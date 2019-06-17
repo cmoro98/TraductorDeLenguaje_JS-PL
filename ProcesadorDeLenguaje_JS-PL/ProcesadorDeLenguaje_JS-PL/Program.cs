@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace ProcesadorDeLenguaje_JS_PL {
     class Program {
         static void Main(string[] args) {
-            Console.WriteLine("Hola mundo que tal estas?");
+            Console.WriteLine("Hola mundo que tal estas? ");
             Console.ReadKey();
         }
     }

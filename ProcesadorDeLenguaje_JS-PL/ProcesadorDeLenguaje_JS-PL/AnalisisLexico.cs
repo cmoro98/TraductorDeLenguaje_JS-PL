@@ -28,11 +28,11 @@ namespace AnalizadorLexico {
              <ENT,valor>
              <ID,posTS>           Variables int numerito=0;
              <Coma,->
-             <ComillasAbre,->
-             <ComillasCierra,->
+             //<ComillasAbre,->
+             //<ComillasCierra,->
              <PuntoComa>
              <AsignaConResto,->
-             …………….Palabras Reservadas Van en la TS-----------¿?
+             …………….Palabras Reservadas Van en la TS-----------
              <function,->
              <int,->
              <bool,->
@@ -47,13 +47,28 @@ namespace AnalizadorLexico {
          *  S-> +|& A|= B|(|)|l C|d D|' E|% G|/ H|del S
             A-> &
             B-> =|LAMBDA
-            C-> l C|d C|_ C|LAMBDA
+            C-> l C|d C|_ C|LAMBDA 
             D-> d D|LAMBDA
             E-> c1 E|null F
             F-> '
             G-> =
             H-> / I
             I-> c2 I|saltolinea S
+            
+            buena
+            S-> +|& A|= B|(|)|l C|d D|' E|% F|/ G|del S
+            A-> &
+            B-> =|LAMBDA
+            C-> l C|d C|_ C|LAMBDA 
+            D-> d D|LAMBDA
+            E-> c1 E|'
+            F-> =
+            G-> / H
+            H-> c2 I|saltolinea S
+            
+            Leyenda:
+                c1=caracteres-{'}
+                c2=caracteres-{salto de linea. Retorno de carro}
          */
 
 
@@ -63,14 +78,11 @@ namespace AnalizadorLexico {
          *  accion=estado(actual,valor entrada)
          * 
          */
-        private string texto;//Nuestro archivo en texto. formato lista.
         
+        private string texto;//Nuestro archivo en texto. formato lista.
         private int pos;//posicion del cursor de la lista texto.        
         private string linea;
-
-        Boolean eof;
-
-        string ruta;
+        private Boolean eof;
         private string[] textoPorLineas; 
         TablaDeSimbolos tablaSimbolos = new TablaDeSimbolos();
         Hashtable palabrasR; //Palabras reservadas
@@ -78,8 +90,7 @@ namespace AnalizadorLexico {
         private Regex letras;
         private int numLineaCodigo;
 
-        public AnalisisLexico(string ruta ) {  /*Constructor.*/         
-            this.ruta = ruta;
+        public AnalisisLexico(string ruta ) {  /*Constructor.*/
             abreArchivo(ruta);
             numerosEnteros = new Regex(@"[0-9]+$");
             letras = new Regex(@"^[A-Za-z_0-9]");
@@ -99,6 +110,7 @@ namespace AnalizadorLexico {
                 }
                 texto.Remove(texto.Length - 1);
                 file.Close();
+                texto.ToCharArray();
             }
             catch (System.Exception e) {
                 System.Console.WriteLine(e.Message);
@@ -198,7 +210,7 @@ namespace AnalizadorLexico {
                                 estado = 0;
                                 break;
                         
-                            case '\'':
+                            case '\'': // ' 
                                 estado = 5;
                                 pos++;
                                 break;
@@ -391,7 +403,15 @@ namespace AnalizadorLexico {
             Console.ReadKey();
             return 0;
         }
+
+        public int[,] a;
+        //Acciones Semánticas
+
     }
+    
+    
+    
+    
     class Token {
         private String token;
         private int valor;

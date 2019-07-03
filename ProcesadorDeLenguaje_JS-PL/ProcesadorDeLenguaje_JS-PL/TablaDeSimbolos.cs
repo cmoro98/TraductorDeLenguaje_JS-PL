@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 
 namespace TablaSimbolos
 {
+
+    public class GestorTablaSimbolos
+    {
+        //crea tabla
+        //maneja las tablas 
+    }
     public class TablaDeSimbolos
     {
         /*Resumen:   
@@ -22,8 +28,6 @@ namespace TablaSimbolos
         private Hashtable TSG;
         private bool encontrado;
         private int numeroDeTabla;
-
-
         public TablaDeSimbolos()
         {
             this.numeroDeTabla = 1;
@@ -34,6 +38,10 @@ namespace TablaSimbolos
             pilaTS.Add(TSG);
         }
         //
+        public bool isPalabraReservada(string pr)
+        {
+            return false;
+        }
 
         //Metodo insertar  
         public void insertaTS(string lexema)

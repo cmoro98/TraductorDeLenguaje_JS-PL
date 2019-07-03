@@ -3,9 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using ProcesadorDeLenguaje_JS_PL;
 using TablaSimbolos;
 
 namespace AnalizadorLexico {
@@ -87,17 +89,21 @@ namespace AnalizadorLexico {
         TablaDeSimbolos tablaSimbolos = new TablaDeSimbolos();
         Hashtable palabrasR; //Palabras reservadas
         private Regex numerosEnteros;
-        private Regex letras;
+        private Regex letrasyNumeros;
         private int numLineaCodigo;
+        private GestorDeErrores ALexErrores;
+        
 
-        public AnalisisLexico(string ruta ) {  /*Constructor.*/
+        
+        public AnalisisLexico(string ruta ) {  /*Constructor.*/ //tabla de simbolos?
             abreArchivo(ruta);
             numerosEnteros = new Regex(@"[0-9]+$");
-            letras = new Regex(@"^[A-Za-z_0-9]");
+            letrasyNumeros = new Regex(@"^[A-Za-z_0-9]");
             palabrasR = new Hashtable();
             eof = false;
             pos = 0;
             numLineaCodigo = 0;
+            ALexErrores= new GestorDeErrores();
         }
 
         /*Mete el archivo en un string llamado texto.*/
@@ -141,7 +147,7 @@ namespace AnalizadorLexico {
         public char LeeCaracter(int pos) {
             //Recorremos un string texto caracter a caracter
             if (pos < texto.Length) {
-                pos++;
+                // pos++;
                 if (texto[pos] == '\n') {
                     numLineaCodigo++;
                     return texto[pos];
@@ -159,12 +165,12 @@ namespace AnalizadorLexico {
          * Realiza la funcion de automata del analisis lexico.
          * Devuelve un token.Por llamada. Null si no hay mas tokens.
          */
-        public Token lexico() {
+        public Token GetToken() {
             Boolean fin = false;
-            Token token = null;
+            Token token = null; 
             int contador = 0;
-            int valor = 0;
-            String cadena = "";
+            short valor = 0;
+            String cadena = ""; // sirve  para los tokens de tipo cadena ej 'hola' y tokens tipo identificador ej id3
             int estado = 0;
             if (eof == true) { return null; }
             while (!fin) {
@@ -206,10 +212,8 @@ namespace AnalizadorLexico {
                             case ';':
                                  token = new Token("PUNTCOMA");
                                 pos++;
-                                //fin = true;
-                                estado = 0;
+                                fin = true;
                                 break;
-                        
                             case '\'': // ' 
                                 estado = 5;
                                 pos++;
@@ -232,6 +236,7 @@ namespace AnalizadorLexico {
                                 pos++;
                                 estado = 0;
                                 break;
+                            
                             case '\n':
                                 pos++;
                                 break;
@@ -241,18 +246,17 @@ namespace AnalizadorLexico {
                                     pos++;
                                     estado = 3;
                                     cadena = cadena + leido;
-
                                     break;
                                 }
                                 //numeros
                                 if (numerosEnteros.IsMatch(leido + "")) {
-                                    valor = (leido-'0');//leido lo convertimos a int.
+                                    valor = (short) (leido-'0'); // leido lo convertimos a int.
                                     estado = 4;
-                                    break;
                                 }
+                                // Algo inesperado -> Error
                                 else {
-                                    //fin = true;
-                                    //Errror.
+                                    ALexErrores.Error(" El símbolo "+leido+ "no está permitido");
+                                    fin = true;
                                 }
                                 break;
                         }
@@ -265,34 +269,35 @@ namespace AnalizadorLexico {
                         }
                         else {
                           //error
+                          ALexErrores.Error("ERROR: Símbolo no permitido./n NO existe el componente léxico & " +
+                                            "pruebe con &&");
                         }
                         fin=true;
                         break;
 
                     case 2://Estado 2
                         if (leido == '=') {
-                            token = new Token("MASMAS");
+                            token = new Token("IGUALIGUAL");
                             pos++;
                         }
                         else {
                             token = new Token("IGUAL");
                         }
-                        //pos++;
                         fin = true;                       
                         break;
-                    case 3://Estado 3
-                        //Regex letras = new Regex(@"^[A-Za-z_0-9]");
-                        if (letras.IsMatch(leido + "")) {
+                    case 3: // Estado 3
+                        //Regex letras = new Regex(@"^[A-Za-z_0-9]"); a-z A-Z  0-9 y _ 
+                        if (letrasyNumeros.IsMatch(leido + "")) {
                             estado = 3;
                             cadena = cadena + leido;
                             pos++;
                         }
-                        else {
-                            //Console.WriteLine();
-                            if (palabrasR.Contains(cadena)) {//Es una palabra reservada
+                        else {  // si Other Character
+                            if (tablaSimbolos.isPalabraReservada(cadena)) {//Es una palabra reservada
                                 token = new Token(cadena);
                             }
                             else {
+                                // REVISAR 
                                 Console.WriteLine("lin de turno:" + linea);
                                 //la buscamos en la TS
                                 //si esta la imprimimos
@@ -307,14 +312,12 @@ namespace AnalizadorLexico {
                                 //se coje el token de la tabla de palabras reservadas
                             }
                             fin = true;
-                            // estado = 0;
-                            //pos++;
                         }
                         break;
-                    case 4://Estado 4
+                    case 4: // Estado 4
                         if (numerosEnteros.IsMatch(leido + "")) {
                             pos++;
-                            valor = valor * 10 + (leido - '0');
+                            valor = (short) (valor * 10 + (leido - '0'));
                             estado = 4;
                         }
                         else {
@@ -324,7 +327,7 @@ namespace AnalizadorLexico {
                         }
                         break;
 
-                    case 5://Estado 5 Cadenas
+                    case 6://Estado 5 Cadenas
                         if (leido == (char)0) {//si es nulo --> fin de cadena
                             estado = 6;
                             pos++;
@@ -333,42 +336,56 @@ namespace AnalizadorLexico {
                             cadena = cadena + leido;
                         }
                         break;
-                    case 6://Estado 6 Cadenas
+                    case 5://Estado 5 Cadenas
                         if (leido == '\'') {//si ' --> fin de cadena
                             token = new Token("cadena");//generar laa cadena
+                            fin = true;
                             pos++;
                         }
+                        else
+                        {
+                            cadena = cadena + leido;
+                            pos++;
+                        }
+
                         break;
 
                     case 7://Estado 7
-                        if (leido == '=') {
+                        if (leido == '=') 
                             token = new Token("AsigRest");
-                        }
-                        //else error
+                        else 
+                            ALexErrores.Error("El componente lexico % no existe. pruebe con %=");
+                        
                         pos++;
                         fin = true;
                         break;
 
-                    case 8://Estado 9
+                    case 8://Estado 9 Comentarios
                         if (leido == '/') {
-                            estado = 6;
+                            estado = 9;
                             pos++;
-                        }         
-                        //pos++;
-                        //fin = true;
+                        }
+                        else
+                            ALexErrores.Error("El componente léxico / no existe pruebe con //");
                         break;
 
                     case 9:
-                        if (leido == '\n') {
+                        if (leido == '\n') 
                             estado = 0;
-                        }                  
+                        else
+                        {
+                            pos++;
+                            estado = 9;
+                        }
                         break;
                 }
             }
             //llamado o dir escribir el token pos 1
             if (token != null) {
                 Console.WriteLine("<" + token.getToken() + "," + ">");
-                Console.WriteLine();
+                Console.WriteLine(token.toString());
+                Console.ReadKey();
+
             }
             return token;
         }
@@ -387,7 +404,7 @@ namespace AnalizadorLexico {
             prueba.rellenaPR();
             Token tokenDevuelto = null;
             do {
-                tokenDevuelto = prueba.lexico();
+                tokenDevuelto = prueba.GetToken();
                 using (System.IO.StreamWriter fichTokens = new System.IO.StreamWriter(@"tokens.txt", true)) {
                     if (tokenDevuelto != null) {
                         if (tokenDevuelto.getToken().Equals("ENT")) { fichTokens.WriteLine("<" + tokenDevuelto.getToken() + "," + tokenDevuelto.getValor() + "" + ">"); }
@@ -435,7 +452,7 @@ namespace AnalizadorLexico {
         public String getToken() {
             return token;
         }
-        public String toString(Token a) {
+        public String toString() {
             
             //String res = "<"+ token+","+"-"+">";
            /* if ((valor + cadena + "") == "") {

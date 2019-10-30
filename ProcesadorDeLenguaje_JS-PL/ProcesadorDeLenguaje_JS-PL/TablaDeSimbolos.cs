@@ -44,12 +44,13 @@ namespace TablaSimbolos
             tablaSimbolosGlobal.Add("string", new ObjetoTS("string", true, 4));
             tablaSimbolosGlobal.Add("true", new ObjetoTS("true", true, 5));
             tablaSimbolosGlobal.Add("false", new ObjetoTS("false", true, 6));
-            tablaSimbolosGlobal.Add("print", new ObjetoTS("print", true, 7));
-            tablaSimbolosGlobal.Add("var", new ObjetoTS("var", true, 8));
-            tablaSimbolosGlobal.Add("do", new ObjetoTS("do", true, 9));
-            tablaSimbolosGlobal.Add("while", new ObjetoTS("while", true, 10));
-            tablaSimbolosGlobal.Add("return", new ObjetoTS("return", true, 11));
-            posTablaDeSimbolos = 11;
+            tablaSimbolosGlobal.Add("input", new ObjetoTS("input", true, 7));
+            tablaSimbolosGlobal.Add("print", new ObjetoTS("print", true, 8));
+            tablaSimbolosGlobal.Add("var", new ObjetoTS("var", true, 9));
+            tablaSimbolosGlobal.Add("do", new ObjetoTS("do", true, 10));
+            tablaSimbolosGlobal.Add("while", new ObjetoTS("while", true, 11));
+            tablaSimbolosGlobal.Add("return", new ObjetoTS("return", true, 12));
+            posTablaDeSimbolos = 13;
         }
 
         public short? buscarPR(string lexema)
@@ -79,67 +80,24 @@ namespace TablaSimbolos
             return posTablaDeSimbolos;
         }
 
-/*
-        public TablaDeSimbolos()
+        // Imprime la tabla de simbolos de mayor prioridad.
+        public string ImprimirTS()
         {
-            //this.numeroDeTabla = 1;
-          //  this.pilaTS = new List<Hashtable>();
-            this.TSG = new Hashtable<>();
-            string lexema;
-           // this.encontrado = false;
-           // pilaTS.Add(TSG);
-        }
-        
-        
-        //
-        public bool isPalabraReservada(string pr)
-        {
-            return false;
-        }
-
-        //Metodo insertar  
-        public void insertaTS(string lexema)
-        {
-            // Atributos atri = new Atributos(tipo);
-            pilaTS.First().Add(lexema,new ObjetoTS(lexema));
-            //tiene que devolver una posicion
-        }
-
-        //recorre la TS y te dice si lo encontro.
-        public bool busca(string lexema)
-        {
-            return encontrado;
-        }
-        //Por hacer
-        public void insertaTSfunc(string lexema, string tipo)
-        {
-
-        }
-        //Imprime en el txt
-        public void imprimirTS()
-        {
-            using (System.IO.StreamWriter tablaSimbolos = new System.IO.StreamWriter(@"TablaSimbolos.txt", true))
+            string ret="Contenido de la tabla # "+0+":\n";
+            foreach (DictionaryEntry elemento in tablaSimbolosGlobal)
             {
-
-                foreach (Hashtable busc in pilaTS)
-                {
-                    tablaSimbolos.WriteLine("Contenido de la tabla# " + numeroDeTabla);
-                    //recorrer hasMap en orden.
-                    int i = 0;
-                    foreach (DictionaryEntry entrada in busc)
-                    {
-                        //Imprimir con formato en el txt
-                        tablaSimbolos.WriteLine("* LEXEMA : '" + busc.Keys + "'");
-                        tablaSimbolos.WriteLine(busc.Values);
-                        tablaSimbolos.WriteLine("---------------");
-
-                    }
-
-                }
+                Console.WriteLine("({0},{1})", elemento.Key,elemento.Value);
+                ObjetoTS rt = (ObjetoTS)elemento.Value;
+                ret = ret +  rt.ImprimirObjetoTS();
             }
+
+            using (System.IO.StreamWriter fichTS = new System.IO.StreamWriter(@"TS.txt", true))
+            {
+                fichTS.WriteLine(ret); 
+            }
+
+            return ret;
         }
-    }
-*/
         public class ObjetoTS
         {
             private string lexema;
@@ -219,6 +177,17 @@ namespace TablaSimbolos
                 get => posicionTablaDeSimbolos;
                 set => posicionTablaDeSimbolos = value;
             }
+            
+
+            public string ImprimirObjetoTS()
+            {
+                string ret = "* LEXEMA: "+"\'"+lexema+"\' \n"+ "ATRIBUTOS: \n"
+                             + "+ tipo: "+ "\'"+tipo+"\' \n"
+                             + "+ despl: "+ "\'"+dir+"\' \n"
+                    ;
+                return ret;
+            }
+            
         }
     }
 }

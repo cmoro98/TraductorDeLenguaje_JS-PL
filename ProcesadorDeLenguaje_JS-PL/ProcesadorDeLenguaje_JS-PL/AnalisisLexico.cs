@@ -141,6 +141,7 @@ namespace AnalizadorLexico
                 leido = LeeCaracter(pos);
                 if (eof == true)
                 {
+                    tablaSimbolos.ImprimirTS();
                     return null;
                 }
 
@@ -207,6 +208,9 @@ namespace AnalizadorLexico
                             case '\n':
                                 pos++;
                                 break;
+                            case '\t':
+                                pos++;
+                                break;
                             default:
                                 //letras
                                 if ((leido >= 'a' && leido <= 'z') || (leido >= 'A' && leido <= 'Z'))
@@ -241,7 +245,7 @@ namespace AnalizadorLexico
                         if (leido == '&')
                         {
                             token = new Token("&&");
-                            //pos++;
+                            pos++;
                         }
                         else
                         {
@@ -324,13 +328,13 @@ namespace AnalizadorLexico
                         if (leido == '+')
                         {
                             //si es nulo --> fin de cadena
-                            token = new Token("Suma");
+                            token = new Token("MASMAS");
                             fin = true;
                             pos++;
                         }
                         else
                         {
-                            token = new Token("MASMAS");
+                            token = new Token("Suma");
                             fin = true;
                         }
 
@@ -377,61 +381,30 @@ namespace AnalizadorLexico
             //llamado o dir escribir el token pos 1
             if (token != null)
             {
-                Console.WriteLine(" desde Alex <" + token.GetCodigo() + "," + ">");
-                Console.WriteLine(token.ToString());
+                Console.WriteLine(" desde Alex <" + token.Codigo + "," + ">");
+                //Console.WriteLine(token.ToString());
                 //Console.ReadKey();
+               
 
+            }
+
+            if (token == null)
+            {
+                tablaSimbolos.ImprimirTS();
             }
 
             return token;
         }
-
-
-        /*static int pan(string[] args) {
-            //era Main no pan
-            if (args.Length == 0) {
-                System.Console.WriteLine("Ingrese un argumento");
-                Console.ReadKey();
-                return -1;
-            }
-            string fichero = args[0];
-            AnalisisLexico prueba = new AnalisisLexico(fichero);
-           // prueba.abreArchivo(fichero);
-            prueba.rellenaPR();
-            Token tokenDevuelto = null;
-            do {
-                tokenDevuelto = prueba.GetToken();
-                using (System.IO.StreamWriter fichTokens = new System.IO.StreamWriter(@"tokens.txt", true)) {
-                    if (tokenDevuelto != null) {
-                        if (tokenDevuelto.GetCodigo().Equals("ENT")) { fichTokens.WriteLine("<" + tokenDevuelto.GetCodigo() + "," + tokenDevuelto.getValor() + "" + ">"); }
-                        else { fichTokens.WriteLine("<" + tokenDevuelto.GetCodigo() + "," + "" + ">"); }
-                    }
-
-                }
-
-            }
-            while (tokenDevuelto != null);
-            prueba.tablaSimbolos.imprimirTS();
-            Console.WriteLine(fichero);
-            Console.ReadKey();
-            return 0;
-        }
-
-        public int[,] a;
-        //Acciones Semánticas
-
-    }
-    */
-
-
+        
+        
         internal class Token
         {
             // Token: <codigo,atributo> Un atributo puede ser un valor o una cadena.
-            private String codigo;
+            private string codigo;
             private string cadena;
             private Int16? valor;
 
-            public Token(String codigo)
+            public Token(string codigo)
             {
                 this.codigo = codigo;
                 cadena = null;
@@ -440,7 +413,7 @@ namespace AnalizadorLexico
 
             }
 
-            public Token(String codigo, Int16 valor)
+            public Token(string codigo, Int16 valor)
             {
                 this.codigo = codigo;
                 this.valor = valor;
@@ -475,11 +448,10 @@ namespace AnalizadorLexico
 
 
             //
-            public String Imprimir()
+            public string Imprimir()
             {
-
-                //String res = "<"+ token+","+"-"+">";
-                if (valor==null&&cadena==null)
+                // token con formato.
+               if (valor==null&&cadena==null)
                 {
                     return "<" + codigo + "," + "-" + ">";
                 }
@@ -491,16 +463,6 @@ namespace AnalizadorLexico
                 {
                     return "<" + codigo + "," + "\"" + cadena + "\"" + ">"; // <codigo,"cadena">
                 }
-                //token con formato.
-                //return ((valor + cadena + "") == "")?"<" + codigo + "," + "-" + ">":"<" + codigo + "," + valor + cadena + ">";
-
-            }
-
-
-
-            public String GetCodigo()
-            {
-                return codigo;
             }
 
         }

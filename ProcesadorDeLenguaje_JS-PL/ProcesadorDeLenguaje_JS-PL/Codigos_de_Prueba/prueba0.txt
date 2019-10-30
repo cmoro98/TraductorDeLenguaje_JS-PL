@@ -1,5 +1,4 @@
-// Comentario de línea
 var bool booleano; //comentario.
 var string ok;
 var int cas0 = 12;
-var 1error;
+cas0 men

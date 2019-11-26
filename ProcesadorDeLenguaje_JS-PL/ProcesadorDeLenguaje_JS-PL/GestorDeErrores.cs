@@ -15,6 +15,11 @@ namespace ProcesadorDeLenguaje_JS_PL
             Console.WriteLine("Teclee una letra para continuar...");
             Console.ReadKey();
         }
+
+        public void ErrSintactico(int nErr,string error)
+        {
+            
+        }
         
         // TODO Guardar error en fichero
         public void GuardarError()

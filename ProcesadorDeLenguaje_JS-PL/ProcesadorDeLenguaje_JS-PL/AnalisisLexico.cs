@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using ProcesadorDeLenguaje_JS_PL;
 using TablaSimbolos;
 
-namespace AnalizadorLexico
+namespace ProcesadorDeLenguaje_JS_PL
 {
     /* Analizdador Lexico: 
      * Recibe:Un codigo JavasScrpt-PL
@@ -18,7 +18,7 @@ namespace AnalizadorLexico
      * Resumen:Abre el fichero. Lo mete en un String
      */
 
-    class AnalisisLexico
+    public class AnalisisLexico
     {
         //Int16 a = -446;
         /*Tokens
@@ -115,6 +115,15 @@ namespace AnalizadorLexico
                 eof = true;
                 return '\0';
             }
+        }
+        // Acciones Semánticas:
+        public void L()
+        {
+            pos++;
+        }
+        public string C(char c, string cadena)
+        {
+            return cadena + c;
         }
 
 
@@ -312,13 +321,19 @@ namespace AnalizadorLexico
                         if (numerosEnteros.IsMatch(leido + ""))
                         {
                             pos++;
-                            // TODO Nadie comprueba la excepción se supera el tamaño.
+                            // TODO Numeros negativos no funcionan
+                            short aux=valor;
                             valor = (short) (valor * 10 + (leido - '0'));
+                            if (valor < aux)
+                            {
+                                ALexErrores.Error("El rango de numeros es (-32768,32767)");
+                            }
+
                             estado = 4;
                         }
                         else
                         {
-                            token = new Token("ENT", valor);
+                            token = new Token("digito", valor);
                             fin = true;
                         }
 
@@ -391,13 +406,15 @@ namespace AnalizadorLexico
             if (token == null)
             {
                 tablaSimbolos.ImprimirTS();
+                token= new Token("$");
             }
+            
 
             return token;
         }
-        
-        
-        internal class Token
+
+
+        public class Token
         {
             // Token: <codigo,atributo> Un atributo puede ser un valor o una cadena.
             private string codigo;
@@ -409,8 +426,6 @@ namespace AnalizadorLexico
                 this.codigo = codigo;
                 cadena = null;
                 valor = null;
-                
-
             }
 
             public Token(string codigo, Int16 valor)
@@ -453,9 +468,9 @@ namespace AnalizadorLexico
                 // token con formato.
                if (valor==null&&cadena==null)
                 {
-                    return "<" + codigo + "," + "-" + ">";
+                    return "<" + codigo + "," + "" + ">";
                 }
-                else if (cadena == ""||cadena==null)
+                else if (string.IsNullOrEmpty(cadena))
                 {
                     return "<" + codigo + "," + valor + ">";
                 }

@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AnalisisLexico.cs" />
+    <Compile Include="AnalizadorSintactico.cs" />
     <Compile Include="GestorDeErrores.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -54,6 +55,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Codigos_de_Prueba\prueba0.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Documentacion" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

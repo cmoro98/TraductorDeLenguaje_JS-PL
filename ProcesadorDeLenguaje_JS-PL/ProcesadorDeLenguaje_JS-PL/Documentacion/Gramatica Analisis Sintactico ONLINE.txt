@@ -1,0 +1,169 @@
+
+
+
+
+Version 2.0
+
+Axioma = P'
+Terminales IGUAL { var ID if AbreParent CierraParent AbreCorchetes while CierraCorchetes  int boolean string IGUAL PuntoComa return print input COMA do  function AND == Suma MASMAS digito cadena true false }
+NoTerminales = { P' P B F T E C S L Q X  H A K R U V }
+Producciones = {
+	P' -> P
+	P -> B P
+	P -> F P
+	P -> ''     
+	B -> var T ID PuntoComa
+	B -> if AbreParent E CierraParent S
+	B -> do AbreCorchetes C CierraCorchetes while AbreParent E CierraParent
+	B -> S
+	T -> int
+	T -> boolean
+	T -> string
+	S -> ID IGUAL E PuntoComa
+	S -> return X PuntoComa
+	S -> print AbreParent E CierraParent PuntoComa
+	S -> input AbreParent ID CierraParent PuntoComa
+	S -> ID AbreParent L CierraParent PuntoComa
+	X -> E
+	X -> ''
+	L -> E Q 
+	L -> ''
+	Q -> COMA E Q
+	Q -> ''
+	F -> function H ID AbreParent A CierraParent AbreCorchetes C CierraCorchetes
+	H -> T
+	H -> ''
+	C -> B C 
+	C -> ''
+	A -> T ID K
+	A -> ''
+	K -> COMA T ID K
+	K -> ''
+	E -> E AND R
+	E -> R
+	R -> R == U 
+	R -> U
+	U -> U Suma V
+	U -> V
+	V -> ID
+	V -> digito
+	V -> true
+	V -> false
+	V -> cadena
+	V -> ID AbreParent L CierraParent
+	V -> AbreParent E CierraParent
+	V -> ID MASMAS 
+}
+
+
+
+Version 1.0
+//// esto es lo único a revisar '' o eof
+
+Axioma = P'
+Terminales = { var id if ( ) { while }  int boolean string = ; return print input , do  function && == + ++ digito cadena true false }
+NoTerminales = { P' P B F T E C S L Q X  H A K R U V }
+Producciones = {
+	P' -> P
+	P -> B P
+	P -> F P
+	P -> ''     
+	B -> var T id ;
+	B -> if ( E ) S
+	B -> do { C } while ( E )
+	B -> S
+	T -> int
+	T -> boolean
+	T -> string
+	S -> id = E ;
+	S -> return X ;
+	S -> print ( E ) ;
+	S -> input ( id ) ;
+	S -> id ( L ) ;
+	X -> E
+	X -> ''
+	L -> E Q 
+	L -> ''
+	Q -> , E Q
+	Q -> ''
+	F -> function H id ( A ) { C }
+	H -> T
+	H -> ''
+	C -> B C 
+	C -> ''
+	A -> T id K
+	A -> ''
+	K -> , T id K
+	K -> ''
+	E -> E && R
+	E -> R
+	R -> R == U 
+	R -> U
+	U -> U + V
+	U -> V
+	V -> id
+	V -> digito
+	V -> true
+	V -> false
+	V -> cadena
+	V -> id ( L )
+	V -> ( E )
+	V -> id ++ 
+}
+
+
+
+
+
+
+
+Axioma = P'
+Terminales = { var id if ( ) { while }  int boolean string = ; return print input , do  function && == + ++ digito cadena true false eof }
+NoTerminales = { P' P B F T E C S L Q X  H A K R U V }
+Producciones = {
+	P' -> P
+	P -> B P
+	P -> F P
+	P -> eof     
+	B -> var T id ;
+	B -> if ( E ) S
+	B -> do { C } while ( E )
+	B -> S
+	T -> int
+	T -> boolean
+	T -> string
+	S -> id = E ;
+	S -> return X ;
+	S -> print ( E ) ;
+	S -> input ( id ) ;
+	S -> id ( L ) ;
+	X -> E
+	X -> ''
+	L -> E Q 
+	L -> ''
+	Q -> , E Q
+	Q -> ''
+	F -> function H id ( A ) { C }
+	H -> T
+	H -> ''
+	C -> B C 
+	C -> ''
+	A -> T id K
+	A -> ''
+	K -> , T id K
+	K -> ''
+	E -> E && R
+	E -> R
+	R -> R == U 
+	R -> U
+	U -> U + V
+	U -> V
+	V -> id
+	V -> digito
+	V -> true
+	V -> false
+	V -> cadena
+	V -> id ( L )
+	V -> ( E )
+	V -> id ++ 
+}

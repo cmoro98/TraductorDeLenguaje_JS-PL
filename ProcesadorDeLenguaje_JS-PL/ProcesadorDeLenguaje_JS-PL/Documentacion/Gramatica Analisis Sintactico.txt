@@ -1,0 +1,61 @@
+
+
+
+
+Axioma = P'
+Terminales IGUAL { var ID if AbreParent CierraParent AbreCorchetes while CierraCorchetes int boolean string IGUAL PuntoComa return print input COMA do  function AND IGUALIGUAL Suma MASMAS digito cadena true false }
+NoTerminales = { P' P B F T E C S L Q X  H A K R U V }
+Producciones = {
+	P' -> P
+	P -> B P
+	P -> F P
+	P -> lambda     //// esto es lo único a revisar lambda o eof
+	B -> var T ID PuntoComa
+	B -> if AbreParent E CierraParent S
+	B -> do AbreCorchetes C CierraCorchetes while AbreParent E CierraParent
+	B -> S
+	T -> int
+	T -> boolean
+	T -> string
+	S -> ID IGUAL E PuntoComa
+	S -> return X PuntoComa
+	S -> print AbreParent E CierraParent PuntoComa
+	S -> input AbreParent ID CierraParent PuntoComa
+	S -> ID AbreParent L CierraParent PuntoComa
+	X -> E
+	X -> lambda
+	L -> E Q 
+	L -> lambda
+	Q -> COMA E Q
+	Q -> lambda
+	F -> function H ID AbreParent A CierraParent AbreCorchetes C CierraCorchetes
+	H -> T
+	H -> lambda
+	C -> B C 
+	C -> lambda
+	A -> T ID K
+	A -> lambda
+	K -> COMA T ID K
+	K -> lambda
+	E -> E AND R
+	E -> R
+	R -> R IGUALIGUAL U 
+	R -> U
+	U -> U Suma V
+	U -> V
+	V -> ID
+	V -> digito
+	V -> true
+	V -> false
+	V -> cadena
+	V -> ID AbreParent L CierraParent
+	V -> AbreParent E CierraParent
+	V -> ID MASMAS 
+}
+
+
+
+
+
+
+

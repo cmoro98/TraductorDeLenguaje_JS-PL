@@ -25,15 +25,15 @@ namespace ProcesadorDeLenguaje_JS_PL
         private Dictionary<string, int> columnaAccion; // Devuelve la posicion j donde esta el token en la tablaAccion ej tablaAccion[numero estado,id] transforma el id al indice de turno.
         private List<string[]> tablaGoto;
         private Dictionary<string, int> columnaGoto;
+        List<int> numeroDeConsecuentes = new List<int>(); 
         private AnalisisLexico alex;
 
-        public AnalizadorSintactico(AnalisisLexico alex,string pathTablaAccion,string pathTablaGoto)
+        public AnalizadorSintactico(AnalisisLexico alex,string pathTablaAccion,string pathTablaGoto,string pathNumeroConsecuentes)
         {
             this.alex = alex; // recibimos el analizador lexico. 
              tablaAccion = CrearTabla(pathTablaAccion,columnaAccion);
              tablaGoto = CrearTabla(pathTablaGoto,columnaGoto);
-             
-            
+             CalcularNumeroDeConscuentesPorRegla(pathNumeroConsecuentes, numeroDeConsecuentes);
         }
         
         
@@ -109,9 +109,21 @@ namespace ProcesadorDeLenguaje_JS_PL
                         // Lanzar error fichero no valido.
                     }
                     tabla.Add(line);
-                    Console.WriteLine(line);
+                    //Console.WriteLine(line);
                 }
                 return tabla;
+            }
+        }
+
+        public void CalcularNumeroDeConscuentesPorRegla(string path, List<int> numeroDeConsecuentes) {
+           numeroDeConsecuentes= new List<int>();
+            using (var reader = new StreamReader(path)) {
+                int i = 0;
+                while (!reader.EndOfStream) {
+                    var line = reader.ReadLine()?.Split('#');
+                    numeroDeConsecuentes[i] = Int32.Parse(line[1]);
+                    i++;         
+                }
             }
         }
 

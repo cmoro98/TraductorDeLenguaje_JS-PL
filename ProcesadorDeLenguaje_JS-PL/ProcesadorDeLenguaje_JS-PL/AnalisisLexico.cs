@@ -294,6 +294,11 @@ namespace ProcesadorDeLenguaje_JS_PL
                             p = tablaSimbolos.buscarPR(cadena);
                             if (p != null)
                             {
+                                if (cadena.Length > 64) {
+                                    //Error
+                                    ALexErrores.Error("Una constante tiene como max 64 caracteres");
+
+                                }
                                 //Es una palabra reservada
                                 token = new Token(cadena);
                                 fin = true;

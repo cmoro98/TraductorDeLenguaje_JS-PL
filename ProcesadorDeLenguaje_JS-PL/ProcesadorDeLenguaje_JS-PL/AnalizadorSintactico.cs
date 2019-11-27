@@ -25,7 +25,7 @@ namespace ProcesadorDeLenguaje_JS_PL
         private Dictionary<string, int> columnaAccion; // Devuelve la posicion j donde esta el token en la tablaAccion ej tablaAccion[numero estado,id] transforma el id al indice de turno.
         private List<string[]> tablaGoto;
         private Dictionary<string, int> columnaGoto;
-        List<int> numeroDeConsecuentes = new List<int>(); 
+        private List<(string,int)> reglas = new List<(string Antecedente,int numDeConsecuentes)>();
         private AnalisisLexico alex;
 
         public AnalizadorSintactico(AnalisisLexico alex,string pathTablaAccion,string pathTablaGoto,string pathNumeroConsecuentes)
@@ -53,7 +53,7 @@ namespace ProcesadorDeLenguaje_JS_PL
             while (true) // mientras no se acabe el fichero. Que peligro tiene ese while true.
             {
                 // El ultimo elemento de la pila deberá ser un numero. Si eso no es así  peta.
-                string accion = Accion(Int32.Parse(pila[pila.Count - 1]), tokenDeEntrada.Cadena); // la tabla goto?
+                string accion = Accion(Int32.Parse(pila[pila.Count - 1]), tokenDeEntrada.Codigo); // la tabla goto?  Codigo no?
                 
                 if (accion.Substring(0, 1) == "d")
                 {
@@ -62,12 +62,32 @@ namespace ProcesadorDeLenguaje_JS_PL
                      * 2 Meter el estado al que se desplaza  en la pila
                      * 3 Leer sig token.
                      */
+                     
                     pila.Add(tokenDeEntrada.Codigo);
                     pila.Add(accion.Substring(1,2));
                     tokenDeEntrada = alex.GetToken();
                 }
                 else if (accion.Substring(0, 1) == "r")
                 {
+                    /*Reduccion A->B
+                     * 1 Sacar (2*Nº de consecuentes de la regla) de la pila
+                     * 2 s' = pila.pop()
+                     * 2 meter A en la pila
+                     * 3 Obtener Goto[s',A]
+                     * Generar el parse correspondiente a la regla
+                     */
+                     
+                   int sacar = 2*reglas[Int32.Parse(accion.Substring(1,2))].Item2;
+                   pila.RemoveRange(pila.Count-1-sacar,sacar); //revisar si saca lo esperado.
+                    //s' = pila.pop()
+                   var estado = pila[pila.Count-1];
+                   pila.RemoveAt(pila.Count-1);
+                    // Meter A en la pila
+                   pila.Add(reglas[Int32.Parse(accion.Substring(1,2))].Item1);
+                   //tablaGoto[]
+                    
+                   
+
                     
                 }
                 else if (accion.Substring(0, 1) == "acc")
@@ -115,13 +135,13 @@ namespace ProcesadorDeLenguaje_JS_PL
             }
         }
 
-        public void CalcularNumeroDeConscuentesPorRegla(string path, List<int> numeroDeConsecuentes) {
-           numeroDeConsecuentes= new List<int>();
+        public void CalcularNumeroDeConscuentesPorRegla(string path, List<(string,int)> reglas) {
             using (var reader = new StreamReader(path)) {
-                int i = 0;
+                int i = 1;
                 while (!reader.EndOfStream) {
-                    var line = reader.ReadLine()?.Split('#');
-                    numeroDeConsecuentes[i] = Int32.Parse(line[1]);
+                    var line = reader.ReadLine()?.Split("->");
+                    string[] numeroDeConsecuentes = line[1].Split(" ");
+                    reglas[i]=(line[0],numeroDeConsecuentes.Length);
                     i++;         
                 }
             }
@@ -137,9 +157,16 @@ namespace ProcesadorDeLenguaje_JS_PL
 
 
         
+
+
+    
+
         public void Aceptar()
         {
             
+        }
+        public void Desplazar(){
+
         }
 
         public void Reducir()

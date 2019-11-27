@@ -1,0 +1,44 @@
+P->B P
+P->F P
+P->
+B->var T ID PuntoComa
+B->if AbreParent E CierraParent S
+B->do AbreCorchetes C CierraCorchetes while AbreParent E CierraParent
+B->S
+T->int
+T->boolean
+T->string
+S->ID IGUAL E PuntoComa
+S->return X PuntoComa
+S->print AbreParent E CierraParent PuntoComa
+S->input AbreParent ID CierraParent PuntoComa
+S->ID AbreParent L CierraParent PuntoComa
+X->E
+X->
+L->E Q
+L->
+Q->COMA E Q
+Q->
+F->function H ID AbreParent A CierraParent AbreCorchetes C CierraCorchetes
+H->T
+H->
+C->B C 
+C->
+A->T ID K
+A->
+K->COMA T ID K
+K->
+E->E AND R
+E->R
+R->R IGUALIGUAL U
+R->U
+U->U Suma V
+U->V
+V->ID
+V->digito
+V->true
+V->false
+V->cadena
+V->ID AbreParent L CierraParent
+V->AbreParent E CierraParent
+V->ID MASMAS

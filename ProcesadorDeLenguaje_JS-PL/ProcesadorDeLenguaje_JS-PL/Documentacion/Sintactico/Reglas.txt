@@ -3,7 +3,7 @@ P->F P
 P->
 B->var T ID PuntoComa
 B->if AbreParent E CierraParent S
-B->do AbreCorchetes C CierraCorchetes while AbreParent E CierraParent
+B->do AbreCorchetes C CierraCorchetes while AbreParent E CierraParent PuntoComa
 B->S
 T->int
 T->boolean
@@ -22,7 +22,7 @@ Q->
 F->function H ID AbreParent A CierraParent AbreCorchetes C CierraCorchetes
 H->T
 H->
-C->B C 
+C->B C
 C->
 A->T ID K
 A->

@@ -151,7 +151,8 @@ namespace ProcesadorDeLenguaje_JS_PL
                 if (eof == true)
                 {
                     tablaSimbolos.ImprimirTS();
-                    return null;
+                    token = new Token("$");
+                    return token;
                 }
 
                 switch (estado)
@@ -401,7 +402,7 @@ namespace ProcesadorDeLenguaje_JS_PL
             //llamado o dir escribir el token pos 1
             if (token != null)
             {
-                Console.WriteLine(" desde Alex <" + token.Codigo + "," + ">");
+                Console.WriteLine(" desde A.lex <" + token.Codigo + "," + ">");
                 //Console.WriteLine(token.ToString());
                 //Console.ReadKey();
                
@@ -411,7 +412,7 @@ namespace ProcesadorDeLenguaje_JS_PL
             if (token == null)
             {
                 tablaSimbolos.ImprimirTS();
-                token= new Token("$");
+                token = new Token("$");
             }
             
 

@@ -14,12 +14,29 @@ namespace ProcesadorDeLenguaje_JS_PL {
             string pathSourceCode="/home/krls/Programacion/C#/PDL/ProcesadorDeLenguaje_JS-PL/ProcesadorDeLenguaje_JS-PL/Codigos_de_Prueba/prueba0.txt";
             string pathAstTablaAccion = "/home/krls/Programacion/C#/PDL/ProcesadorDeLenguaje_JS-PL/ProcesadorDeLenguaje_JS-PL/Ficheros_Del_Traductor/Sintactico/TablaACCION.csv";
             string pathAstTablaGoto = "/home/krls/Programacion/C#/PDL/ProcesadorDeLenguaje_JS-PL/ProcesadorDeLenguaje_JS-PL/Ficheros_Del_Traductor/Sintactico/TablaGOTO.csv";
+            string pathReglas = "/home/krls/Programacion/C#/PDL/ProcesadorDeLenguaje_JS-PL/ProcesadorDeLenguaje_JS-PL/Ficheros_Del_Traductor/Sintactico/Reglas.txt";
             //ruta=Console.ReadLine();
             AnalisisLexico alex= new AnalisisLexico(pathSourceCode);
-            AnalisisLexico.Token tokenDevuelto;
-            AnalizadorSintactico ast= new AnalizadorSintactico(alex, pathAstTablaAccion, pathAstTablaGoto);
-            ast.GetParse();
+            //AnalisisLexico.Token tokenDevuelto;
+            
+            // LLamar An. SINTÁCTICO
+            AnalizadorSintactico ast= new AnalizadorSintactico(alex, pathAstTablaAccion, pathAstTablaGoto,pathReglas);
+            string parse = ast.GetParse();
+            string listaTokens = ast.GetFichTokens();
+            
+            // Imprimir parse
+            System.IO.File.Delete("parse.txt");
+            using (System.IO.StreamWriter fichParse = new System.IO.StreamWriter(@"parse.txt", true))
+            {
+                fichParse.Write(parse);
+            }
             System.IO.File.Delete("tokens.txt");
+            using (System.IO.StreamWriter fichTokens = new System.IO.StreamWriter(@"tokens.txt", true))
+            {
+                fichTokens.Write(listaTokens);
+            }
+
+            
             /*
             do {
                 tokenDevuelto = alex.GetToken();

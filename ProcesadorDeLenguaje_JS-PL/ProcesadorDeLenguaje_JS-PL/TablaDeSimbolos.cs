@@ -36,7 +36,6 @@ namespace TablaSimbolos
         public TablaDeSimbolos()
         {
             this.tablaSimbolosGlobal = new Hashtable();
-            object ObjetoTS;
             tablaSimbolosGlobal.Add("if", new ObjetoTS("if", true, 0));
             tablaSimbolosGlobal.Add("function", new ObjetoTS("function", true, 1));
             tablaSimbolosGlobal.Add("int", new ObjetoTS("int", true, 2));

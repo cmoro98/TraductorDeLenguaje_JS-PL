@@ -63,19 +63,21 @@ namespace ProcesadorDeLenguaje_JS_PL
 
                     if (casilla.Substring(0, 1) == "s")
                     {
+                       
                         /* DESPLAZAR
                      * 1 Meter tokenDeEntrada en la pila
                      * 2 Meter el estado al que se desplaza  en la pila
                      * 3 Leer sig token.
                      */
-
                         pila.Add(tokenDeEntrada.Codigo);
                         pila.Add(casilla.Substring(1));
                         tokenDeEntrada = alex.GetToken();
                         ficheroTokens += tokenDeEntrada.Imprimir() + "\n";
+                        
                     }
                     else if (casilla.Substring(0, 1) == "r")
                     { 
+                        
                      /*REDUCCION A->B                A es el antecedente y B el consecuente
                      * 1 Sacar (2*Nº de consecuentes de la regla) de la pila
                      * 2 s' = pila.cima()
@@ -84,6 +86,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                      * Generar el parse correspondiente a la regla
                      */
 
+                     
                         int sacar = 2 * reglas[Int32.Parse(casilla.Substring(1))].Item2;
                         pila.RemoveRange(pila.Count - sacar, sacar); //revisar si saca lo esperado.
                         //s' = pila.cima()
@@ -96,6 +99,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                         string a=Goto(estadoPila, antecedente);
                         pila.Add(a);
                         parse += (Convert.ToInt32(casilla.Substring(1))+1)+" "; // solucion to cutre sumamos un 1 a la regla y ya esta listo para vast
+                        
                     }
                     else if (casilla == "acc")
                     {
@@ -105,20 +109,15 @@ namespace ProcesadorDeLenguaje_JS_PL
                     {
                         //error
                         Console.WriteLine("Error: casilla= " + casilla);
-                        erroresSintactico.ErrSintactico(1,"error: sintactico encontrado.");
+                        erroresSintactico.ErrSintactico(1,"error: sintactico encontrado. en Linea " + alex.NumLineaCodigo+
+                                                          " . Tiene que estar cerca del simbolo  : "+ tokenDeEntrada.Codigo);
                         break;
                     }
                 }
             }
-            else
-            {
-                // error NO hay Tokens.
-            }
-
             return "";
         }
-
-     
+        
 
         public List<string[]> CrearTabla(string path,Dictionary<string,int>Columna)
         {// creamos la estructura tabla. Ya sea la tabla goto o la tabla acción.
@@ -175,15 +174,6 @@ namespace ProcesadorDeLenguaje_JS_PL
             return tablaGoto[estadoPila][columnaGoto[antecedente]];
         }
         
-        public void Desplazar(){
-
-        }
-
-        public void Reducir()
-        {
-            
-        }
-
         public string GetFichTokens()
         {
             return ficheroTokens;

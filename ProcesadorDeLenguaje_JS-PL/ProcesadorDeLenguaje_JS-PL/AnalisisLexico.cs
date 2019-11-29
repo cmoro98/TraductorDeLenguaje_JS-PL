@@ -69,9 +69,11 @@ namespace ProcesadorDeLenguaje_JS_PL
             palabrasR = new Hashtable();
             eof = false;
             pos = 0;
-            numLineaCodigo = 0;
+            numLineaCodigo = 1;
             ALexErrores = new GestorDeErrores();
         }
+
+        public int NumLineaCodigo => numLineaCodigo;
 
         /*Mete el archivo en un string llamado texto.*/
         private void abreArchivo(string ruta)

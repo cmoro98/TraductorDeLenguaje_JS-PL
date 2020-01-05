@@ -1,13 +1,7 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using ProcesadorDeLenguaje_JS_PL;
 using TablaSimbolos;
 
 namespace ProcesadorDeLenguaje_JS_PL
@@ -91,9 +85,9 @@ namespace ProcesadorDeLenguaje_JS_PL
                 file.Close();
                 texto.ToCharArray();
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
-                System.Console.WriteLine(e.Message);
+                Console.WriteLine(e.Message);
             }
         }
 
@@ -112,11 +106,9 @@ namespace ProcesadorDeLenguaje_JS_PL
 
                 return texto[pos];
             }
-            else
-            {
-                eof = true;
-                return '\0';
-            }
+            eof = true;
+            return '\0';
+            
         }
         // Acciones Semánticas:
         public void L()

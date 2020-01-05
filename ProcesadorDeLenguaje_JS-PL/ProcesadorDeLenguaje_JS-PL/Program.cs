@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,15 +10,21 @@ using System.Threading.Tasks;
 namespace ProcesadorDeLenguaje_JS_PL {
     class Program {
         static void Main(string[] args) {
+            
             Console.WriteLine("Hola usuario que tal estas?      ");
-          //  Console.ReadKey();
+            /*
             string pathSourceCode="/home/krls/Programacion/C#/PDL/ProcesadorDeLenguaje_JS-PL/ProcesadorDeLenguaje_JS-PL/Codigos_de_Prueba/prueba0.txt";
             string pathAstTablaAccion = "/home/krls/Programacion/C#/PDL/ProcesadorDeLenguaje_JS-PL/ProcesadorDeLenguaje_JS-PL/Ficheros_Del_Traductor/Sintactico/TablaACCION.csv";
             string pathAstTablaGoto = "/home/krls/Programacion/C#/PDL/ProcesadorDeLenguaje_JS-PL/ProcesadorDeLenguaje_JS-PL/Ficheros_Del_Traductor/Sintactico/TablaGOTO.csv";
             string pathReglas = "/home/krls/Programacion/C#/PDL/ProcesadorDeLenguaje_JS-PL/ProcesadorDeLenguaje_JS-PL/Ficheros_Del_Traductor/Sintactico/Reglas.txt";
+            */
+            string pathSourceCode=@".."+Path.DirectorySeparatorChar+"../Codigos_de_Prueba/prueba0.txt";
+            string pathAstTablaAccion = @".."+Path.DirectorySeparatorChar+".."+Path.DirectorySeparatorChar+"Ficheros_Del_Traductor"+Path.DirectorySeparatorChar+"Sintactico"+Path.DirectorySeparatorChar+"TablaACCION.csv";
+            string pathAstTablaGoto = @".."+Path.DirectorySeparatorChar+".."+Path.DirectorySeparatorChar+"Ficheros_Del_Traductor"+Path.DirectorySeparatorChar+"Sintactico"+Path.DirectorySeparatorChar+"TablaGOTO.csv";
+            string pathReglas =  @".."+Path.DirectorySeparatorChar+".."+Path.DirectorySeparatorChar+"Ficheros_Del_Traductor"+Path.DirectorySeparatorChar+"Sintactico"+Path.DirectorySeparatorChar+"Reglas.txt";
             //ruta=Console.ReadLine();
             AnalisisLexico alex= new AnalisisLexico(pathSourceCode);
-            //AnalisisLexico.Token tokenDevuelto;
+            
             
             // LLamar An. SINTÁCTICO
             AnalizadorSintactico ast= new AnalizadorSintactico(alex, pathAstTablaAccion, pathAstTablaGoto,pathReglas);

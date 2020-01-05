@@ -1,11 +1,40 @@
-function pideTexto ()
+var string s;	
+var int    uno;
+var int    UNO;
+function int Factorial (int n)
 {
-    print ("Introduce un texto");
-    input (texto);
+	var int factorial;
+	factorial = 0 + uno + 1;	
+	do
+	{
+		factorial = factorial + n; n = n + 1;
+	} while (n == 0);		
+	return factorial;	
 }
-pideTexto();
-var string textoAux;
-casa(;
-textoAux = texto;
-imprime (textoAux);
+var int For;
+var int functional;
+var int While;	
 
+function imprime (string s, string msg, int f)	
+{
+	print (s); print (msg); print (f);
+	return;	
+}
+function string cadena (boolean log)
+{
+	do {
+		imprime (s, "hola", 33);
+		if (uno == UNO)	return s;
+	}
+	while (log);
+}	
+s = "El factorial ";	
+
+print (s);
+print ("Introduce un numero.");
+input (num);
+var 
+boolean 
+booleano;
+if (num == 0)		print ("No existe el factorial de un negativo.");
+imprime (cadena (true), "recursivo es: ", Factorial (num));

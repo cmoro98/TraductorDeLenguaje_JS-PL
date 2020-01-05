@@ -153,7 +153,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                 if (eof == true)
                 {
                     tablaSimbolos.ImprimirTS();
-                    token = new Token("$");
+                   // token = new Token("$");
                     return token;
                 }
 
@@ -181,7 +181,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                                 fin = true;
                                 break;
                             case ',':
-                                token = new Token("Coma");
+                                token = new Token("COMA");
                                 pos++;
                                 fin = true;
                                 break;
@@ -413,8 +413,8 @@ namespace ProcesadorDeLenguaje_JS_PL
 
             if (token == null)
             {
-                tablaSimbolos.ImprimirTS();
-                token = new Token("$");
+                //tablaSimbolos.ImprimirTS();
+                //token = new Token("$");
             }
             
 

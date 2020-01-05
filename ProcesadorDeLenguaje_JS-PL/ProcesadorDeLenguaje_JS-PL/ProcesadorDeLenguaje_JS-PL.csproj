@@ -61,9 +61,20 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Codigos_de_Prueba\prueba0.txt" />
+    <Content Include="Documentacion\ Memoria.txt" />
+    <Content Include="Documentacion\Gramatica Analisis Sintactico ONLINE.txt" />
+    <Content Include="Documentacion\Gramatica Analisis Sintactico.txt" />
+    <Content Include="Documentacion\Matriz_de_Transicion.xlsx" />
+    <Content Include="Documentacion\Sintactico\Reglas.txt" />
+    <Content Include="Documentacion\Sintactico\TablaACCION.csv" />
+    <Content Include="Documentacion\Sintactico\TablaGOTO.csv" />
+    <Content Include="Ficheros_Del_Traductor\Sintactico\numeroDeConsecuentesPorRegla.txt" />
+    <Content Include="Ficheros_Del_Traductor\Sintactico\Reglas.txt" />
+    <Content Include="Ficheros_Del_Traductor\Sintactico\TablaACCION.csv" />
+    <Content Include="Ficheros_Del_Traductor\Sintactico\TablaGOTO.csv" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Documentacion" />
+    <Folder Include="Ficheros_Del_Traductor\Lexico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

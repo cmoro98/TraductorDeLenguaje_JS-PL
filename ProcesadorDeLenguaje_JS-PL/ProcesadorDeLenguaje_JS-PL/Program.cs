@@ -22,7 +22,6 @@ namespace ProcesadorDeLenguaje_JS_PL {
             string pathAstTablaAccion = @".."+Path.DirectorySeparatorChar+".."+Path.DirectorySeparatorChar+"Ficheros_Del_Traductor"+Path.DirectorySeparatorChar+"Sintactico"+Path.DirectorySeparatorChar+"TablaACCION.csv";
             string pathAstTablaGoto = @".."+Path.DirectorySeparatorChar+".."+Path.DirectorySeparatorChar+"Ficheros_Del_Traductor"+Path.DirectorySeparatorChar+"Sintactico"+Path.DirectorySeparatorChar+"TablaGOTO.csv";
             string pathReglas =  @".."+Path.DirectorySeparatorChar+".."+Path.DirectorySeparatorChar+"Ficheros_Del_Traductor"+Path.DirectorySeparatorChar+"Sintactico"+Path.DirectorySeparatorChar+"Reglas.txt";
-            //ruta=Console.ReadLine();
             AnalisisLexico alex= new AnalisisLexico(pathSourceCode);
             
             
@@ -42,21 +41,11 @@ namespace ProcesadorDeLenguaje_JS_PL {
             {
                 fichTokens.Write(listaTokens);
             }
+          
+            var os = Environment.OSVersion;
+            Console.WriteLine("SO: "+os.Platform);
 
-            
-            /*
-            do {
-                tokenDevuelto = alex.GetToken();
-                using (System.IO.StreamWriter fichTokens = new System.IO.StreamWriter(@"tokens.txt", true)) {
-                    if (tokenDevuelto != null) {
-                        //fichTokens.WriteLine("hola");
-                        fichTokens.WriteLine(tokenDevuelto.Imprimir()); 
-                    }
-                }
-            }
-            while (tokenDevuelto != null);
-            */
-            
+
         }
     }
 }

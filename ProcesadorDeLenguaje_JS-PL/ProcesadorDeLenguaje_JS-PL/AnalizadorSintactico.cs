@@ -116,7 +116,8 @@ namespace ProcesadorDeLenguaje_JS_PL
             return "";
         }
         
-
+        // Metodo que crea la tabla goto y la tabla ACCION 
+        // Recive un csv y una estructura y un hashmap 
         private static List<string[]> CrearTabla(string path,Dictionary<string,int>columna)
         {// creamos la estructura tabla. Ya sea la tabla goto o la tabla acción.
             using (var reader = new StreamReader(path))

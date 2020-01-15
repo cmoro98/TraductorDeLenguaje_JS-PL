@@ -18,13 +18,21 @@ namespace TablaSimbolos
     {
         /*Resumen:   
         * Tenemos una pila de Tablas de simbolos. La pila sera un List de hash map.
-        * El hashmap contendra ObjetoTS
+        * El hashmap contendra ObjetoTS CORRECCION tenemos 2 tablas. un global y la local que se van creando y destruyendo. pero solo 2 al mismo tiempo.
         * Cuando se busque un valor. Se nos dara el lexema e iremos buscando en el hashmap y recorriendo 
         * el arraylist.
         */
         //Coleccion elementos clave,valor.
         //la clave no se puede repetir. 
 
+        
+        
+        /* METODOS Que debería haber
+         * Crear_TS();
+         * Insertar_TS(TS,id.lexema,T.tipo,Despl)
+         * Busca_TS(TS,id.lexema)
+         * 
+         */
         //private List<Hashtable> pilaTS;
         private Hashtable tablaSimbolosGlobal;
 

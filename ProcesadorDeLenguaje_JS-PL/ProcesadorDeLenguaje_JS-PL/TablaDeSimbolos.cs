@@ -83,7 +83,7 @@ namespace TablaSimbolos
         public short insertarTS(string lexema)
         {
             posTablaDeSimbolos++;
-            tablaSimbolosGlobal.Add(lexema, new ObjetoTS(lexema, esPalabraReservada: false, posTablaDeSimbolos));
+            tablaSimbolosGlobal.Add(lexema, new ObjetoTS(lexema,false,posTablaDeSimbolos));
             return posTablaDeSimbolos;
         }
 

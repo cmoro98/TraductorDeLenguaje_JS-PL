@@ -1,15 +1,40 @@
-var int a;
-var int b;
-var int c;
-print ("Introduce el primer operando");
-input (a);
-print ("Introduce el segundo operando");
-input (b);
-function int suma (int num1, int num2)
+var string s;	
+var int    uno;
+var int    UNO;
+function int Factorial (int n)
 {
-	var int res;
-	res = num1+num2;
-	return res;
+	var int factorial;
+	factorial = 0 + uno + 1;	
+	do
+	{
+		factorial = factorial + n; n = n + 1;
+	} while (n == 0);		
+	return factorial;	
 }
-c = suma (a, b);
-print (c);
+var int For;
+var int functional;
+var int While;	
+
+function imprime (string s, string msg, int f)	
+{
+	print (s); print (msg); print (f);
+	return;	
+}
+function string cadena (boolean log)
+{
+	do {
+		imprime (s, "hola", 33);
+		if (uno == UNO)	return s;
+	}
+	while (log);
+}	
+s = "El factorial ";	
+
+print (s);
+print ("Introduce un numero.");
+input (num);
+var 
+boolean 
+booleano;
+if (num == 0)		print ("No existe el factorial de un negativo.");
+imprime (cadena (true), "recursivo es: ", Factorial (num));

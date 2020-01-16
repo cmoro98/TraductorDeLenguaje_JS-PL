@@ -2,11 +2,11 @@ Terminales = { var ID if AbreParent CierraParent AbreCorchetes while CierraCorch
 NoTerminales = { PAxioma P B F T E C S L Q X  H A K R U V }
 Axioma = PAxioma
 Producciones = {
-	PAxioma -> P
-	P -> B P
-	P -> F P
-	P -> lambda     
-	B -> var T ID PuntoComa
+	PAxioma -> {Crear TSG, DesplG=0}P{imprimirTS,DestruirTSG}
+	P -> B P  // Nada
+	P -> F P  //Nada
+	P -> lambda    // nada 
+	B -> var T ID PuntoComa {}//Declaracion de variable
 	B -> if AbreParent E CierraParent S
 	B -> do AbreCorchetes C CierraCorchetes while AbreParent E CierraParent PuntoComa
 	B -> S

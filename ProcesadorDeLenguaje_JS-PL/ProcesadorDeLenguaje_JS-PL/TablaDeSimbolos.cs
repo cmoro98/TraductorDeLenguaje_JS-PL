@@ -25,6 +25,9 @@ namespace TablaSimbolos
         //Coleccion elementos clave,valor.
         //la clave no se puede repetir. 
 
+        /*ADVERTENCIA: Esta tabla de simbolos ha sido dieñada para un lenguaje que No admite funciones
+         dentro de funciones o lo que es lo mismo, Existe una Tabla de simbolos global y una tabla de
+         simbolos local como máximo Es decir solo existe una TSLocal al mismo tiempo.*/
         
         
         /* METODOS Que debería haber
@@ -35,6 +38,7 @@ namespace TablaSimbolos
          */
         //private List<Hashtable> pilaTS;
         private Hashtable tablaSimbolosGlobal;
+       
 
         //private bool encontrado;
         //private int numeroDeTabla;

@@ -8,16 +8,10 @@ using System.Threading.Tasks;
 namespace TablaSimbolos
 {
 
-    public class GestorTablaSimbolos
-    {
-        //crea tabla
-        //maneja las tablas 
-    }
-
     public class TablaDeSimbolos
     {
         /*Resumen:   
-        * Tenemos una pila de Tablas de simbolos. La pila sera un List de hash map.
+        *
         * El hashmap contendra ObjetoTS CORRECCION tenemos 2 tablas. un global y la local que se van creando y destruyendo. pero solo 2 al mismo tiempo.
         * Cuando se busque un valor. Se nos dara el lexema e iremos buscando en el hashmap y recorriendo 
         * el arraylist.
@@ -25,13 +19,30 @@ namespace TablaSimbolos
         //Coleccion elementos clave,valor.
         //la clave no se puede repetir. 
 
-        /*ADVERTENCIA: Esta tabla de simbolos ha sido dieñada para un lenguaje que No admite funciones
-         dentro de funciones o lo que es lo mismo, Existe una Tabla de simbolos global y una tabla de
-         simbolos local como máximo Es decir solo existe una TSLocal al mismo tiempo.*/
+       //Uso:
+       /* Hay al menos dos casos claramente diferenciados:
+        * 1-> No se permiten funciones dentro de funciones-> Existe una TSG y una TSL al mismo tiempo. Las TSL iran creandose y destruyendose pero solo existira una unica TSL al mismo tiempo.
+        *
+        * 2-> Se permiten funciones dentro de funciones-> Existe una TSG y N TSL
+        *     Recomendacion: Crea un objeto gestor_TS que contiene una pila de Tablas de simbolos y otra pila de desplazamientos.
+        *     si usas una pila ya tienes hecha la busqueda de variables(el ord de acc a la pila) mirando primero di la variables
+        *     es local y en caso de no encontrarla ya si buscara en la siguiente TS
+        * 
+        */
+       
+       
+        // Esto es un objeto tabla de simbolos. Si tu lenguaje no contiene funciones dentro de funciones (lo que provocaria
+        //la necesidad de tener varias tablas de simbolos locales) Tendras normalmente dos tablas una TSG y una TSL que serán instancias de este objeto. 
+        // En caso de necesitar numerosas TSL sería interesante crear un objeto gestor de TS que contuviese una pila de TS y una pila de Desplazamientos.
         
+        
+        /*ADVERTENCIA: Esta tabla de simbolos ha sido dieñada para un lenguaje que No admite funciones
+        dentro de funciones o lo que es lo mismo, Existe una Tabla de simbolos global y una tabla de
+        simbolos local como máximo Es decir solo existe una TSLocal al mismo tiempo. EN caso */
+
         
         /* METODOS Que debería haber
-         * Crear_TS();
+         * Crear_TS();  Constructor.
          * Insertar_TS(TS,id.lexema,T.tipo,Despl)
          * Busca_TS(TS,id.lexema)
          * 
@@ -43,6 +54,7 @@ namespace TablaSimbolos
         //private bool encontrado;
         //private int numeroDeTabla;
         private short posTablaDeSimbolos;
+        private int desplazamiento;
 
 
         public TablaDeSimbolos()

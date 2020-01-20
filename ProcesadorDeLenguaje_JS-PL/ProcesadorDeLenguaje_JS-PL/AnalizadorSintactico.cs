@@ -98,6 +98,8 @@ namespace ProcesadorDeLenguaje_JS_PL
                     string a=Goto(estadoPila, antecedente);
                     pila.Add(a);
                     parse += Convert.ToInt32(casilla.Substring(1))+1+" "; // solucion to cutre sumamos un 1 a la regla y ya esta listo para vast
+                    // la regla tratada será la casilla.Substring(1)+1
+                    //El semantico debe Ejecutar segun la regla q sea.
                         
                 }
                 else if (casilla == "acc")

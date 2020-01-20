@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AnalisisLexico.cs" />
+    <Compile Include="AnalizadorSemantico.cs" />
     <Compile Include="AnalizadorSintactico.cs" />
     <Compile Include="GestorDeErrores.cs" />
     <Compile Include="Program.cs" />
@@ -65,6 +66,7 @@
     <Content Include="Documentacion\Gramatica Analisis Sintactico ONLINE.txt" />
     <Content Include="Documentacion\Gramatica Analisis Sintactico.txt" />
     <Content Include="Documentacion\Matriz_de_Transicion.xlsx" />
+    <Content Include="Documentacion\Semantico\G_Analisis Sintactico+Semantico.txt" />
     <Content Include="Documentacion\Sintactico\Reglas.txt" />
     <Content Include="Documentacion\Sintactico\TablaACCION.csv" />
     <Content Include="Documentacion\Sintactico\TablaGOTO.csv" />

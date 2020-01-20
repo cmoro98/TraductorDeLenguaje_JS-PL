@@ -2,11 +2,16 @@ Terminales = { var ID if AbreParent CierraParent AbreCorchetes while CierraCorch
 NoTerminales = { PAxioma P B F T E C S L Q X  H A K R U V }
 Axioma = PAxioma
 Producciones = {
-	PAxioma -> {Crear TSG, DesplG=0}P{imprimirTS,DestruirTSG}
-	P -> B P  // Nada
+	1 PAxioma -> {Crear TSG, DesplG=0}P{imprimirTS,DestruirTSG}
+	2 P -> B P  // Nada
 	P -> F P  //Nada
 	P -> lambda    // nada 
-	B -> var T ID PuntoComa {}//Declaracion de variable
+	B -> var T ID PuntoComa {
+	if( tslActiva and TSL.buscaTS(ID.lexema!=null)) then ERROR
+	if(tsg.buscaTS(ID.lexema!=null)) then ERROR
+	
+	
+	}//Declaracion de variable
 	B -> if AbreParent E CierraParent S
 	B -> do AbreCorchetes C CierraCorchetes while AbreParent E CierraParent PuntoComa
 	B -> S

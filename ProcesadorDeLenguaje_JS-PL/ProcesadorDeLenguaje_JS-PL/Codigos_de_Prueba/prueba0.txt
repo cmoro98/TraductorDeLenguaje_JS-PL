@@ -37,4 +37,4 @@ var
 boolean 
 booleano;
 if (num == 0)		print ("No existe el factorial de un negativo.");
-imprime (cadena (true), "recursivo es: ", Factorial (num));
+imprime (cadena (booleano), "recursivo es: ", Factorial (num));

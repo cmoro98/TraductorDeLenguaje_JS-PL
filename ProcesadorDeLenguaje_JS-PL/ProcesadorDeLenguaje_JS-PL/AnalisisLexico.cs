@@ -257,7 +257,6 @@ namespace ProcesadorDeLenguaje_JS_PL
                             ALexErrores.Error("ERROR: Símbolo no permitido./n NO existe el componente léxico & " +
                                               "pruebe con &&");
                         }
-
                         fin = true;
                         break;
 
@@ -292,7 +291,6 @@ namespace ProcesadorDeLenguaje_JS_PL
                                 if (cadena.Length > 64) {
                                     //Error
                                     ALexErrores.Error("Una constante tiene como max 64 caracteres");
-
                                 }
                                 //Es una palabra reservada
                                 token = new Token(cadena);
@@ -301,20 +299,18 @@ namespace ProcesadorDeLenguaje_JS_PL
                             }
 
                             p = tablaSimbolos.buscarTS(cadena);
-                            if (p != null)
+                            if (p != null) // NO hay que meterla en la tabla de simbolos. Simplemente declaramos el token y fuera.
                             {
-
                                 token = new Token("ID", (short) p);
                                 fin = true;
                                 break;
                             }
-                            else
-                            {
-                                p = tablaSimbolos.insertarTS(cadena);
-                                token = new Token("ID", (short) p);
-                                fin = true;
-                                break;
-                            }
+                            //Else
+                            p = tablaSimbolos.insertarTS(cadena);
+                            token = new Token("ID", (short) p);
+                            fin = true;
+                            
+                            
                         }
                         break;
                     case 4: // Estado 4

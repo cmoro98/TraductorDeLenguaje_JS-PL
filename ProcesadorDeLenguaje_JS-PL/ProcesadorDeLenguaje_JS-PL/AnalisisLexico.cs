@@ -45,16 +45,21 @@ namespace ProcesadorDeLenguaje_JS_PL
         private string linea;
         private Boolean eof;
         private string[] textoPorLineas;
-        TablaDeSimbolos tablaSimbolos = new TablaDeSimbolos();
+        
         Hashtable palabrasR; //Palabras reservadas
         private Regex numerosEnteros;
         private Regex letrasyNumeros;
         private int numLineaCodigo;
         private GestorDeErrores ALexErrores;
+        // Tabla simbolos
+        private GestorTS gestorTs = new GestorTS();
+        
+        
+        TablaDeSimbolos tablaSimbolosG = new TablaDeSimbolos(true);
 
 
 
-        public AnalisisLexico(string ruta)
+        public AnalisisLexico(string ruta, GestorTS gsTs)
         {
             /*Constructor.*/ //tabla de simbolos?
             abreArchivo(ruta);
@@ -65,6 +70,8 @@ namespace ProcesadorDeLenguaje_JS_PL
             pos = 0;
             numLineaCodigo = 1;
             ALexErrores = new GestorDeErrores();
+            gestorTs = gsTs;
+            gestorTs.crearTS(true);  // Creamos la tabla de simbolos global.
         }
 
         public int NumLineaCodigo => numLineaCodigo;
@@ -144,7 +151,9 @@ namespace ProcesadorDeLenguaje_JS_PL
                 leido = LeeCaracter(pos);
                 if (eof == true)
                 {
-                    tablaSimbolos.ImprimirTS();
+                    //tablaSimbolosG.ImprimirTS();
+                    gestorTs.imprimirTS();
+                    
                    // token = new Token("$");
                     return token;
                 }
@@ -285,7 +294,8 @@ namespace ProcesadorDeLenguaje_JS_PL
                         {
                             // si Other Character
                             Int16? p;
-                            p = tablaSimbolos.buscarPR(cadena);
+                            p = gestorTs.buscarPR(cadena);
+                           // p = tablaSimbolosG.buscarPR(cadena);
                             if (p != null)
                             {
                                 if (cadena.Length > 64) {
@@ -298,7 +308,8 @@ namespace ProcesadorDeLenguaje_JS_PL
                                 break;
                             }
 
-                            p = tablaSimbolos.buscarTS(cadena);
+                            //p = tablaSimbolosG.buscarTS(cadena);
+                            p = gestorTs.buscarTS(cadena);
                             if (p != null) // NO hay que meterla en la tabla de simbolos. Simplemente declaramos el token y fuera.
                             {
                                 token = new Token("ID", (short) p);
@@ -306,7 +317,8 @@ namespace ProcesadorDeLenguaje_JS_PL
                                 break;
                             }
                             //Else
-                            p = tablaSimbolos.insertarTS(cadena);
+                            p = gestorTs.insertarTS(cadena);
+                            //p = tablaSimbolosG.insertarTS(cadena);
                             token = new Token("ID", (short) p);
                             fin = true;
                             
@@ -317,12 +329,13 @@ namespace ProcesadorDeLenguaje_JS_PL
                         if (numerosEnteros.IsMatch(leido + ""))
                         {
                             pos++;
-                            // TODO Numeros negativos no funcionan
+                            // TODO Numeros negativos no funcionan  Actualmente se notifica el error pero no se para la ejecucucion
                             short aux=valor;
                             valor = (short) (valor * 10 + (leido - '0'));
                             if (valor < aux)
                             {
                                 ALexErrores.Error("El rango de numeros es (-32768,32767)");
+                                //return null;  probar si funciona con esta linea
                             }
 
                             estado = 4;
@@ -392,7 +405,7 @@ namespace ProcesadorDeLenguaje_JS_PL
             //llamado o dir escribir el token pos 1
             if (token != null)
             {
-                Console.WriteLine(" desde A.lex <" + token.Codigo + "," + ">");
+               // Console.WriteLine(" desde A.lex <" + token.Codigo + "," + ">");
                 //Console.WriteLine(token.ToString());
                 //Console.ReadKey();
                
@@ -476,6 +489,6 @@ namespace ProcesadorDeLenguaje_JS_PL
                 }
             }
 
-        }
-    }
+        } // Fin Token
+    }     // Fin An Lexico
 }

@@ -24,8 +24,9 @@ namespace ProcesadorDeLenguaje_JS_PL
         private readonly AnalisisLexico alex;
         private string ficheroTokens = "";
         private GestorDeErrores erroresSintactico;
+        private GestorTS gestorTs;
 
-        public AnalizadorSintactico(AnalisisLexico alex,string pathTablaAccion,string pathTablaGoto,string pathNumeroConsecuentes)
+        public AnalizadorSintactico(AnalisisLexico alex, GestorTS gsTs,string pathTablaAccion,string pathTablaGoto,string pathNumeroConsecuentes)
         {
             this.alex = alex; // recibimos el analizador lexico. 
             tablaAccion = new List<string[]>();
@@ -36,12 +37,14 @@ namespace ProcesadorDeLenguaje_JS_PL
             tablaGoto = CrearTabla(pathTablaGoto,columnaGoto);
             CalcularNumeroDeConscuentesPorRegla(pathNumeroConsecuentes);
             erroresSintactico = new GestorDeErrores();
+            gestorTs = gsTs;
         }
 
       
         
         /// <summary>
-        /// 
+        /// Metodo principal del analizador sintactico. Devuelve el parse a partir del analizador lexico y los fich de configuración(tabla Accion y tabla GOTO).
+        /// Utiliza la Tabla de Simbolos y el Gestor de errores.
         /// </summary>
         /// <para>Cadena de entrada con delimiador $ por la derecha</para>
         /// <para>Tabla accion</para>
@@ -53,52 +56,77 @@ namespace ProcesadorDeLenguaje_JS_PL
             if (tokenDeEntrada == null) return "";
             ficheroTokens = tokenDeEntrada.Imprimir() + "\n";
             string parse = "Ascendente ";
-            List<string> pila = new List<string> {"0"};
+            List<string> pilaSt = new List<string> {"0"};
+            Stack<Atributo> pilaSem = new Stack<Atributo>();
+            AnalizadorSemantico Asem = new AnalizadorSemantico(gestorTs);
             while (true) // mientras no se acabe el fichero. Que peligro tiene ese while true.
             {
                 // El ultimo elemento de la pila deberá ser un numero. Si eso no es así  peta.
-                string casilla = Accion(int.Parse(pila[pila.Count - 1]), tokenDeEntrada.Codigo); //   Codigo no?
+                string casilla = Accion(int.Parse(pilaSt[pilaSt.Count - 1]), tokenDeEntrada.Codigo); 
 
-                if (casilla.Substring(0, 1) == "s")
+                if (casilla.Substring(0, 1) == "s")// la s se debe tomar como una "d" de desplazar.
                 {
-                       
+                    /*
+                    // ############################### INICIO SEMANTICO  P1 ########################################################
+                     if(tokenDeEntrada.Codigo.Equals("ID"))
+                     {
+                         // Obtenemos el lexema y el tipo
+                         // Lo metemos en la pila semantica como atributo
+                         // Meter el atributo en la pila semantica
+                         pilaSem.Push(new Atributo(tokenDeEntrada.Codigo,tokenDeEntrada.Cadena));
+                     }
+                     else
+                     {
+                         pilaSem.Push(new Atributo(tokenDeEntrada.Codigo,tokenDeEntrada.Cadena));
+                         // meter el atributo en la pila (Atributo: token.entrada,tipo.)
+                     }
+                     // ############################### FIN SEMANTICO  P1 ###########################################################
+                     */
                     /* DESPLAZAR
                      * 1 Meter tokenDeEntrada en la pila
                      * 2 Meter el estado al que se desplaza  en la pila
                      * 3 Leer sig token.
                      */
-                    pila.Add(tokenDeEntrada.Codigo);
-                    pila.Add(casilla.Substring(1));
+                    pilaSt.Add(tokenDeEntrada.Codigo);
+                    pilaSt.Add(casilla.Substring(1));
                     tokenDeEntrada = alex.GetToken();
-                    if (tokenDeEntrada != null)
+                    if (tokenDeEntrada != null)// si es null signifa que hemos acabado todos los tokens
                     { ficheroTokens += tokenDeEntrada.Imprimir() + "\n"; }
-                    else { tokenDeEntrada = new AnalisisLexico.Token("$"); }
+                    else { tokenDeEntrada = new AnalisisLexico.Token("$"); }// Este es siempre el ultimo token.
                 }
                 else if (casilla.Substring(0, 1) == "r")
                 { 
                         
-                    /*REDUCCION A->B                A es el antecedente y B el consecuente
+                    /*REDUCCION A->B   A es el antecedente y B el consecuente
                      * 1 Sacar (2*Nº de consecuentes de la regla) de la pila
                      * 2 s' = pila.cima()
                      * 2 meter A en la pila
-                     * 3 Obtener Goto[s',A]
+                     * 3 Obtener estado=Goto[s',A] y meter enla pila el estado
                      * Generar el parse correspondiente a la regla
                      */
 
                      
                     int sacar = 2 * reglas[int.Parse(casilla.Substring(1))].Item2;
-                    pila.RemoveRange(pila.Count - sacar, sacar); //revisar si saca lo esperado.
+                    pilaSt.RemoveRange(pilaSt.Count - sacar, sacar); //revisar si saca lo esperado.
                     //s' = pila.cima()
-                    int estadoPila = Convert.ToInt32(pila[pila.Count - 1]);
+                    int estadoPila = Convert.ToInt32(pilaSt[pilaSt.Count - 1]);
                     // Meter A en la pila:
                     int numRegla = int.Parse(casilla.Substring(1));
                     string antecedente = reglas[numRegla].Item1; // reglas[Nº Regla].antecedente
-                    pila.Add(antecedente); // se añade a la pila. 
-                    //tablaGoto[s',A]
-                    string a=Goto(estadoPila, antecedente);
-                    pila.Add(a);
-                    parse += Convert.ToInt32(casilla.Substring(1))+1+" "; // solucion to cutre sumamos un 1 a la regla y ya esta listo para vast
-                    // la regla tratada será la casilla.Substring(1)+1
+                    pilaSt.Add(antecedente); // se añade a la pila el antecedente. 
+                    //tablaGoto[s',A]  un (estado,antecedente)
+                    string estado=Goto(estadoPila, antecedente);
+                    
+                    /*
+                    // ############################### INICIO SEMANTICO  P2 ########################################################
+                    Asem.ejecAccSemantica(Convert.ToInt32(casilla.Substring(1)) + 1, pilaSem);
+                    // ############################### FIN SEMANTICO  P2 ###########################################################
+                    */
+                    //Console.WriteLine("tipo"+pilaSem[0]);
+                    pilaSt.Add(estado);
+                    Console.WriteLine("regla:"+antecedente+" Tam pila: "+pilaSt.Count+" Pila: "+pilaSt[0] );
+                    // meter en el parse la regla por la q se reduce. casilla.Substring(1)+1
+                    parse += numRegla+1+" "; // solucion to cutre sumamos un 1 a la regla y ya esta listo para vast
                     //El semantico debe Ejecutar segun la regla q sea.
                         
                 }
@@ -115,7 +143,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                     break;
                 }
             }
-            return "";
+            return ""; // se ejecuta solo en caso de error.
         }
         
         // Metodo que crea la tabla goto y la tabla ACCION 
@@ -170,6 +198,7 @@ namespace ProcesadorDeLenguaje_JS_PL
         {
             return tablaGoto[estadoPila][columnaGoto[antecedente]];
         }
+        
         
         public string GetFichTokens()
         {

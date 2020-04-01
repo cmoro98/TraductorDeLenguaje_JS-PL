@@ -1,9 +1,91 @@
+using System.Collections.Generic;
+using System.Security.Authentication.ExtendedProtection;
+
 namespace ProcesadorDeLenguaje_JS_PL
 {
     public class AnalizadorSemantico
     {
         private bool tsLocalActiva = false;
-        
+        GestorTS gesTS;
+        private int desplG;
+
+        public AnalizadorSemantico( GestorTS gesTS)
+        {
+            this.gesTS = gesTS;
+        }
+
+        // Declaramos Nuestros atributos de los no terminales.(que son los q tienen atributos)
+        private Atributo PAxioma, P, B, F, T, E, C, S, L, Q, X, H, A, K, R, U, V;
+
+        public  string ejecAccSemantica(int numRegla,Stack<Atributo> pilaSemantico)
+        {
+            
+            switch (numRegla)
+            {
+                case 1: /* 1 PAxioma -> {Crear TSG, DesplG=0}P{imprimirTS,DestruirTSG}*/
+                   // gesTS.crearTS(true);
+                    desplG = 0;
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+                case 5://5 B -> var T ID PuntoComa {
+                    //if(TSL==Null) then TS<-TSG; Despl<-DesplG
+                    //else TS<-TSL  Despl<-DesplLocal
+                    Atributo atPunto = pilaSemantico.Pop();
+                    Atributo atID = pilaSemantico.Pop();
+                    Atributo atT = pilaSemantico.Pop();
+                    Atributo atVar = pilaSemantico.Pop();
+                    if (gesTS.buscarTS(atID.Lexema) != null)
+                    {
+                    }
+
+                    /*if(buscaTS(ID.lexema!=null)) then ERROR  Variable ya declarada
+                    else id.pos=InsertaTS(TS,id.lexema,T.tipo,Despl)
+                    despl+=T.ancho}//Declaracion de variable*/
+            
+                    break;
+                case 6:
+                    break;
+                case 7:
+                    break;
+                case 8:
+                    break;
+                case 9:
+                    break;
+                case 10:
+                    break;
+                case 11:   //11 T -> string {T.tipo=string,T.ancho=2}
+                    Atributo atString =pilaSemantico.Pop();
+                    Atributo T = new Atributo();
+                    T.Tipo = "string"; T.Ancho= 2;
+                    
+                    pilaSemantico.Push(T);
+                    
+                    break;
+                case 12:
+                    break;
+                case 13:
+                    break;
+                case 14:
+                    break;
+                case 15:
+                    break;
+                case 16:
+                    break;
+                case 17:
+                    break;
+                    
+                default:
+                    //llamar a gestor de errores
+                    break;
+
+            }
+            return  "";
+        }
         
         
         
@@ -56,6 +138,14 @@ namespace ProcesadorDeLenguaje_JS_PL
                             Q.ListaVar=E.tipoxQ1.ListaVar}
     22 Q -> lambda{Q.tipo=Tipo_OK,Q.ListaVar=""}
 
+
+
+
+
+
+
+
+
     23 F -> function H ID {if(BuscarTS(ID.lexema)!=null) Then TIPO_ERROR "Variable ya declarada"
                           else InsertaTS(ID.lexema)
                           TSL=CreaTS()
@@ -66,6 +156,8 @@ namespace ProcesadorDeLenguaje_JS_PL
                                   {if(C.TipoRet!=H.tipo) THen TIPO_ERROR "la funcion esperaba devolver otro tipo de varametro."
                                   else Tipo_ok
                                   DestruyeTS(TSL)}
+                                  
+                            
     24 H -> T {H.tipo=T.tipo }
     25 H -> lambda {H.tipo= Tipo_vacio}
     26 C -> B C {C.tipo=if(B.tipo=Tipo_OK) then C.tipo
@@ -118,4 +210,14 @@ namespace ProcesadorDeLenguaje_JS_PL
     */
 
     }
+
+    //Por facilidad de uso hemos tratado de utilizar solo atributos sintetizados
+    /*El tipo puede ser TIPO_OK,TIPO_ERROR, string, int,boolean, Tipo_vacio
+     * 
+     */
+    
+    /*Para un analizador sintactico ascendente nos interesa usar una gramática S-atribuida es decir un gramatica L-atribuida
+     (Viene por la izquierda) que además solo utiliza atributos sintetizados(Atributos de hijos a padres) esto
+     es así porque va acorde con el sentido ascendente de nuestro analisis sintactico..*/
+
 }

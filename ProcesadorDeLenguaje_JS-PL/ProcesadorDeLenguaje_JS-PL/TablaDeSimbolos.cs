@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace TablaSimbolos
 {
-
-    public class TablaDeSimbolos
+    public class TablaDeSimbolos : ITablaDeSimbolos
     {
         /*Resumen:   
         *
@@ -48,37 +47,43 @@ namespace TablaSimbolos
          * 
          */
         //private List<Hashtable> pilaTS;
-        private Hashtable tablaSimbolosGlobal;
+        private Hashtable tablaSimbolos;
        
 
         //private bool encontrado;
         //private int numeroDeTabla;
         private short posTablaDeSimbolos;
         private int desplazamiento;
+        private int numeroTS;
 
-
-        public TablaDeSimbolos()
+        // Constructor: Recibe un booleano para indicar si la tabla de simbolos es global -> true o es local -> false
+        public TablaDeSimbolos(bool global)
         {
-            this.tablaSimbolosGlobal = new Hashtable();
-            tablaSimbolosGlobal.Add("if", new ObjetoTS("if", true, 0));
-            tablaSimbolosGlobal.Add("function", new ObjetoTS("function", true, 1));
-            tablaSimbolosGlobal.Add("int", new ObjetoTS("int", true, 2));
-            tablaSimbolosGlobal.Add("boolean", new ObjetoTS("boolean", true, 3));
-            tablaSimbolosGlobal.Add("string", new ObjetoTS("string", true, 4));
-            tablaSimbolosGlobal.Add("true", new ObjetoTS("true", true, 5));
-            tablaSimbolosGlobal.Add("false", new ObjetoTS("false", true, 6));
-            tablaSimbolosGlobal.Add("input", new ObjetoTS("input", true, 7));
-            tablaSimbolosGlobal.Add("print", new ObjetoTS("print", true, 8));
-            tablaSimbolosGlobal.Add("var", new ObjetoTS("var", true, 9));
-            tablaSimbolosGlobal.Add("do", new ObjetoTS("do", true, 10));
-            tablaSimbolosGlobal.Add("while", new ObjetoTS("while", true, 11));
-            tablaSimbolosGlobal.Add("return", new ObjetoTS("return", true, 12));
-            posTablaDeSimbolos = 13;
+            this.tablaSimbolos = new Hashtable();
+            if (global)
+            {
+                tablaSimbolos.Add("if", new ObjetoTS("if", true, 0));
+                tablaSimbolos.Add("function", new ObjetoTS("function", true, 1));
+                tablaSimbolos.Add("int", new ObjetoTS("int", true, 2));
+                tablaSimbolos.Add("boolean", new ObjetoTS("boolean", true, 3));
+                tablaSimbolos.Add("string", new ObjetoTS("string", true, 4));
+                tablaSimbolos.Add("true", new ObjetoTS("true", true, 5));
+                tablaSimbolos.Add("false", new ObjetoTS("false", true, 6));
+                tablaSimbolos.Add("input", new ObjetoTS("input", true, 7));
+                tablaSimbolos.Add("print", new ObjetoTS("print", true, 8));
+                tablaSimbolos.Add("var", new ObjetoTS("var", true, 9));
+                tablaSimbolos.Add("do", new ObjetoTS("do", true, 10));
+                tablaSimbolos.Add("while", new ObjetoTS("while", true, 11));
+                tablaSimbolos.Add("return", new ObjetoTS("return", true, 12));
+                posTablaDeSimbolos = 13;
+            }
+            
+
         }
 
         public short? buscarPR(string lexema)
         {
-            ObjetoTS ret = (ObjetoTS) tablaSimbolosGlobal[lexema];
+            ObjetoTS ret = (ObjetoTS) tablaSimbolos[lexema];
             if (ret == null) { return null;}
             
             if (ret.EsPalabraReservada)
@@ -91,7 +96,7 @@ namespace TablaSimbolos
 
         public short? buscarTS(string lexema)
         {
-            ObjetoTS ret = (ObjetoTS) tablaSimbolosGlobal[lexema];
+            ObjetoTS ret = (ObjetoTS) tablaSimbolos[lexema];
             if (ret == null) { return null;}
             return (short?) ret.PosicionTablaDeSimbolos;
         }
@@ -99,33 +104,41 @@ namespace TablaSimbolos
         public short insertarTS(string lexema)
         {
             posTablaDeSimbolos++;
-            tablaSimbolosGlobal.Add(lexema, new ObjetoTS(lexema,false,posTablaDeSimbolos));
+            tablaSimbolos.Add(lexema, new ObjetoTS(lexema,false,posTablaDeSimbolos));
             return posTablaDeSimbolos;
         }
 
         // Imprime la tabla de simbolos de mayor prioridad.
         public string ImprimirTS()
         {
-            string ret="Contenido de la tabla # "+0+":\n";
-            foreach (DictionaryEntry elemento in tablaSimbolosGlobal)
+            string ret="Contenido de la tabla # "+numeroTS+":\n";
+            foreach (DictionaryEntry elemento in tablaSimbolos)
             {
-                Console.WriteLine("({0},{1})", elemento.Key,elemento.Value);
+               
                 ObjetoTS rt = (ObjetoTS)elemento.Value;
+               // Console.WriteLine("({0},{1})", elemento.Key,rt.Lexema);
                 ret = ret +  rt.ImprimirObjetoTS();
             }
 
-            using (System.IO.StreamWriter fichTS = new System.IO.StreamWriter(@"TS.txt", true))
+            using (System.IO.StreamWriter fichTS = new System.IO.StreamWriter(@"../../Resultados/TS.txt", true))
             {
                 fichTS.WriteLine(ret); 
             }
 
             return ret;
         }
+
+        public int NumeroTs
+        {
+            get => numeroTS;
+            set => numeroTS = value;
+        }
+
         public class ObjetoTS
         {
             private string lexema;
             private string tipo;
-            private string dir;
+            private string despl;
             private int nParametros;
             private string tipoDevuelto;
             private string etiqueta;
@@ -161,8 +174,8 @@ namespace TablaSimbolos
 
             public string Dir
             {
-                get => dir;
-                set => dir = value;
+                get => despl;
+                set => despl = value;
             }
 
             public int NParametros
@@ -195,7 +208,7 @@ namespace TablaSimbolos
                 set => esPalabraReservada = value;
             }
 
-            public int PosicionTablaDeSimbolos
+            public int PosicionTablaDeSimbolos // El desplazamiento.
             {
                 get => posicionTablaDeSimbolos;
                 set => posicionTablaDeSimbolos = value;
@@ -206,10 +219,12 @@ namespace TablaSimbolos
             {
                 string ret = "* LEXEMA: "+"\'"+lexema+"\' \n"+ "ATRIBUTOS: \n"
                              + "+ tipo: "+ "\'"+tipo+"\' \n"
-                             + "+ despl: "+ "\'"+dir+"\' \n"
+                             + "+ despl: "+ "\'"+despl+"\' \n"
                     ;
                 return ret;
             }
+            
+            
             
         }
     }

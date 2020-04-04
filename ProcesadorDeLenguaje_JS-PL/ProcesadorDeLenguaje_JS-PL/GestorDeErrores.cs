@@ -12,7 +12,7 @@ namespace ProcesadorDeLenguaje_JS_PL
         public void Error(string error)
         {
             Console.WriteLine(error);
-            Console.WriteLine("Teclee una letra para continuar...");
+            Console.WriteLine("Teclee una letra para continuar...    no se asegura que los siguientes errores sean correctos.");
             Console.ReadKey();
         }
 
@@ -21,6 +21,12 @@ namespace ProcesadorDeLenguaje_JS_PL
             Console.WriteLine(error);
             Console.WriteLine("Teclee una letra para continuar...");
             Console.ReadKey();
+        }
+
+        public void ErrSemantico(int nErr,string error)
+        {
+            Console.WriteLine("Error semantico: " + error);
+            Console.WriteLine("Teclee una letra para continuar...");
         }
         
         // TODO Guardar error en fichero

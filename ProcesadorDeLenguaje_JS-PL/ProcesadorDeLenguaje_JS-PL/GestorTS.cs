@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using TablaSimbolos;
 
 namespace ProcesadorDeLenguaje_JS_PL
@@ -10,11 +11,27 @@ namespace ProcesadorDeLenguaje_JS_PL
         private bool tablaLocalActiva = false; 
         private TablaDeSimbolos tsg;
         private TablaDeSimbolos tsl;
+        private Hashtable tablaPalabrasReservadas;
         private int numeroTS;// la global sera 0 la local sera 1,2,3...(Solo existen 2 al mismo tiempo , las locales se van
                              // creando y destruyendo)
         public GestorTS()
         {
+            tablaPalabrasReservadas = new Hashtable();
             numeroTS = 0;
+            tablaPalabrasReservadas.Add("if","if");
+            tablaPalabrasReservadas.Add("function", "function");
+            tablaPalabrasReservadas.Add("int","int");
+            tablaPalabrasReservadas.Add("boolean", "boolean");
+            tablaPalabrasReservadas.Add("string","string");
+            tablaPalabrasReservadas.Add("true", "true");
+            tablaPalabrasReservadas.Add("false","false");
+            tablaPalabrasReservadas.Add("input","input");
+            tablaPalabrasReservadas.Add("print","print");
+            tablaPalabrasReservadas.Add("var", "var");
+            tablaPalabrasReservadas.Add("do", "do");
+            tablaPalabrasReservadas.Add("while","while");
+            tablaPalabrasReservadas.Add("return","return");
+
         }
 
         public TablaDeSimbolos crearTS(bool global)
@@ -48,6 +65,9 @@ namespace ProcesadorDeLenguaje_JS_PL
 
         public short? buscarPR(string lexema)
         {
+            short? aux = 0;
+            string ret =  (string) tablaPalabrasReservadas[lexema];
+            return ret == null ? null : aux;
             /*if (tablaLocalActiva)
             {
                 short? resLocal= tsl.buscarPR(lexema);
@@ -56,14 +76,14 @@ namespace ProcesadorDeLenguaje_JS_PL
                     return resLocal;
                 }
             }*/
-            return tsg.buscarPR(lexema);
+            //return tsg.buscarPR(lexema);
         }
 
-        public short? buscarTS(string lexema)
+        public int? buscarTS(string lexema)
         {
             if (tablaLocalActiva)
             {
-                short? resLocal= tsl.buscarTS(lexema);
+                int? resLocal= tsl.buscarTS(lexema);
                 if (resLocal != null)
                 {
                     return resLocal;
@@ -72,7 +92,16 @@ namespace ProcesadorDeLenguaje_JS_PL
             return tsg.buscarTS(lexema);
         }
 
-        public short insertarTS(string lexema)
+        public string buscaTipoTS(string lexema)
+        {
+            if (tablaLocalActiva)
+            {
+                return tsl.buscarObjTS(lexema).Tipo;
+            }
+            return tsg.buscarObjTS(lexema).Tipo;
+        }
+
+        public int insertarTS(string lexema)
         {
             if (tablaLocalActiva)
             {
@@ -81,6 +110,15 @@ namespace ProcesadorDeLenguaje_JS_PL
             }
             return tsg.insertarTS(lexema);
         }
+/*        public short insertarDespl(string id,int despl)
+        {
+            if (tablaLocalActiva)
+            {
+                return  tsl.insertarTS(lexema);
+             
+            }
+            return tsg.insertarTS(lexema);
+        }*/
 
         public void imprimirTS()
         {
@@ -92,10 +130,14 @@ namespace ProcesadorDeLenguaje_JS_PL
 
             tsg.ImprimirTS();
         }
-        
-        
-        
-        
+
+        public bool TablaLocalActiva
+        {
+            get => tablaLocalActiva;
+            set => tablaLocalActiva = value;
+        }
+
+
         //Insertar_TS(TS,id.lexema,T.tipo,Despl)
        // public void insertar_TS(id.lexema, T.tipo, Despl)
     

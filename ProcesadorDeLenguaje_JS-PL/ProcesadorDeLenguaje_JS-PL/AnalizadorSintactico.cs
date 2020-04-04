@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-
-
 namespace ProcesadorDeLenguaje_JS_PL
 {
     public class AnalizadorSintactico
@@ -40,7 +38,6 @@ namespace ProcesadorDeLenguaje_JS_PL
             gestorTs = gsTs;
         }
 
-      
         
         /// <summary>
         /// Metodo principal del analizador sintactico. Devuelve el parse a partir del analizador lexico y los fich de configuración(tabla Accion y tabla GOTO).
@@ -58,31 +55,43 @@ namespace ProcesadorDeLenguaje_JS_PL
             string parse = "Ascendente ";
             List<string> pilaSt = new List<string> {"0"};
             Stack<Atributo> pilaSem = new Stack<Atributo>();
-            AnalizadorSemantico Asem = new AnalizadorSemantico(gestorTs);
+            AnalizadorSemantico aSemantico = new AnalizadorSemantico(gestorTs);
             while (true) // mientras no se acabe el fichero. Que peligro tiene ese while true.
             {
                 // El ultimo elemento de la pila deberá ser un numero. Si eso no es así  peta.
                 string casilla = Accion(int.Parse(pilaSt[pilaSt.Count - 1]), tokenDeEntrada.Codigo); 
 
-                if (casilla.Substring(0, 1) == "s")// la s se debe tomar como una "d" de desplazar.
+                if (casilla.Substring(0, 1) == "s")// Desplazar :  la s se debe tomar como una "d" de desplazar.
                 {
-                    /*
+                    Console.WriteLine("token"+ tokenDeEntrada.Imprimir());
+                   
                     // ############################### INICIO SEMANTICO  P1 ########################################################
-                     if(tokenDeEntrada.Codigo.Equals("ID"))
-                     {
-                         // Obtenemos el lexema y el tipo
-                         // Lo metemos en la pila semantica como atributo
-                         // Meter el atributo en la pila semantica
-                         pilaSem.Push(new Atributo(tokenDeEntrada.Codigo,tokenDeEntrada.Cadena));
-                     }
-                     else
-                     {
-                         pilaSem.Push(new Atributo(tokenDeEntrada.Codigo,tokenDeEntrada.Cadena));
-                         // meter el atributo en la pila (Atributo: token.entrada,tipo.)
-                     }
-                     // ############################### FIN SEMANTICO  P1 ###########################################################
-                     */
+                    if (tokenDeEntrada.Codigo.Equals("ID"))
+                    {
+                        pilaSem.Push(new Atributo(tokenDeEntrada.Codigo,tokenDeEntrada.Cadena));
+                    }
+                    else
+                    {
+                        pilaSem.Push(new Atributo(tokenDeEntrada.Codigo));
+                    }
+                    /* 
+                    if(tokenDeEntrada.Codigo.Equals("ID"))
+                    {
+                        // Obtenemos el lexema y el tipo
+                        // Lo metemos en la pila semantica como atributo
+                        // Meter el atributo en la pila semantica
+                        pilaSem.Push(new Atributo(tokenDeEntrada.Codigo,tokenDeEntrada.Cadena));
+                    }
+                    else
+                    {
+                        pilaSem.Push(new Atributo(tokenDeEntrada.Codigo,tokenDeEntrada.Cadena));
+                        // meter el atributo en la pila (Atributo: token.entrada,tipo.)
+                    }
+                    // ############################### FIN SEMANTICO  P1 ###########################################################
+                    */
                     /* DESPLAZAR
+                      "Si no se puede completar una parte derecha, se acumula a lo que se esta construyendo. 
+                       Esta accion es el desplazamiento."
                      * 1 Meter tokenDeEntrada en la pila
                      * 2 Meter el estado al que se desplaza  en la pila
                      * 3 Leer sig token.
@@ -90,6 +99,9 @@ namespace ProcesadorDeLenguaje_JS_PL
                     pilaSt.Add(tokenDeEntrada.Codigo);
                     pilaSt.Add(casilla.Substring(1));
                     tokenDeEntrada = alex.GetToken();
+                    
+                    /* Lo de abajo es un apaño para distinguir la llegada de tokens y el ultimo token.
+                     Que debería ser $ pero como lo que nos llega es un null pues lo detectamos y simulamos que es $.*/
                     if (tokenDeEntrada != null)// si es null signifa que hemos acabado todos los tokens
                     { ficheroTokens += tokenDeEntrada.Imprimir() + "\n"; }
                     else { tokenDeEntrada = new AnalisisLexico.Token("$"); }// Este es siempre el ultimo token.
@@ -97,15 +109,17 @@ namespace ProcesadorDeLenguaje_JS_PL
                 else if (casilla.Substring(0, 1) == "r")
                 { 
                         
-                    /*REDUCCION A->B   A es el antecedente y B el consecuente
+                    /*REDUCCION
+                     "Si el token es una parte derecha derecha de una regla o completa una parte derecha en contruccion, entonces 
+                      se puede deshacer la regla. Esta accion es la reduccion."
+                     * A->B   A es el antecedente y B el consecuente
                      * 1 Sacar (2*Nº de consecuentes de la regla) de la pila
                      * 2 s' = pila.cima()
                      * 2 meter A en la pila
                      * 3 Obtener estado=Goto[s',A] y meter enla pila el estado
                      * Generar el parse correspondiente a la regla
                      */
-
-                     
+                    
                     int sacar = 2 * reglas[int.Parse(casilla.Substring(1))].Item2;
                     pilaSt.RemoveRange(pilaSt.Count - sacar, sacar); //revisar si saca lo esperado.
                     //s' = pila.cima()
@@ -117,20 +131,23 @@ namespace ProcesadorDeLenguaje_JS_PL
                     //tablaGoto[s',A]  un (estado,antecedente)
                     string estado=Goto(estadoPila, antecedente);
                     
-                    /*
+                    
                     // ############################### INICIO SEMANTICO  P2 ########################################################
-                    Asem.ejecAccSemantica(Convert.ToInt32(casilla.Substring(1)) + 1, pilaSem);
+                    //Asem.ejecAccSemantica(Convert.ToInt32(casilla.Substring(1)) + 1, pilaSem);
+                    pilaSem.Push(new Atributo(antecedente));
+                    aSemantico.ejecAccSemantica(numRegla, pilaSem);
+
                     // ############################### FIN SEMANTICO  P2 ###########################################################
-                    */
+                  
                     //Console.WriteLine("tipo"+pilaSem[0]);
                     pilaSt.Add(estado);
-                    Console.WriteLine("regla:"+antecedente+" Tam pila: "+pilaSt.Count+" Pila: "+pilaSt[0] );
+                    Console.WriteLine("Num regla: "+ (numRegla+1) +" regla:"+antecedente+" Tam pila: "+pilaSt.Count +" Pila: "+pilaSt[0] );
                     // meter en el parse la regla por la q se reduce. casilla.Substring(1)+1
                     parse += numRegla+1+" "; // solucion to cutre sumamos un 1 a la regla y ya esta listo para vast
                     //El semantico debe Ejecutar segun la regla q sea.
                         
                 }
-                else if (casilla == "acc")
+                else if (casilla == "acc") // ACEPTACION "La cadena pertenece al lenguaje generado. Cadena sintacticamente correcta"
                 {
                     return parse + 1;// añadimos la regla axioma
                 }
@@ -139,7 +156,8 @@ namespace ProcesadorDeLenguaje_JS_PL
                     //error
                     Console.WriteLine("Error: casilla= " + casilla);
                     erroresSintactico.ErrSintactico(1,"error: sintactico encontrado. en Linea " + alex.NumLineaCodigo+
-                                                      " . Tiene que estar cerca del simbolo  : "+ tokenDeEntrada.Codigo);
+                                                      " . Tiene que estar cerca del simbolo: "+ tokenDeEntrada.Codigo);
+                    // TODO Crear metodo estatico que convierte de TokenDeEntrada.Codigo al simbolo de turno. ej IGUAL -> =
                     break;
                 }
             }

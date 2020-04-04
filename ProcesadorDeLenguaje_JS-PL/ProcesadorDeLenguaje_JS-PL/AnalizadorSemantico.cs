@@ -5,26 +5,35 @@ namespace ProcesadorDeLenguaje_JS_PL
 {
     public class AnalizadorSemantico
     {
+        private GestorDeErrores gestorDeErrores;
         private bool tsLocalActiva = false;
         GestorTS gesTS;
-        private int desplG;
+        private int desplGss;
+        private int desplLss;
+        private int desplss;
+        private Desplazamiento despl;
+        
 
         public AnalizadorSemantico( GestorTS gesTS)
         {
             this.gesTS = gesTS;
+            gestorDeErrores = new GestorDeErrores();
+            despl = new Desplazamiento();
         }
 
         // Declaramos Nuestros atributos de los no terminales.(que son los q tienen atributos)
         private Atributo PAxioma, P, B, F, T, E, C, S, L, Q, X, H, A, K, R, U, V;
+        // La pila la utilizamos para en el sintactico guardar y ahora, en el semantico sacar atributos de ella.pu
 
         public  string ejecAccSemantica(int numRegla,Stack<Atributo> pilaSemantico)
         {
-            
-            switch (numRegla)
+           
+ 
+/*            switch (numRegla)
             {
-                case 1: /* 1 PAxioma -> {Crear TSG, DesplG=0}P{imprimirTS,DestruirTSG}*/
+                case 1: // 1 PAxioma -> {Crear TSG, DesplG=0}P{imprimirTS,DestruirTSG}#2#
                    // gesTS.crearTS(true);
-                    desplG = 0;
+                    gesTS.imprimirTS();
                     break;
                 case 2:
                     break;
@@ -35,17 +44,44 @@ namespace ProcesadorDeLenguaje_JS_PL
                 case 5://5 B -> var T ID PuntoComa {
                     //if(TSL==Null) then TS<-TSG; Despl<-DesplG
                     //else TS<-TSL  Despl<-DesplLocal
+                    // Consecuentes
+                    Atributo atVar = pilaSemantico.Pop();
+                    Atributo atT = pilaSemantico.Pop();
+                    Atributo atID = pilaSemantico.Pop();
                     Atributo atPunto = pilaSemantico.Pop();
+                    // Antecedente
+                    Atributo atB = pilaSemantico.Pop();
+                    if (gesTS.TablaLocalActiva)
+                    {
+                        despl.useDesplL();
+                    }
+                    
+                    if (gesTS.buscarTS(atID.Lexema) != null)
+                    {
+                        //ERROR variable ya declarada. 
+                        gestorDeErrores.ErrSemantico(2,"ERROR, variable: "+atID.Lexema+"ya declarada");
+                        
+                    }
+                    else
+                    {
+                        gesTS.insertarTS(atID.Lexema,despl,atT.Tipo);
+                        //gesTS.in
+                        despl.Despl += this.T.Ancho;
+                    }
+                    pilaSemantico.Push(B);
+
+                    despl.update();
+                    /*Atributo atPunto = pilaSemantico.Pop();
                     Atributo atID = pilaSemantico.Pop();
                     Atributo atT = pilaSemantico.Pop();
                     Atributo atVar = pilaSemantico.Pop();
                     if (gesTS.buscarTS(atID.Lexema) != null)
                     {
-                    }
+                    }#1#
 
-                    /*if(buscaTS(ID.lexema!=null)) then ERROR  Variable ya declarada
-                    else id.pos=InsertaTS(TS,id.lexema,T.tipo,Despl)
-                    despl+=T.ancho}//Declaracion de variable*/
+                    //if(buscaTS(ID.lexema!=null)) then ERROR  Variable ya declarada
+                    //else id.pos=InsertaTS(TS,id.lexema,T.tipo,Despl)
+                    //despl+=T.ancho} //Declaracion de variable#3#
             
                     break;
                 case 6:
@@ -54,7 +90,14 @@ namespace ProcesadorDeLenguaje_JS_PL
                     break;
                 case 8:
                     break;
-                case 9:
+                case 9:  //T-T> int {T.tipo = int,T.ancho=2}
+                    // Consecuente
+                    Atributo tInt = pilaSemantico.Pop();
+                    // Antecedente
+                    Atributo ntT = pilaSemantico.Pop();
+                    ntT.Tipo = "int";
+                    ntT.Ancho = 2;
+                    pilaSemantico.Push(ntT);
                     break;
                 case 10:
                     break;
@@ -83,7 +126,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                     //llamar a gestor de errores
                     break;
 
-            }
+            }*/
             return  "";
         }
         
@@ -209,6 +252,11 @@ namespace ProcesadorDeLenguaje_JS_PL
         Sentencias
     */
 
+        public void regla_0()
+        {
+            
+        }
+
     }
 
     //Por facilidad de uso hemos tratado de utilizar solo atributos sintetizados
@@ -220,4 +268,45 @@ namespace ProcesadorDeLenguaje_JS_PL
      (Viene por la izquierda) que además solo utiliza atributos sintetizados(Atributos de hijos a padres) esto
      es así porque va acorde con el sentido ascendente de nuestro analisis sintactico..*/
 
+    class Desplazamiento
+    {
+        private int desplL;
+        private int desplG;
+        private int despl;
+        private bool usarDesplL;
+        public Desplazamiento()
+        {
+            desplG = 0;
+            desplL = 0;
+            usarDesplL = false;
+        }
+
+        public void useDesplL()
+        {
+            usarDesplL = true;
+        }
+        
+        public void useDesplG()
+        {
+            usarDesplL = false;
+        }
+
+        public void update()
+        {
+            if (usarDesplL)
+                desplL = despl;
+            else
+            {
+                desplG = despl;
+            }
+
+            usarDesplL = false;
+        }
+
+        public int Despl
+        {
+            get => despl;
+            set => despl = value;
+        }
+    }
 }

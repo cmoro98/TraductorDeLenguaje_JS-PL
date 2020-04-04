@@ -151,3 +151,10 @@ Fichero 3:
 	{
 		return num1+num2;
 	}
+
+
+
+
+An sem
+Reduccion es cuando se ejecuta una accion semantica.Pues es cuando se ha resuelto una regla
+Evidentemente también se ejecuta una acc semantica en la aceptacion. Pues se resuelve una regla (es la ultima reduccion)

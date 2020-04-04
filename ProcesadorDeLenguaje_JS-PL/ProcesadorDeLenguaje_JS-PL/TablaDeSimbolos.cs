@@ -52,7 +52,7 @@ namespace TablaSimbolos
 
         //private bool encontrado;
         //private int numeroDeTabla;
-        private short posTablaDeSimbolos;
+        private int dirDeMemoria;
         private int desplazamiento;
         private int numeroTS;
 
@@ -62,7 +62,7 @@ namespace TablaSimbolos
             this.tablaSimbolos = new Hashtable();
             if (global)
             {
-                tablaSimbolos.Add("if", new ObjetoTS("if", true, 0));
+                /*tablaSimbolos.Add("if", new ObjetoTS("if", true, 0));
                 tablaSimbolos.Add("function", new ObjetoTS("function", true, 1));
                 tablaSimbolos.Add("int", new ObjetoTS("int", true, 2));
                 tablaSimbolos.Add("boolean", new ObjetoTS("boolean", true, 3));
@@ -74,38 +74,49 @@ namespace TablaSimbolos
                 tablaSimbolos.Add("var", new ObjetoTS("var", true, 9));
                 tablaSimbolos.Add("do", new ObjetoTS("do", true, 10));
                 tablaSimbolos.Add("while", new ObjetoTS("while", true, 11));
-                tablaSimbolos.Add("return", new ObjetoTS("return", true, 12));
-                posTablaDeSimbolos = 13;
+                tablaSimbolos.Add("return", new ObjetoTS("return", true, 12));*/
+                
             }
+            dirDeMemoria = 0;
             
 
         }
 
-        public short? buscarPR(string lexema)
+        public int? buscarTS(string lexema)
         {
             ObjetoTS ret = (ObjetoTS) tablaSimbolos[lexema];
             if (ret == null) { return null;}
-            
-            if (ret.EsPalabraReservada)
-            {
-                return (short?) ret.PosicionTablaDeSimbolos;
-            }
-
-            return null;
+            return  ret.DirDeMemoria;
         }
-
-        public short? buscarTS(string lexema)
+        
+        public ObjetoTS buscarObjTS(string lexema)
         {
             ObjetoTS ret = (ObjetoTS) tablaSimbolos[lexema];
-            if (ret == null) { return null;}
-            return (short?) ret.PosicionTablaDeSimbolos;
+            return  ret;
+        }
+        
+        
+
+        public int insertarTS(string lexema)
+        {
+            dirDeMemoria++;
+            tablaSimbolos.Add(lexema, new ObjetoTS(lexema));
+            return dirDeMemoria;
+        }
+        
+        public int insertarTS(string lexema,int desplazamiento,string tipo)
+        {
+            //dirDeMemoria += desplazamiento;
+            tablaSimbolos.Add(lexema, new ObjetoTS(lexema,desplazamiento,tipo));
+            return dirDeMemoria;
         }
 
-        public short insertarTS(string lexema)
+        public void insertarDespl(string lexema, int despl)
         {
-            posTablaDeSimbolos++;
-            tablaSimbolos.Add(lexema, new ObjetoTS(lexema,false,posTablaDeSimbolos));
-            return posTablaDeSimbolos;
+          // tablaSimbolos.Add(lexema,);
+          ObjetoTS aux = (ObjetoTS) tablaSimbolos[lexema];
+          aux.DirDeMemoria = despl;
+          tablaSimbolos[lexema] = aux;
         }
 
         // Imprime la tabla de simbolos de mayor prioridad.
@@ -143,8 +154,7 @@ namespace TablaSimbolos
             private string tipoDevuelto;
             private string etiqueta;
             private string[] tiposParametros;
-            private bool esPalabraReservada;
-            private int posicionTablaDeSimbolos; // posición por orden de llegada.
+            private int dirDeMemoria; // posición por orden de llegada.
 
 
 
@@ -153,11 +163,16 @@ namespace TablaSimbolos
                 this.lexema = lexema;
             }
 
-            public ObjetoTS(string lexema, bool esPalabraReservada, int posicionTablaDeSimbolos)
+            public ObjetoTS(string lexema, int dirDeMemoria)
             {
                 this.lexema = lexema;
-                this.esPalabraReservada = esPalabraReservada;
-                this.posicionTablaDeSimbolos = posicionTablaDeSimbolos;
+                this.dirDeMemoria = dirDeMemoria;
+            }
+            public ObjetoTS(string lexema, int dirDeMemoria , string tipo)
+            {
+                this.lexema = lexema;
+                this.dirDeMemoria = dirDeMemoria;
+                this.Tipo = tipo;
             }
 
             public string Lexema
@@ -202,16 +217,10 @@ namespace TablaSimbolos
                 set => tiposParametros = value;
             }
 
-            public bool EsPalabraReservada
+            public int DirDeMemoria // El desplazamiento.
             {
-                get => esPalabraReservada;
-                set => esPalabraReservada = value;
-            }
-
-            public int PosicionTablaDeSimbolos // El desplazamiento.
-            {
-                get => posicionTablaDeSimbolos;
-                set => posicionTablaDeSimbolos = value;
+                get => dirDeMemoria;
+                set => dirDeMemoria = value;
             }
             
 

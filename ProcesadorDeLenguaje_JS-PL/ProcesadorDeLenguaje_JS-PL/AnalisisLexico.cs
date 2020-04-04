@@ -42,11 +42,9 @@ namespace ProcesadorDeLenguaje_JS_PL
 
         private string texto; //Nuestro archivo en texto. formato lista.
         private int pos; //posicion del cursor de la lista texto.        
-        private string linea;
         private Boolean eof;
-        private string[] textoPorLineas;
-        
-        Hashtable palabrasR; //Palabras reservadas
+
+       
         private Regex numerosEnteros;
         private Regex letrasyNumeros;
         private int numLineaCodigo;
@@ -65,7 +63,6 @@ namespace ProcesadorDeLenguaje_JS_PL
             abreArchivo(ruta);
             numerosEnteros = new Regex(@"[0-9]+$");
             letrasyNumeros = new Regex(@"^[A-Za-z_0-9]");
-            palabrasR = new Hashtable();
             eof = false;
             pos = 0;
             numLineaCodigo = 1;
@@ -90,7 +87,7 @@ namespace ProcesadorDeLenguaje_JS_PL
 
                 texto.Remove(texto.Length - 1);
                 file.Close();
-                texto.ToCharArray();
+                texto.ToCharArray();  // TODO revisar
             }
             catch (Exception e)
             {
@@ -136,7 +133,7 @@ namespace ProcesadorDeLenguaje_JS_PL
         {
             Boolean fin = false;
             Token token = null;
-            int contador = 0;
+            //int contador = 0;
             short valor = 0;
             String cadena = ""; // sirve  para los tokens de tipo cadena ej 'hola' y tokens tipo identificador ej id3
             int estado = 0;
@@ -245,7 +242,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                                 // Algo inesperado -> Error
                                 else
                                 {
-                                    ALexErrores.Error(" El símbolo " + leido + "no está permitido");
+                                    ALexErrores.Error("Error en linea: "+ numLineaCodigo+ " El símbolo " + leido + " no está permitido");
                                     fin = true;
                                 }
 
@@ -293,7 +290,8 @@ namespace ProcesadorDeLenguaje_JS_PL
                         else
                         {
                             // si Other Character
-                            Int16? p;
+                            //Int16? p;
+                            Int32? p;
                             p = gestorTs.buscarPR(cadena);
                            // p = tablaSimbolosG.buscarPR(cadena);
                             if (p != null)
@@ -335,7 +333,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                             if (valor < aux)
                             {
                                 ALexErrores.Error("El rango de numeros es (-32768,32767)");
-                                //return null;  probar si funciona con esta linea
+                                //return null; // probar si funciona con esta linea
                             }
 
                             estado = 4;
@@ -425,7 +423,7 @@ namespace ProcesadorDeLenguaje_JS_PL
 
         public class Token
         {
-            // Token: <codigo,atributo> Un atributo puede ser un valor o una cadena.
+            // Token: <codigo,atributo> Un atributo puede ser un valor o una cadena.   <- en este contexto(En el semantico con atributo nos referimos a otra cosa.)
             private string codigo;
             private string cadena;
             private Int16? valor;
@@ -468,6 +466,16 @@ namespace ProcesadorDeLenguaje_JS_PL
             {
                 get => valor;
                 set => valor = value;
+            }
+
+            public string derecha()
+            {
+                if (cadena==null)
+                {
+                    return valor+"";
+                }
+
+                return cadena;
             }
 
 

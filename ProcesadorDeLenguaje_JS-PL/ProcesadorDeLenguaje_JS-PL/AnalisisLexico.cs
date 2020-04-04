@@ -293,8 +293,8 @@ namespace ProcesadorDeLenguaje_JS_PL
                             //Int16? p;
                             Int32? p;
                             p = gestorTs.buscarPR(cadena);
-                           // p = tablaSimbolosG.buscarPR(cadena);
-                            if (p != null)
+                           
+                            if (p != null) // si Palabra reservada
                             {
                                 if (cadena.Length > 64) {
                                     //Error
@@ -305,12 +305,14 @@ namespace ProcesadorDeLenguaje_JS_PL
                                 fin = true;
                                 break;
                             }
-
-                            //p = tablaSimbolosG.buscarTS(cadena);
+                        
+                            // Si identificador normal.
+                            /*
                             p = gestorTs.buscarTS(cadena);
                             if (p != null) // NO hay que meterla en la tabla de simbolos. Simplemente declaramos el token y fuera.
                             {
                                 token = new Token("ID", (short) p);
+                                token.NombreIdentificador = cadena;
                                 fin = true;
                                 break;
                             }
@@ -318,7 +320,16 @@ namespace ProcesadorDeLenguaje_JS_PL
                             p = gestorTs.insertarTS(cadena);
                             //p = tablaSimbolosG.insertarTS(cadena);
                             token = new Token("ID", (short) p);
+                            token.NombreIdentificador = cadena;
                             fin = true;
+                            */
+                            
+                            
+                            token = new Token("ID", cadena);
+                            token.NombreIdentificador = cadena;
+                            fin = true;
+                            
+                            
                             
                             
                         }
@@ -427,6 +438,13 @@ namespace ProcesadorDeLenguaje_JS_PL
             private string codigo;
             private string cadena;
             private Int16? valor;
+            private string nombreIdentificador; // Usuado para guardar el nombre del identificador y poder localizarlo posteriormente en la Tabla de simbolos.
+
+            public string NombreIdentificador
+            {
+                get => nombreIdentificador;
+                set => nombreIdentificador = value;
+            }
 
             public Token(string codigo)
             {

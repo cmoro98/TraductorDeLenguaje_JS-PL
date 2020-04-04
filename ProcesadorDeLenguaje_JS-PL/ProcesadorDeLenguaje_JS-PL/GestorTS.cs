@@ -14,6 +14,11 @@ namespace ProcesadorDeLenguaje_JS_PL
         private Hashtable tablaPalabrasReservadas;
         private int numeroTS;// la global sera 0 la local sera 1,2,3...(Solo existen 2 al mismo tiempo , las locales se van
                              // creando y destruyendo)
+                             
+        private int numElementos;
+        private string fichTSLocal;
+        private string fichTSGlobal;
+
         public GestorTS()
         {
             tablaPalabrasReservadas = new Hashtable();
@@ -31,6 +36,9 @@ namespace ProcesadorDeLenguaje_JS_PL
             tablaPalabrasReservadas.Add("do", "do");
             tablaPalabrasReservadas.Add("while","while");
             tablaPalabrasReservadas.Add("return","return");
+            numElementos = 13;
+            fichTSLocal = "";
+            fichTSGlobal = "";
 
         }
 
@@ -110,6 +118,15 @@ namespace ProcesadorDeLenguaje_JS_PL
             }
             return tsg.insertarTS(lexema);
         }
+        public int insertarTS(string lexema,int desplazamiento,string tipo)
+        {
+            if (tablaLocalActiva)
+            {
+                return  tsl.insertarTS(lexema,desplazamiento,tipo);
+             
+            }
+            return tsg.insertarTS(lexema, desplazamiento, tipo);
+        }
 /*        public short insertarDespl(string id,int despl)
         {
             if (tablaLocalActiva)
@@ -124,11 +141,16 @@ namespace ProcesadorDeLenguaje_JS_PL
         {
             if (tablaLocalActiva)
             {
-                tsl.ImprimirTS();
+                fichTSLocal+=tsl.ImprimirTS();
                 return;
             }
 
-            tsg.ImprimirTS();
+            fichTSGlobal=tsg.ImprimirTS();
+        }
+
+        public string getFichTS()
+        {
+            return fichTSLocal+fichTSGlobal;
         }
 
         public bool TablaLocalActiva

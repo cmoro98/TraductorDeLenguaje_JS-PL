@@ -29,9 +29,9 @@ namespace ProcesadorDeLenguaje_JS_PL
         {
            
  
-/*            switch (numRegla)
+            switch (numRegla)
             {
-                case 1: // 1 PAxioma -> {Crear TSG, DesplG=0}P{imprimirTS,DestruirTSG}#2#
+                case 1: // 1 PAxioma -> {Crear TSG, DesplG=0}P{imprimirTS,DestruirTSG}#1#
                    // gesTS.crearTS(true);
                     gesTS.imprimirTS();
                     break;
@@ -44,44 +44,36 @@ namespace ProcesadorDeLenguaje_JS_PL
                 case 5://5 B -> var T ID PuntoComa {
                     //if(TSL==Null) then TS<-TSG; Despl<-DesplG
                     //else TS<-TSL  Despl<-DesplLocal
-                    // Consecuentes
-                    Atributo atVar = pilaSemantico.Pop();
-                    Atributo atT = pilaSemantico.Pop();
-                    Atributo atID = pilaSemantico.Pop();
-                    Atributo atPunto = pilaSemantico.Pop();
                     // Antecedente
                     Atributo atB = pilaSemantico.Pop();
+                    
+                    // Consecuentes
+                    Atributo atPunto = pilaSemantico.Pop();
+                    Atributo atID = pilaSemantico.Pop();
+                    Atributo atT = pilaSemantico.Pop();
+                    Atributo atVar = pilaSemantico.Pop();
+
                     if (gesTS.TablaLocalActiva)
                     {
                         despl.useDesplL();
                     }
-                    
                     if (gesTS.buscarTS(atID.Lexema) != null)
                     {
                         //ERROR variable ya declarada. 
                         gestorDeErrores.ErrSemantico(2,"ERROR, variable: "+atID.Lexema+"ya declarada");
-                        
+                        atB.Tipo = Tipo.TIPO_ERROR;
                     }
                     else
                     {
-                        gesTS.insertarTS(atID.Lexema,despl,atT.Tipo);
+                        gesTS.insertarTS(atID.Lexema,despl.Despl,atT.Tipo.ToString());
                         //gesTS.in
-                        despl.Despl += this.T.Ancho;
+                        despl.Despl += atT.Ancho;
                     }
                     pilaSemantico.Push(B);
-
                     despl.update();
-                    /*Atributo atPunto = pilaSemantico.Pop();
-                    Atributo atID = pilaSemantico.Pop();
-                    Atributo atT = pilaSemantico.Pop();
-                    Atributo atVar = pilaSemantico.Pop();
-                    if (gesTS.buscarTS(atID.Lexema) != null)
-                    {
-                    }#1#
-
                     //if(buscaTS(ID.lexema!=null)) then ERROR  Variable ya declarada
                     //else id.pos=InsertaTS(TS,id.lexema,T.tipo,Despl)
-                    //despl+=T.ancho} //Declaracion de variable#3#
+                    //despl+=T.ancho} //Declaracion de variable#2#
             
                     break;
                 case 6:
@@ -91,11 +83,12 @@ namespace ProcesadorDeLenguaje_JS_PL
                 case 8:
                     break;
                 case 9:  //T-T> int {T.tipo = int,T.ancho=2}
-                    // Consecuente
-                    Atributo tInt = pilaSemantico.Pop();
+ 
                     // Antecedente
                     Atributo ntT = pilaSemantico.Pop();
-                    ntT.Tipo = "int";
+                    // Consecuente
+                    Atributo tInt = pilaSemantico.Pop();
+                    ntT.Tipo = Tipo.@int;
                     ntT.Ancho = 2;
                     pilaSemantico.Push(ntT);
                     break;
@@ -104,7 +97,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                 case 11:   //11 T -> string {T.tipo=string,T.ancho=2}
                     Atributo atString =pilaSemantico.Pop();
                     Atributo T = new Atributo();
-                    T.Tipo = "string"; T.Ancho= 2;
+                    T.Tipo =Tipo.@string; T.Ancho= 2;
                     
                     pilaSemantico.Push(T);
                     
@@ -126,7 +119,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                     //llamar a gestor de errores
                     break;
 
-            }*/
+            }
             return  "";
         }
         

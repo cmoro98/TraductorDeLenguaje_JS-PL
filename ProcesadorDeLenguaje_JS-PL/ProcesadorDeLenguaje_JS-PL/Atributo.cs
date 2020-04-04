@@ -1,3 +1,5 @@
+using System;
+
 namespace ProcesadorDeLenguaje_JS_PL
 {
     public class Atributo
@@ -8,12 +10,12 @@ namespace ProcesadorDeLenguaje_JS_PL
         //Atributos normales
         private string simbolo;  // simbolo sea terminal: ID,PuntoComa... o NO terminal T,P..
         private string lexema; // propiedad de un Simb terminal ej ID.lexema
-        private string tipo;
+        //private string tipo;
         private int ancho;
         //Atributos extras.
         private string tipoRet;
         private string listaVar;
-
+        
 
         public Atributo()
         {
@@ -21,10 +23,11 @@ namespace ProcesadorDeLenguaje_JS_PL
 
         public Atributo(string simbolo)
         {
-            this.lexema = lexema;
+            this.simbolo = simbolo;
         }
         public Atributo(string simbolo,string lexema)
         {
+            this.simbolo = simbolo;
             this.lexema = lexema;
         }
 
@@ -34,12 +37,8 @@ namespace ProcesadorDeLenguaje_JS_PL
             set => lexema = value;
         }
 
-        public string Tipo
-        {
-            get => tipo;
-            set => tipo = value;
-        }
-
+        public Tipo Tipo { get; set; }
+        
         public string TipoRet
         {
             get => tipoRet;
@@ -58,4 +57,6 @@ namespace ProcesadorDeLenguaje_JS_PL
             set => ancho = value;
         }
     }
+
+    public enum Tipo { UNDEFF,TIPO_OK,TIPO_ERROR,@int,@string,@bool };
 }

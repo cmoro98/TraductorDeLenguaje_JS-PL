@@ -31,12 +31,14 @@ namespace ProcesadorDeLenguaje_JS_PL {
             AnalizadorSintactico ast= new AnalizadorSintactico(alex, gestorTs, pathAstTablaAccion, pathAstTablaGoto,pathReglas);
             string parse = ast.GetParse();
             string listaTokens = ast.GetFichTokens();
+            string tablaSimbolos = gestorTs.getFichTS();
             
             // Ficheros donde guardamos el resultado.
             string pathParse = "../../Resultados/parse.txt";
             string pathTokens = "../../Resultados/tokens.txt";
+            string pathTablaSimbolos = @"../../Resultados/TS.txt";
             
-            // ESCRIBIR parse en ficheros.
+            // ESCRIBIR FICHERO PARSE.
             System.IO.File.Delete(pathParse);
             using (System.IO.StreamWriter fichParse = new System.IO.StreamWriter(pathParse, true))
             {
@@ -48,6 +50,13 @@ namespace ProcesadorDeLenguaje_JS_PL {
             {
                 fichTokens.Write(listaTokens);
             }
+            // ESCRIBIR FICHERO TABLA SIMBOLOS
+            System.IO.File.Delete(pathTablaSimbolos);
+            using (System.IO.StreamWriter fichTS = new System.IO.StreamWriter(pathTablaSimbolos, true))
+            {
+                fichTS.WriteLine(tablaSimbolos); 
+            }
+            
           
           
             // TODO Verificar que SO estamos usando. Para monstrar interfaz si windows. NO TIENE UTILIDAD de momento.

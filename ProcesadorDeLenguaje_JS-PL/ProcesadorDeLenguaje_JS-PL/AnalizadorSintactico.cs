@@ -68,7 +68,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                     // ############################### INICIO SEMANTICO  P1 ########################################################
                     if (tokenDeEntrada.Codigo.Equals("ID"))
                     {
-                        pilaSem.Push(new Atributo(tokenDeEntrada.Codigo,tokenDeEntrada.Cadena));
+                        pilaSem.Push(new Atributo(tokenDeEntrada.Codigo,tokenDeEntrada.NombreIdentificador));
                     }
                     else
                     {
@@ -135,7 +135,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                     // ############################### INICIO SEMANTICO  P2 ########################################################
                     //Asem.ejecAccSemantica(Convert.ToInt32(casilla.Substring(1)) + 1, pilaSem);
                     pilaSem.Push(new Atributo(antecedente));
-                    aSemantico.ejecAccSemantica(numRegla, pilaSem);
+                    aSemantico.ejecAccSemantica(numRegla+1, pilaSem);
 
                     // ############################### FIN SEMANTICO  P2 ###########################################################
                   
@@ -149,6 +149,9 @@ namespace ProcesadorDeLenguaje_JS_PL
                 }
                 else if (casilla == "acc") // ACEPTACION "La cadena pertenece al lenguaje generado. Cadena sintacticamente correcta"
                 {
+                    // ############################### INICIO SEMANTICO  P3 ########################################################
+                    aSemantico.ejecAccSemantica(1, pilaSem);
+                    // ############################### FIN SEMANTICO  P3 ###########################################################
                     return parse + 1;// añadimos la regla axioma
                 }
                 else

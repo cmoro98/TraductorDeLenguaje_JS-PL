@@ -54,6 +54,7 @@ namespace TablaSimbolos
         //private int numeroDeTabla;
         private int dirDeMemoria;
         private int desplazamiento;
+        private int posEnLaTablaDeSimbolos;
         private int numeroTS;
 
         // Constructor: Recibe un booleano para indicar si la tabla de simbolos es global -> true o es local -> false
@@ -78,6 +79,7 @@ namespace TablaSimbolos
                 
             }
             dirDeMemoria = 0;
+            posEnLaTablaDeSimbolos = 0;
             
 
         }
@@ -86,7 +88,8 @@ namespace TablaSimbolos
         {
             ObjetoTS ret = (ObjetoTS) tablaSimbolos[lexema];
             if (ret == null) { return null;}
-            return  ret.DirDeMemoria;
+
+            return ret.PosEnLaTablaDeSimbolos;
         }
         
         public ObjetoTS buscarObjTS(string lexema)
@@ -99,16 +102,17 @@ namespace TablaSimbolos
 
         public int insertarTS(string lexema)
         {
-            dirDeMemoria++;
+            posEnLaTablaDeSimbolos++;
             tablaSimbolos.Add(lexema, new ObjetoTS(lexema));
-            return dirDeMemoria;
+            return posEnLaTablaDeSimbolos;
         }
         
         public int insertarTS(string lexema,int desplazamiento,string tipo)
         {
             //dirDeMemoria += desplazamiento;
+            posEnLaTablaDeSimbolos++;
             tablaSimbolos.Add(lexema, new ObjetoTS(lexema,desplazamiento,tipo));
-            return dirDeMemoria;
+            return posEnLaTablaDeSimbolos;
         }
 
         public void insertarDespl(string lexema, int despl)
@@ -144,6 +148,7 @@ namespace TablaSimbolos
             get => numeroTS;
             set => numeroTS = value;
         }
+        
 
         public class ObjetoTS
         {
@@ -155,7 +160,13 @@ namespace TablaSimbolos
             private string etiqueta;
             private string[] tiposParametros;
             private int dirDeMemoria; // posición por orden de llegada.
+            private int posEnLaTablaDeSimbolos; // solo numeros, indica el orden de entrada. Sirve para ir a la derecha del identificador en el fich token. Req de la practica nada mas.
 
+            public int PosEnLaTablaDeSimbolos
+            {
+                get => posEnLaTablaDeSimbolos;
+                set => posEnLaTablaDeSimbolos = value;
+            }
 
 
             public ObjetoTS(string lexema)
@@ -228,7 +239,7 @@ namespace TablaSimbolos
             {
                 string ret = "* LEXEMA: "+"\'"+lexema+"\' \n"+ "ATRIBUTOS: \n"
                              + "+ tipo: "+ "\'"+tipo+"\' \n"
-                             + "+ despl: "+ "\'"+despl+"\' \n"
+                             + "+ despl: "+ "\'"+dirDeMemoria+"\' \n"
                     ;
                 return ret;
             }

@@ -66,7 +66,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                     Console.WriteLine("token"+ tokenDeEntrada.Imprimir());
                    
                     // ############################### INICIO SEMANTICO  P1 ########################################################
-                    if (tokenDeEntrada.Codigo.Equals("ID"))
+                    if (tokenDeEntrada.Codigo.Equals("ID")) 
                     {
                         pilaSem.Push(new Atributo(tokenDeEntrada.Codigo,tokenDeEntrada.NombreIdentificador));
                     }

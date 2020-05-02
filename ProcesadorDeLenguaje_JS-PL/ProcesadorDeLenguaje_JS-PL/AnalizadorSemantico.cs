@@ -22,16 +22,16 @@ namespace ProcesadorDeLenguaje_JS_PL
         }
 
         // Declaramos Nuestros atributos de los no terminales.(que son los q tienen atributos)
-        private Atributo PAxioma, P, B, F, T, E, C, S, L, Q, X, H, A, K, R, U, V;
+        
         // La pila la utilizamos para en el sintactico guardar y ahora, en el semantico sacar atributos de ella.pu
 
         public  string ejecAccSemantica(int numRegla,Stack<Atributo> pilaSemantico)
-        {
-           
- 
+        {   
+            Atributo PAxioma, P, B , F, T, E, C, S, L, Q, X, H, A, K, R, U, V; //No terminales
+            Atributo  var, ID, @if, AbreParent, CierraParent, AbreCorchetes ,@while ,CierraCorchetes,  @int, boolean ,@string ,IGUAL ,PuntoComa ,@return ,print ,input ,COMA, @do  ,function, AND, IGUALIGUAL, Suma ,MASMAS, digito, cadena ,@true, @false;
             switch (numRegla)
             {
-                case 1: // 1 PAxioma -> {Crear TSG, DesplG=0}P{imprimirTS,DestruirTSG}#1#
+                case 1: // 1 PAxioma -> {Crear TSG, DesplG=0}P{imprimirTS,DestruirTSG}#2#
                    // gesTS.crearTS(true);
                     gesTS.imprimirTS();
                     break;
@@ -44,36 +44,40 @@ namespace ProcesadorDeLenguaje_JS_PL
                 case 5://5 B -> var T ID PuntoComa {
                     //if(TSL==Null) then TS<-TSG; Despl<-DesplG
                     //else TS<-TSL  Despl<-DesplLocal
+                    
+                    
+                    // sacamos elems de la pila
                     // Antecedente
-                    Atributo atB = pilaSemantico.Pop();
+                    B = pilaSemantico.Pop();
                     
                     // Consecuentes
-                    Atributo atPunto = pilaSemantico.Pop();
-                    Atributo atID = pilaSemantico.Pop();
-                    Atributo atT = pilaSemantico.Pop();
-                    Atributo atVar = pilaSemantico.Pop();
-
+                    PuntoComa = pilaSemantico.Pop();
+                    ID = pilaSemantico.Pop();
+                    T = pilaSemantico.Pop();
+                    var = pilaSemantico.Pop();
+                    // Ejecutamos la accion semántica en si:
+                    
                     if (gesTS.TablaLocalActiva)
                     {
                         despl.useDesplL();
                     }
-                    if (gesTS.buscarTS(atID.Lexema) != null)
+                    if (gesTS.buscarTS(ID.Lexema) != null)
                     {
                         //ERROR variable ya declarada. 
-                        gestorDeErrores.ErrSemantico(2,"ERROR, variable: "+atID.Lexema+"ya declarada");
-                        atB.Tipo = Tipo.TIPO_ERROR;
+                        gestorDeErrores.ErrSemantico(2,"ERROR, variable: "+ID.Lexema+"ya declarada");
+                        B.Tipo = Tipo.TIPO_ERROR;
                     }
                     else
                     {
-                        gesTS.insertarTS(atID.Lexema,despl.Despl,atT.Tipo.ToString());
+                        gesTS.insertarTS(ID.Lexema,despl.Despl,T.Tipo.ToString());
                         //gesTS.in
-                        despl.Despl += atT.Ancho;
+                        despl.Despl += T.Ancho;
                     }
                     pilaSemantico.Push(B);
                     despl.update();
                     //if(buscaTS(ID.lexema!=null)) then ERROR  Variable ya declarada
                     //else id.pos=InsertaTS(TS,id.lexema,T.tipo,Despl)
-                    //despl+=T.ancho} //Declaracion de variable#2#
+                    //despl+=T.ancho} //Declaracion de variable#3#
             
                     break;
                 case 6:
@@ -82,21 +86,21 @@ namespace ProcesadorDeLenguaje_JS_PL
                     break;
                 case 8:
                     break;
-                case 9:  //T-T> int {T.tipo = int,T.ancho=2}
+                case 9:  //T-> int {T.tipo = int,T.ancho=2}
  
                     // Antecedente
-                    Atributo ntT = pilaSemantico.Pop();
+                    T = pilaSemantico.Pop();
                     // Consecuente
                     Atributo tInt = pilaSemantico.Pop();
-                    ntT.Tipo = Tipo.@int;
-                    ntT.Ancho = 2;
-                    pilaSemantico.Push(ntT);
+                    T.Tipo = Tipo.@int;
+                    T.Ancho = 2;
+                    pilaSemantico.Push(T);
                     break;
                 case 10:
                     break;
                 case 11:   //11 T -> string {T.tipo=string,T.ancho=2}
                     Atributo atString =pilaSemantico.Pop();
-                    Atributo T = new Atributo();
+                    T = new Atributo();
                     T.Tipo =Tipo.@string; T.Ancho= 2;
                     
                     pilaSemantico.Push(T);
@@ -120,6 +124,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                     break;
 
             }
+
             return  "";
         }
         

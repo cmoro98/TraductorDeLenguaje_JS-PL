@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Linq.Expressions;
+using ProcesadorDeLenguaje_JS_PL;
 
 namespace TablaSimbolos
 {
@@ -9,6 +11,10 @@ namespace TablaSimbolos
         TablaDeSimbolos.ObjetoTS buscarObjTS(string lexema);
         int insertarTS(string lexema);
         int insertarTS(string lexema,int dirDeMemoria,string tipo);
+        int? insertarNumParametrosTS(string lexema, int numParametros);
+        int? insertarTipoParametrosTS(string lexema, List<Tipo> tipoParametros);
+        int? insertarTipoRetornoTS(string lexema, string  tipoRetorno);
+        
         string ImprimirTS();
         //void insertarDespl();
         int NumeroTs { get; set; }

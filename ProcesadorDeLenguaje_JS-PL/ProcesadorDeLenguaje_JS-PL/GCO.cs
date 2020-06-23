@@ -1,0 +1,146 @@
+using System;
+using System.Collections.Generic;
+
+namespace ProcesadorDeLenguaje_JS_PL
+{
+    public class GCO
+    {
+        int gcogen(Operador op, string arg1, string arg2, string dest)
+        {
+            Console.WriteLine("Se ejecuta el cuarteto: %d, arg1: %s, arg2: %s, dest: %s", op, arg1, arg2, dest);
+
+            switch (op)
+            {
+                /**
+                 * code: input(a)
+                 * quartet: (OP_INPUT, NULL, NULL, dest)
+                 * asm:
+                 *  MOVE `PTR+dest`, .R0
+                 *  INSTR .R0
+                */
+                case  Operador.OP_INPUT:
+                    /* code */
+                    break;
+
+                /**
+                 * code: print(a)
+                 * quartet: (OP_PRINT, NULL, NULL, dest)
+                 * asm:
+                 *  MOVE `PTR+dest`, .R0
+                 *  WRSTR .R0
+                */
+                case Operador.OP_PRINT:
+                    /* code */
+                    break;
+
+                /**
+                 * code: a + b
+                 * quartet: (OP_ADD, arg1, arg2, dest)
+                 * asm:
+                 *  MOVE `PTR1+dest`, .R0
+                 *  MOVE `PTR2+arg1`, .R1
+                 *  MOVE `PTR3+arg2`, .R2 
+                 *  ADD [.R1], [.R2]
+                 *  MOVE .A, [.R0]
+                */
+                case Operador.OP_PLUS:
+                    break;
+
+                /**
+                 * code: a & b
+                 * quartet: (OP_AND, arg1, arg2, dest)
+                 * asm:
+                 *  MOVE `PTR1+dest`, .R0
+                 *  MOVE `PTR2+arg1`, .R1
+                 *  MOVE `PTR3+arg2`, .R2 
+                 *  AND [.R1], [.R2]
+                 *  MOVE .A, [.R0]
+                */
+                case Operador.OP_AND:
+                    /* code */
+                    break;
+
+                /**
+                 * FIXME
+                 * code: a == b
+                 * quartet: (OP_EQUALS, arg1, arg2, dest)
+                 * asm:
+                 *  MOVE `PTR1+dest`, .R0
+                 *  MOVE `PTR2+arg1`, .R1
+                 *  MOVE `PTR3+arg2`, .R2 
+                */
+                case Operador.OP_EQUALS:
+                    /* code */
+                    break;
+
+                /**
+                 * code: if (cond) then x
+                 * quartet: (OP_IF, arg1, NULL, dest)
+                 * asm:
+                 *  MOVE `PTR1+arg1`, .R1
+                 *  CMP #0, [.R1]
+                 *  BZ /dest
+                */
+                case Operador.OP_IF:
+                    /* code */
+                    break;
+
+                /**
+                 * code: goto L
+                 * quartet: (OP_GOTO, NULL, NULL, dest)
+                 * asm:
+                 *  BR /dest
+                */
+                case Operador.OP_GOTO:
+                    /* code */
+                    break;
+
+                /**
+                 * code: a--
+                 * quartet: (OP_POST_DEC, arg1, NULL, dest)
+                 * asm:
+                 *  MOVE `PTR1+dest`, .R0
+                 *  MOVE `PTR1+arg1`, .R1
+                 *  MOVE [.R1], [.R0]
+                 *  MOVE [.R1], .R9
+                 *  DEC [.R0]
+                */
+                case Operador.OP_POST_DEC:
+                    /* code */
+                    break;
+
+                /**
+                 * code: a = b
+                 * quartet: (OP_ASIGN, arg1, NULL, dest)
+                 * asm:
+                 *  MOVE `PTR1+dest`, .R0
+                 *  MOVE `PTR2+arg1`, .R1
+                 *  MOVE [.R1], [.R0]
+                */
+                case Operador.OP_ASIG:
+                    // check if is a ID or inmediate
+                    // if inmediate check if int or string.
+                    // store de id or the inmediate in a register and put on the stack
+                    // existe_entrada(arg1, "");
+                    //dprintf(_fd, "MOVE %s, %s\n", atoi(yytext));
+                    //  write(_fd,"MOVE , op2",3);
+                    break;
+
+                default:
+                    return -1;
+                    break;
+            }
+
+            return 0;
+        }
+        
+        /*private Dictionary<Operador, Func<int, int, double>> operators =
+            new Dictionary<Operador, Func<int, int, double>>
+            {
+                { Operador.PLUS, ( a, b ) => a + b },
+                { Operador.MINUS, ( a, b ) => a - b },
+                { Operador.MULTIPLY, ( a, b ) => a * b },
+                { Operador.DIVIDE ( a, b ) => (double)a / b },
+            };*/
+    }
+}

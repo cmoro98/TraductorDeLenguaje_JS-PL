@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ProcesadorDeLenguaje_JS_PL;
 
 namespace TablaSimbolos
 {
@@ -53,7 +54,7 @@ namespace TablaSimbolos
         //private bool encontrado;
         //private int numeroDeTabla;
         private int dirDeMemoria;
-        private int desplazamiento;
+       // private int desplazamiento;
         private int posEnLaTablaDeSimbolos;
         private int numeroTS;
 
@@ -61,35 +62,15 @@ namespace TablaSimbolos
         public TablaDeSimbolos(bool global)
         {
             this.tablaSimbolos = new Hashtable();
-            if (global)
-            {
-                /*tablaSimbolos.Add("if", new ObjetoTS("if", true, 0));
-                tablaSimbolos.Add("function", new ObjetoTS("function", true, 1));
-                tablaSimbolos.Add("int", new ObjetoTS("int", true, 2));
-                tablaSimbolos.Add("boolean", new ObjetoTS("boolean", true, 3));
-                tablaSimbolos.Add("string", new ObjetoTS("string", true, 4));
-                tablaSimbolos.Add("true", new ObjetoTS("true", true, 5));
-                tablaSimbolos.Add("false", new ObjetoTS("false", true, 6));
-                tablaSimbolos.Add("input", new ObjetoTS("input", true, 7));
-                tablaSimbolos.Add("print", new ObjetoTS("print", true, 8));
-                tablaSimbolos.Add("var", new ObjetoTS("var", true, 9));
-                tablaSimbolos.Add("do", new ObjetoTS("do", true, 10));
-                tablaSimbolos.Add("while", new ObjetoTS("while", true, 11));
-                tablaSimbolos.Add("return", new ObjetoTS("return", true, 12));*/
-                
-            }
             dirDeMemoria = 0;
             posEnLaTablaDeSimbolos = 0;
-            
-
         }
 
         public int? buscarTS(string lexema)
         {
             ObjetoTS ret = (ObjetoTS) tablaSimbolos[lexema];
-            if (ret == null) { return null;}
 
-            return ret.PosEnLaTablaDeSimbolos;
+            return ret?.PosEnLaTablaDeSimbolos;
         }
         
         public ObjetoTS buscarObjTS(string lexema)
@@ -115,6 +96,28 @@ namespace TablaSimbolos
             return posEnLaTablaDeSimbolos;
         }
 
+        public int? insertarNumParametrosTS(string lexema, int numParametros)
+        {
+            ObjetoTS ret = (ObjetoTS) tablaSimbolos[lexema];
+            ret.NParametros = numParametros;
+            return ret?.PosEnLaTablaDeSimbolos;
+        }
+
+        public int? insertarTipoParametrosTS(string lexema, List<Tipo> tipoParametros)
+        {
+            ObjetoTS ret = (ObjetoTS) tablaSimbolos[lexema];
+            ret.TiposParametros = tipoParametros;
+            return ret?.PosEnLaTablaDeSimbolos;
+        }
+
+        public int? insertarTipoRetornoTS(string lexema, string tipoRetorno)
+        {
+            ObjetoTS ret = (ObjetoTS) tablaSimbolos[lexema];
+            ret.TipoDevuelto = tipoRetorno;
+            return ret?.PosEnLaTablaDeSimbolos;
+        }
+
+
         public void insertarDespl(string lexema, int despl)
         {
           // tablaSimbolos.Add(lexema,);
@@ -126,7 +129,7 @@ namespace TablaSimbolos
         // Imprime la tabla de simbolos de mayor prioridad.
         public string ImprimirTS()
         {
-            string ret="Contenido de la tabla # "+numeroTS+":\n";
+            string ret="  # "+numeroTS+":\n";
             foreach (DictionaryEntry elemento in tablaSimbolos)
             {
                
@@ -154,11 +157,10 @@ namespace TablaSimbolos
         {
             private string lexema;
             private string tipo;
-            private string despl;
             private int nParametros;
             private string tipoDevuelto;
             private string etiqueta;
-            private string[] tiposParametros;
+            private List<Tipo> tiposParametros;
             private int dirDeMemoria; // posición por orden de llegada.
             private int posEnLaTablaDeSimbolos; // solo numeros, indica el orden de entrada. Sirve para ir a la derecha del identificador en el fich token. Req de la practica nada mas.
 
@@ -197,12 +199,7 @@ namespace TablaSimbolos
                 get => tipo;
                 set => tipo = value;
             }
-
-            public string Dir
-            {
-                get => despl;
-                set => despl = value;
-            }
+            
 
             public int NParametros
             {
@@ -222,7 +219,7 @@ namespace TablaSimbolos
                 set => etiqueta = value;
             }
 
-            public string[] TiposParametros
+            public List<Tipo> TiposParametros
             {
                 get => tiposParametros;
                 set => tiposParametros = value;
@@ -237,10 +234,33 @@ namespace TablaSimbolos
 
             public string ImprimirObjetoTS()
             {
-                string ret = "* LEXEMA: "+"\'"+lexema+"\' \n"+ "ATRIBUTOS: \n"
-                             + "+ tipo: "+ "\'"+tipo+"\' \n"
-                             + "+ despl: "+ "\'"+dirDeMemoria+"\' \n"
-                    ;
+                // TODO: CHECK si es una funcion.
+                string ret = "";
+                if (tipoDevuelto == null)
+                {
+                     ret = "* LEXEMA: "+"\'"+lexema+"\' \n"+ "ATRIBUTOS: \n"
+                                 + "+ tipo: "+ "\'"+tipo+"\' \n"
+                                 + "+ despl: "+ "\'"+dirDeMemoria+"\' \n"
+                                 + "\n "
+                        ;
+                }
+                else
+                {
+                    string parametros = "";
+                    for (int i = 0; i < nParametros; i++)
+                    {
+                        parametros += "+ TipoParam" + i + ": \'" + tiposParametros[i] + "\' \n" ;//+ "+ ModoParam"+ i + ": 1 (es por valor) \n"
+                    }
+                    ret = "* LEXEMA: " + "\'" + lexema + "\' \n" + "ATRIBUTOS: \n"
+                          + "+ tipo: " + "\'" + tipo + "\' \n"
+                          + "+ numParam: " + nParametros + "\n" 
+                          + parametros + ""
+                          + "+ TipoRetorno: " + "\'" + tipoDevuelto + "\' \n"
+                          + ""
+                          + "\n "
+                        ;
+                }
+
                 return ret;
             }
             

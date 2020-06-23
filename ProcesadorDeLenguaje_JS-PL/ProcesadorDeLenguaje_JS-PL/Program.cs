@@ -9,26 +9,27 @@ using System.Threading.Tasks;
 
 namespace ProcesadorDeLenguaje_JS_PL {
     class Program {
+        public static void funcion()
+        {
+            
+        }
+        // ruta para ficheros internos
+       
         static void Main(string[] args) {
             
             Console.WriteLine("Hola usuario que tal estas?      ");
-            GestorDeErrores gsErrores;
+            GestorDeErrores gestorDeErrores = new GestorDeErrores();
             GestorTS gestorTs = new GestorTS();
-            /*
-            string pathSourceCode="/home/krls/Programacion/C#/PDL/ProcesadorDeLenguaje_JS-PL/ProcesadorDeLenguaje_JS-PL/Codigos_de_Prueba/prueba0.txt";
-            string pathAstTablaAccion = "/home/krls/Programacion/C#/PDL/ProcesadorDeLenguaje_JS-PL/ProcesadorDeLenguaje_JS-PL/Ficheros_Del_Traductor/Sintactico/TablaACCION.csv";
-            string pathAstTablaGoto = "/home/krls/Programacion/C#/PDL/ProcesadorDeLenguaje_JS-PL/ProcesadorDeLenguaje_JS-PL/Ficheros_Del_Traductor/Sintactico/TablaGOTO.csv";
-            string pathReglas = "/home/krls/Programacion/C#/PDL/ProcesadorDeLenguaje_JS-PL/ProcesadorDeLenguaje_JS-PL/Ficheros_Del_Traductor/Sintactico/Reglas.txt";
-            */
-            string pathSourceCode=@".."+Path.DirectorySeparatorChar+"../Codigos_de_Prueba/prueba0.txt";
+           
+            string pathSourceCode = @".."+Path.DirectorySeparatorChar+"../Codigos_de_Prueba/prueba0.txt";
             string pathAstTablaAccion = @".."+Path.DirectorySeparatorChar+".."+Path.DirectorySeparatorChar+"Ficheros_Del_Traductor"+Path.DirectorySeparatorChar+"Sintactico"+Path.DirectorySeparatorChar+"TablaACCION.csv";
             string pathAstTablaGoto = @".."+Path.DirectorySeparatorChar+".."+Path.DirectorySeparatorChar+"Ficheros_Del_Traductor"+Path.DirectorySeparatorChar+"Sintactico"+Path.DirectorySeparatorChar+"TablaGOTO.csv";
             string pathReglas =  @".."+Path.DirectorySeparatorChar+".."+Path.DirectorySeparatorChar+"Ficheros_Del_Traductor"+Path.DirectorySeparatorChar+"Sintactico"+Path.DirectorySeparatorChar+"Reglas.txt";
-            AnalisisLexico alex= new AnalisisLexico(pathSourceCode,gestorTs);
-            
+            AnalisisLexico alex= new AnalisisLexico(pathSourceCode,gestorTs,gestorDeErrores);
+            gestorDeErrores.SetAnalizadorLexico(alex);
             
             // LLamar An. SINTÁCTICO
-            AnalizadorSintactico ast= new AnalizadorSintactico(alex, gestorTs, pathAstTablaAccion, pathAstTablaGoto,pathReglas);
+            AnalizadorSintactico ast= new AnalizadorSintactico(alex, gestorTs, pathAstTablaAccion, pathAstTablaGoto,pathReglas,gestorDeErrores);
             string parse = ast.GetParse();
             string listaTokens = ast.GetFichTokens();
             string tablaSimbolos = gestorTs.getFichTS();
@@ -61,9 +62,10 @@ namespace ProcesadorDeLenguaje_JS_PL {
           
             // TODO Verificar que SO estamos usando. Para monstrar interfaz si windows. NO TIENE UTILIDAD de momento.
             var os = Environment.OSVersion;
-            Console.WriteLine("SO: "+os.Platform);
-
+            //Console.WriteLine("SO: "+os.Platform);
+           
 
         }
+        
     }
 }

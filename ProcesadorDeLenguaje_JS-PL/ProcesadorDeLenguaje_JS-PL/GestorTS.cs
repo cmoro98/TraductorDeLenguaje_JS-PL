@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using TablaSimbolos;
 
 namespace ProcesadorDeLenguaje_JS_PL
@@ -15,7 +16,7 @@ namespace ProcesadorDeLenguaje_JS_PL
         private int numeroTS;// la global sera 0 la local sera 1,2,3...(Solo existen 2 al mismo tiempo , las locales se van
                              // creando y destruyendo)
                              
-        private int numElementos;
+       // private int numElementos; // TODO: REVISAR SI ES NECESARIO
         private string fichTSLocal;
         private string fichTSGlobal;
 
@@ -36,7 +37,7 @@ namespace ProcesadorDeLenguaje_JS_PL
             tablaPalabrasReservadas.Add("do", "do");
             tablaPalabrasReservadas.Add("while","while");
             tablaPalabrasReservadas.Add("return","return");
-            numElementos = 13;
+            //numElementos = 13;
             fichTSLocal = "";
             fichTSGlobal = "";
 
@@ -44,11 +45,11 @@ namespace ProcesadorDeLenguaje_JS_PL
 
         public TablaDeSimbolos crearTS(bool global)
         {
+            numeroTS++;
             if (global)
             {
                 tsg = new TablaDeSimbolos(true);
                 tsg.NumeroTs = numeroTS;
-                numeroTS++;
                 return tsg;
             }
             tsl=new TablaDeSimbolos(false);
@@ -61,8 +62,8 @@ namespace ProcesadorDeLenguaje_JS_PL
         {
             if (tablaLocalActiva)
             {
-                tsl.ImprimirTS();
                 tsl = null;
+                tablaLocalActiva = false;
             }
             else
             {
@@ -76,15 +77,6 @@ namespace ProcesadorDeLenguaje_JS_PL
             short? aux = 0;
             string ret =  (string) tablaPalabrasReservadas[lexema];
             return ret == null ? null : aux;
-            /*if (tablaLocalActiva)
-            {
-                short? resLocal= tsl.buscarPR(lexema);
-                if (resLocal != null)
-                {
-                    return resLocal;
-                }
-            }*/
-            //return tsg.buscarPR(lexema);
         }
 
         public int? buscarTS(string lexema)
@@ -99,15 +91,54 @@ namespace ProcesadorDeLenguaje_JS_PL
             }
             return tsg.buscarTS(lexema);
         }
+        // Busqueda en la tabla de simbolos con la intencion de declarar.
+        public int? buscarTSDeclarar(string lexema)
+        {
+            if (tablaLocalActiva)
+            {
+                return tsl.buscarTS(lexema);
+            }
+            return tsg.buscarTS(lexema);
+        }
+        public int? buscarTSGlobal(string lexema)
+        {
+            return tsg.buscarTS(lexema);
+        }
+        public int? buscarTSLocal(string lexema)
+        {
+            if (tablaLocalActiva)
+            {
+                int? resLocal= tsl.buscarTS(lexema);
+                if (resLocal != null)
+                {
+                    return resLocal;
+                }
+            }
+            return null;
+        }
 
         public string buscaTipoTS(string lexema)
         {
             if (tablaLocalActiva)
             {
-                return tsl.buscarObjTS(lexema).Tipo;
+                if (tsl.buscarObjTS(lexema) != null)
+                {
+                    return tsl.buscarObjTS(lexema).Tipo;
+                }
             }
             return tsg.buscarObjTS(lexema).Tipo;
         }
+        
+        public List<Tipo> buscaTipoParametrosTS(string lexema)
+        {
+            return tsg.buscarObjTS(lexema).TiposParametros;
+        }
+        public string buscaTipoRetornoTS(string lexema)
+        {
+            return tsg.buscarObjTS(lexema).TipoDevuelto;
+        }
+        
+        
 
         public int insertarTS(string lexema)
         {
@@ -127,30 +158,46 @@ namespace ProcesadorDeLenguaje_JS_PL
             }
             return tsg.insertarTS(lexema, desplazamiento, tipo);
         }
-/*        public short insertarDespl(string id,int despl)
+        public int? insertarNumParametrosTS(string lexema,int numParametros)
         {
             if (tablaLocalActiva)
             {
-                return  tsl.insertarTS(lexema);
-             
+                return tsl.insertarNumParametrosTS(lexema, numParametros);
             }
-            return tsg.insertarTS(lexema);
-        }*/
-
-        public void imprimirTS()
+            return tsg.insertarNumParametrosTS(lexema, numParametros);
+        }
+        public int? insertarTipoParametrosTS(string lexema, List<Tipo> tipoParametros)
+        {
+/*            if (tablaLocalActiva)
+            {
+                return tsl.insertarTipoParametrosTS(lexema,  tipoParametros);
+            }*/
+            return tsg.insertarTipoParametrosTS(lexema,  tipoParametros);
+        }
+        public int? insertarTipoRetornoTS(string lexema, string  tipoRetorno)
         {
             if (tablaLocalActiva)
             {
-                fichTSLocal+=tsl.ImprimirTS();
+                return tsl.insertarTipoRetornoTS(lexema,  tipoRetorno);
+            }
+            return tsg.insertarTipoRetornoTS( lexema, tipoRetorno);
+        }
+        
+        public void imprimirTS(string idLexema)
+        {
+            if (tablaLocalActiva)
+            {
+                fichTSLocal = fichTSLocal + " TABLA Local de la FUNCION "+idLexema +"  "+ tsl.ImprimirTS();
+               
                 return;
             }
 
-            fichTSGlobal=tsg.ImprimirTS();
+            fichTSGlobal= "Tabla Global "+ tsg.ImprimirTS();
         }
 
         public string getFichTS()
         {
-            return fichTSLocal+fichTSGlobal;
+            return fichTSGlobal + fichTSLocal;
         }
 
         public bool TablaLocalActiva

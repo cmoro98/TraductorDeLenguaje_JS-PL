@@ -43,21 +43,23 @@ namespace ProcesadorDeLenguaje_JS_PL
         private string texto; //Nuestro archivo en texto. formato lista.
         private int pos; //posicion del cursor de la lista texto.        
         private Boolean eof;
-
+        private char posAnterior;
        
         private Regex numerosEnteros;
         private Regex letrasyNumeros;
         private int numLineaCodigo;
-        private GestorDeErrores ALexErrores;
+        private GestorDeErrores gestorDeErrores;
         // Tabla simbolos
         private GestorTS gestorTs = new GestorTS();
-        
+        private short numParaID = 0;
+        char leido = ' ';
+        int antPos = -1;
         
         TablaDeSimbolos tablaSimbolosG = new TablaDeSimbolos(true);
 
 
 
-        public AnalisisLexico(string ruta, GestorTS gsTs)
+        public AnalisisLexico(string ruta, GestorTS gsTs, GestorDeErrores deErrores)
         {
             /*Constructor.*/ //tabla de simbolos?
             abreArchivo(ruta);
@@ -66,9 +68,12 @@ namespace ProcesadorDeLenguaje_JS_PL
             eof = false;
             pos = 0;
             numLineaCodigo = 1;
-            ALexErrores = new GestorDeErrores();
+            //gestorDeErrores = new GestorDeErrores();
             gestorTs = gsTs;
             gestorTs.crearTS(true);  // Creamos la tabla de simbolos global.
+            this.gestorDeErrores = deErrores;
+            posAnterior = ' ';
+
         }
 
         public int NumLineaCodigo => numLineaCodigo;
@@ -96,18 +101,33 @@ namespace ProcesadorDeLenguaje_JS_PL
         }
 
         // Devuelve un caracter de texto y avanza el puntero.
+        
         public char LeeCaracter(int pos)
         {
             // Recorremos un string texto caracter a caracter
             if (pos < texto.Length)
             {
+                /*char a = texto[pos];
+                char b = texto[pos + 1];
+                char bb = texto[pos + 2];
+                char bbb = texto[pos + 3];
+                char bbbb = texto[pos + 4];
+                char bbbbb = texto[pos + 5];
+                Console.WriteLine(a +" "+ b +" "+numLineaCodigo );*/
                 // pos++;
                 if (texto[pos] == '\n')
                 {
                     numLineaCodigo++;
+                    /*if (posAnterior != texto[pos] || posAnterior =='\n' )
+                    {
+                        numLineaCodigo++;
+                    }*/
+
+                    posAnterior = texto[pos];
+                    
                     return texto[pos];
                 }
-
+                posAnterior = texto[pos];
                 return texto[pos];
             }
             eof = true;
@@ -131,6 +151,7 @@ namespace ProcesadorDeLenguaje_JS_PL
          */
         public Token GetToken()
         {
+            
             Boolean fin = false;
             Token token = null;
             //int contador = 0;
@@ -141,15 +162,21 @@ namespace ProcesadorDeLenguaje_JS_PL
             {
                 return null;
             }
+            
 
             while (!fin)
             {
-                char leido;
-                leido = LeeCaracter(pos);
+                
+                if (pos != antPos)
+                {
+                    leido = LeeCaracter(pos);
+                }
+
+                antPos = pos;
                 if (eof == true)
                 {
                     //tablaSimbolosG.ImprimirTS();
-                    gestorTs.imprimirTS();
+                    //gestorTs.imprimirTS();
                     
                    // token = new Token("$");
                     return token;
@@ -169,32 +196,32 @@ namespace ProcesadorDeLenguaje_JS_PL
                                 pos++;
                                 break;
                             case '(':
-                                token = new Token("AbreParent");
+                                token = new Token("AbreParent",numLineaCodigo);
                                 pos++;
                                 fin = true;
                                 break;
                             case ')':
-                                token = new Token("CierraParent");
+                                token = new Token("CierraParent",numLineaCodigo);
                                 pos++;
                                 fin = true;
                                 break;
                             case ',':
-                                token = new Token("COMA");
+                                token = new Token("COMA",numLineaCodigo);
                                 pos++;
                                 fin = true;
                                 break;
                             case ';':
-                                token = new Token("PuntoComa");
+                                token = new Token("PuntoComa",numLineaCodigo);
                                 pos++;
                                 fin = true;
                                 break;
                             case '{':
-                                token = new Token("AbreCorchetes");
+                                token = new Token("AbreCorchetes",numLineaCodigo);
                                 pos++;
                                 fin = true;
                                 break;
                             case '}':
-                                token = new Token("CierraCorchetes");
+                                token = new Token("CierraCorchetes",numLineaCodigo);
                                 pos++;
                                 fin = true;
                                 break;
@@ -242,7 +269,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                                 // Algo inesperado -> Error
                                 else
                                 {
-                                    ALexErrores.Error("Error en linea: "+ numLineaCodigo+ " El símbolo " + leido + " no está permitido");
+                                    gestorDeErrores.ErrLexico("Error en linea: "+ numLineaCodigo+ " El símbolo " + leido + " no está permitido");
                                     fin = true;
                                 }
 
@@ -254,13 +281,14 @@ namespace ProcesadorDeLenguaje_JS_PL
                     case 1: //Estado 1
                         if (leido == '&')
                         {
-                            token = new Token("&&");
+                            token = new Token("AND",numLineaCodigo);
                             pos++;
                         }
                         else
                         {
                             //error
-                            ALexErrores.Error("ERROR: Símbolo no permitido./n NO existe el componente léxico & " +
+                            
+                            gestorDeErrores.ErrLexico("ERROR: Símbolo no permitido./n NO existe el componente léxico & " +
                                               "pruebe con &&");
                         }
                         fin = true;
@@ -269,12 +297,12 @@ namespace ProcesadorDeLenguaje_JS_PL
                     case 2: //Estado 2
                         if (leido == '=')
                         {
-                            token = new Token("IGUALIGUAL");
+                            token = new Token("IGUALIGUAL",numLineaCodigo);
                             pos++;
                         }
                         else
                         {
-                            token = new Token("IGUAL");
+                            token = new Token("IGUAL",numLineaCodigo);
                         }
 
                         fin = true;
@@ -293,15 +321,15 @@ namespace ProcesadorDeLenguaje_JS_PL
                             //Int16? p;
                             Int32? p;
                             p = gestorTs.buscarPR(cadena);
-                           
+                            if (cadena.Length > 64) {
+                                //Error
+                                gestorDeErrores.ErrLexico("Una constante tiene como max 64 caracteres");
+                            }
                             if (p != null) // si Palabra reservada
                             {
-                                if (cadena.Length > 64) {
-                                    //Error
-                                    ALexErrores.Error("Una constante tiene como max 64 caracteres");
-                                }
+ 
                                 //Es una palabra reservada
-                                token = new Token(cadena);
+                                token = new Token(cadena,numLineaCodigo);
                                 fin = true;
                                 break;
                             }
@@ -323,9 +351,9 @@ namespace ProcesadorDeLenguaje_JS_PL
                             token.NombreIdentificador = cadena;
                             fin = true;
                             */
-                            
-                            
-                            token = new Token("ID", cadena);
+
+                            numParaID++;
+                            token = new Token("ID", numParaID,numLineaCodigo); // token = new Token("ID", cadena); CORRECTO: 
                             token.NombreIdentificador = cadena;
                             fin = true;
                             
@@ -343,7 +371,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                             valor = (short) (valor * 10 + (leido - '0'));
                             if (valor < aux)
                             {
-                                ALexErrores.Error("El rango de numeros es (-32768,32767)");
+                                gestorDeErrores.ErrLexico("El rango de numeros es (-32768,32767)");
                                 //return null; // probar si funciona con esta linea
                             }
 
@@ -351,7 +379,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                         }
                         else
                         {
-                            token = new Token("digito", valor);
+                            token = new Token("digito", valor,numLineaCodigo);
                             fin = true;
                         }
 
@@ -361,20 +389,25 @@ namespace ProcesadorDeLenguaje_JS_PL
                         if (leido == '+')
                         {
                             //si es nulo --> fin de cadena
-                            token = new Token("MASMAS");
+                            token = new Token("MASMAS",numLineaCodigo);
                             fin = true;
                             pos++;
                         }
                         else
                         {
-                            token = new Token("Suma");
+                            token = new Token("Suma",numLineaCodigo);
                             fin = true;
                         }
 
                         break;
                     case 5: //Estado 5 Cadenas
+                        if (cadena.Length > 64) {
+                            //Error
+                            gestorDeErrores.ErrLexico("Una constante tiene como max 64 caracteres");
+                        }
                         if (leido == '\"')
                         {
+
                             //si " --> fin de cadena
                             token = new Token("cadena", cadena); //generar laa cadena
                             fin = true;
@@ -394,7 +427,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                             pos++;
                         }
                         else
-                            ALexErrores.Error("El componente léxico / no existe pruebe con //");
+                            gestorDeErrores.ErrLexico("El componente léxico / no existe pruebe con //");
 
                         break;
 
@@ -439,7 +472,8 @@ namespace ProcesadorDeLenguaje_JS_PL
             private string cadena;
             private Int16? valor;
             private string nombreIdentificador; // Usuado para guardar el nombre del identificador y poder localizarlo posteriormente en la Tabla de simbolos.
-
+            private int numLinea;
+            
             public string NombreIdentificador
             {
                 get => nombreIdentificador;
@@ -452,12 +486,21 @@ namespace ProcesadorDeLenguaje_JS_PL
                 cadena = null;
                 valor = null;
             }
-
-            public Token(string codigo, Int16 valor)
+            
+            public Token(string codigo,int numLinea)
+            {
+                this.codigo = codigo;
+                cadena = null;
+                valor = null;
+                this.numLinea = numLinea;
+            }
+            
+            public Token(string codigo, Int16 valor,int numLinea)
             {
                 this.codigo = codigo;
                 this.valor = valor;
                 this.cadena = null;
+                this.numLinea = numLinea;
             }
 
             public Token(string codigo, string cadena)
@@ -485,6 +528,9 @@ namespace ProcesadorDeLenguaje_JS_PL
                 get => valor;
                 set => valor = value;
             }
+
+            public int NumLinea => numLinea;
+
 
             public string derecha()
             {

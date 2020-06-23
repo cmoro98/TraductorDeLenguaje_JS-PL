@@ -1,7 +1,13 @@
 using System;
+using System.Collections.Generic;
 
 namespace ProcesadorDeLenguaje_JS_PL
 {
+    public enum AmbitoVariable
+    {
+        Global,Local,NoLocal
+    }
+
     public class Atributo
     {
         
@@ -13,23 +19,36 @@ namespace ProcesadorDeLenguaje_JS_PL
         //private string tipo;
         private int ancho;
         //Atributos extras.
-        private string tipoRet;
-        private string listaVar;
+        private Tipo tipoRet;
+        private List<Tipo>  listaVar ;
+        private int numLineaCodigo;
         
+        // Atributos GCI
+        private Tuple<AmbitoVariable,int> lugar;
 
         public Atributo()
         {
+            listaVar = new List<Tipo>();
         }
 
         public Atributo(string simbolo)
         {
             this.simbolo = simbolo;
         }
-        public Atributo(string simbolo,string lexema)
+        
+        public Atributo(string simbolo,int numLineaCodigo)
+        {
+            this.simbolo = simbolo;
+            this.numLineaCodigo = numLineaCodigo;
+        }
+        
+        public Atributo(string simbolo,string lexema,int numLineaCodigo)
         {
             this.simbolo = simbolo;
             this.lexema = lexema;
+            this.numLineaCodigo = numLineaCodigo;
         }
+        
 
         public string Lexema
         {
@@ -39,13 +58,13 @@ namespace ProcesadorDeLenguaje_JS_PL
 
         public Tipo Tipo { get; set; }
         
-        public string TipoRet
+        public Tipo TipoRet
         {
             get => tipoRet;
             set => tipoRet = value;
         }
 
-        public string ListaVar
+        public List<Tipo> ListaVar
         {
             get => listaVar;
             set => listaVar = value;
@@ -56,7 +75,21 @@ namespace ProcesadorDeLenguaje_JS_PL
             get => ancho;
             set => ancho = value;
         }
+
+        public string Simbolo
+        {
+            get => simbolo;
+            set => simbolo = value;
+        }
+
+        public Tuple<AmbitoVariable, int> Lugar
+        {
+            get => lugar;
+            set => lugar = value;
+        }
+
+        public int NumLineaCodigo => numLineaCodigo;
     }
 
-    public enum Tipo { UNDEFF,TIPO_OK,TIPO_ERROR,@int,@string,@bool };
+    public enum Tipo { UNDEFF,TIPO_OK,TIPO_ERROR,@int,@string,boolean, vacio,funcion };
 }

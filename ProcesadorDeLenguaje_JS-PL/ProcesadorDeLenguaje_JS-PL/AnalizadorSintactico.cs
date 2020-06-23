@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace ProcesadorDeLenguaje_JS_PL
 {
@@ -8,7 +9,8 @@ namespace ProcesadorDeLenguaje_JS_PL
     {
         /*Este es un analizador sintáctico LR(1)
          Contiene 
-            Una Pila
+            Una Pila sintactico
+            Una pila semantico
             Dos Tablas: 
                     Tabla Accion
                     Tabla GOTO
@@ -23,8 +25,11 @@ namespace ProcesadorDeLenguaje_JS_PL
         private string ficheroTokens = "";
         private GestorDeErrores erroresSintactico;
         private GestorTS gestorTs;
+        private bool detectarFuncionFlag;
+        //private bool detectaAhoraLaFuncion;
 
-        public AnalizadorSintactico(AnalisisLexico alex, GestorTS gsTs,string pathTablaAccion,string pathTablaGoto,string pathNumeroConsecuentes)
+        public AnalizadorSintactico(AnalisisLexico alex, GestorTS gsTs, string pathTablaAccion, string pathTablaGoto,
+            string pathNumeroConsecuentes, GestorDeErrores gestorDeErrores)
         {
             this.alex = alex; // recibimos el analizador lexico. 
             tablaAccion = new List<string[]>();
@@ -34,8 +39,10 @@ namespace ProcesadorDeLenguaje_JS_PL
             tablaAccion = CrearTabla(pathTablaAccion,columnaAccion);
             tablaGoto = CrearTabla(pathTablaGoto,columnaGoto);
             CalcularNumeroDeConscuentesPorRegla(pathNumeroConsecuentes);
-            erroresSintactico = new GestorDeErrores();
+            erroresSintactico = gestorDeErrores;
             gestorTs = gsTs;
+            detectarFuncionFlag = false;
+            //detectaAhoraLaFuncion = false; 
         }
 
         
@@ -55,7 +62,8 @@ namespace ProcesadorDeLenguaje_JS_PL
             string parse = "Ascendente ";
             List<string> pilaSt = new List<string> {"0"};
             Stack<Atributo> pilaSem = new Stack<Atributo>();
-            AnalizadorSemantico aSemantico = new AnalizadorSemantico(gestorTs);
+            AnalizadorSemantico aSemantico = new AnalizadorSemantico(gestorTs,alex,erroresSintactico);
+            List<Atributo> detectarFuncionUltimosTresElementos; // sirve para detectar una funcion y así declararla cuando hay que hacerlo.. El patron : function H ID Abreparent A CierraParent
             while (true) // mientras no se acabe el fichero. Que peligro tiene ese while true.
             {
                 // El ultimo elemento de la pila deberá ser un numero. Si eso no es así  peta.
@@ -63,32 +71,41 @@ namespace ProcesadorDeLenguaje_JS_PL
 
                 if (casilla.Substring(0, 1) == "s")// Desplazar :  la s se debe tomar como una "d" de desplazar.
                 {
-                    Console.WriteLine("token"+ tokenDeEntrada.Imprimir());
-                   
                     // ############################### INICIO SEMANTICO  P1 ########################################################
-                    if (tokenDeEntrada.Codigo.Equals("ID")) 
+                   // Console.WriteLine("token"+ tokenDeEntrada.Imprimir());
+                   if (detectarFuncionFlag && pilaSem.Count >= 3)
+                   {
+                       detectarFuncionUltimosTresElementos = pilaSem.ToList().GetRange(0, 3);
+                       if (DetectarFunction(detectarFuncionUltimosTresElementos))
+                       {
+                           Console.WriteLine("Declarando funcion.");
+                           // Ejecutamo la accion semantica de turno.
+                           aSemantico.declararFuncion(detectarFuncionUltimosTresElementos);
+                           detectarFuncionFlag = false;
+                       }
+                   }
+                   if (tokenDeEntrada.Codigo.Equals("ID")) 
                     {
-                        pilaSem.Push(new Atributo(tokenDeEntrada.Codigo,tokenDeEntrada.NombreIdentificador));
+                        pilaSem.Push(new Atributo(tokenDeEntrada.Codigo,tokenDeEntrada.NombreIdentificador,tokenDeEntrada.NumLinea));
+                    }
+                    else if (tokenDeEntrada.Codigo.Equals("function")) 
+                    {
+                        /*En principio con la regla semantica F -> function H ID (A) cuando llegamos hasta un punto creamos la tabla de simbolos y eso.
+                         pero ,nosotros solo llamamos a las acc semanticas cuando se reduce una regla no cuando esta a medias. Realmente estamos haciendo un DDS.
+                         La implementación así es mucho más faci.
+                         Esto queda sucio porque aquí tengo que semi ejecutar una acción semántica para ver si puedo crear la nueva tabla de símbolos y ttodo eso. */
+                        
+                        pilaSem.Push(new Atributo(tokenDeEntrada.Codigo,tokenDeEntrada.NumLinea));
+                        //Console.WriteLine("FUNCTION:");
+                        detectarFuncionFlag = true;
                     }
                     else
                     {
-                        pilaSem.Push(new Atributo(tokenDeEntrada.Codigo));
+                        pilaSem.Push(new Atributo(tokenDeEntrada.Codigo,tokenDeEntrada.NumLinea));
                     }
-                    /* 
-                    if(tokenDeEntrada.Codigo.Equals("ID"))
-                    {
-                        // Obtenemos el lexema y el tipo
-                        // Lo metemos en la pila semantica como atributo
-                        // Meter el atributo en la pila semantica
-                        pilaSem.Push(new Atributo(tokenDeEntrada.Codigo,tokenDeEntrada.Cadena));
-                    }
-                    else
-                    {
-                        pilaSem.Push(new Atributo(tokenDeEntrada.Codigo,tokenDeEntrada.Cadena));
-                        // meter el atributo en la pila (Atributo: token.entrada,tipo.)
-                    }
+                    
                     // ############################### FIN SEMANTICO  P1 ###########################################################
-                    */
+                    
                     /* DESPLAZAR
                       "Si no se puede completar una parte derecha, se acumula a lo que se esta construyendo. 
                        Esta accion es el desplazamiento."
@@ -128,20 +145,21 @@ namespace ProcesadorDeLenguaje_JS_PL
                     int numRegla = int.Parse(casilla.Substring(1));
                     string antecedente = reglas[numRegla].Item1; // reglas[Nº Regla].antecedente
                     pilaSt.Add(antecedente); // se añade a la pila el antecedente. 
-                    //tablaGoto[s',A]  un (estado,antecedente)
-                    string estado=Goto(estadoPila, antecedente);
+                    string estado=Goto(estadoPila, antecedente);  //tablaGoto[s',A]  un (estado,antecedente)
                     
                     
                     // ############################### INICIO SEMANTICO  P2 ########################################################
                     //Asem.ejecAccSemantica(Convert.ToInt32(casilla.Substring(1)) + 1, pilaSem);
-                    pilaSem.Push(new Atributo(antecedente));
+                    pilaSem.Push(new Atributo(antecedente,alex.NumLineaCodigo));
                     aSemantico.ejecAccSemantica(numRegla+1, pilaSem);
 
                     // ############################### FIN SEMANTICO  P2 ###########################################################
                   
                     //Console.WriteLine("tipo"+pilaSem[0]);
                     pilaSt.Add(estado);
-                    Console.WriteLine("Num regla: "+ (numRegla+1) +" regla:"+antecedente+" Tam pila: "+pilaSt.Count +" Pila: "+pilaSt[0] );
+                    
+                    // Console.WriteLine("Num regla: "+ (numRegla+1) +" regla:"+antecedente+" Tam pila: "+pilaSt.Count +" Pila: "+pilaSt[0] );
+                    
                     // meter en el parse la regla por la q se reduce. casilla.Substring(1)+1
                     parse += numRegla+1+" "; // solucion to cutre sumamos un 1 a la regla y ya esta listo para vast
                     //El semantico debe Ejecutar segun la regla q sea.
@@ -157,9 +175,13 @@ namespace ProcesadorDeLenguaje_JS_PL
                 else
                 {
                     //error
-                    Console.WriteLine("Error: casilla= " + casilla);
-                    erroresSintactico.ErrSintactico(1,"error: sintactico encontrado. en Linea " + alex.NumLineaCodigo+
-                                                      " . Tiene que estar cerca del simbolo: "+ tokenDeEntrada.Codigo);
+                    //Console.WriteLine("Error: casilla= " + casilla);
+                    string valor = "";
+                    valor = tokenDeEntrada.Valor?.ToString();
+                    valor = tokenDeEntrada.Cadena?.ToString();
+                    erroresSintactico.ErrSintactico(1,"error: sintactico encontrado. en Linea " + tokenDeEntrada.NumLinea+
+                                                      " . Tiene que estar cerca del simbolo: "+ tokenDeEntrada.Codigo + ": "+ valor );
+
                     // TODO Crear metodo estatico que convierte de TokenDeEntrada.Codigo al simbolo de turno. ej IGUAL -> =
                     break;
                 }
@@ -224,6 +246,21 @@ namespace ProcesadorDeLenguaje_JS_PL
         public string GetFichTokens()
         {
             return ficheroTokens;
+        }
+
+        public bool DetectarFunction(List<Atributo> ultmosTresElementos)
+        {
+            List<string> patronFuncion = new List<string> {"ID","H","function"}; //{"CierraParent","A","AbreParent","ID","H","function"};
+            int i = 0;
+            foreach (var atributo in ultmosTresElementos)
+            {
+                if (atributo.Simbolo != patronFuncion[i])
+                {
+                    return false;
+                }
+                i++;
+            }
+            return true;
         }
     }
 }

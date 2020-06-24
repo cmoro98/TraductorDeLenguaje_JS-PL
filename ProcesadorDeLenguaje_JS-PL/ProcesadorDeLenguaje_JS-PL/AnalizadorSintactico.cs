@@ -179,8 +179,8 @@ namespace ProcesadorDeLenguaje_JS_PL
                     string valor = "";
                     valor = tokenDeEntrada.Valor?.ToString();
                     valor = tokenDeEntrada.Cadena?.ToString();
-                    erroresSintactico.ErrSintactico(1,"error: sintactico encontrado. en Linea " + tokenDeEntrada.NumLinea+
-                                                      " . Tiene que estar cerca del simbolo: "+ tokenDeEntrada.Codigo + ": "+ valor );
+                    erroresSintactico.ErrSintactico(1,
+                                                      "Tiene que estar cerca del simbolo: "+ tokenDeEntrada.Codigo + ": "+ valor );
                     //Console.WriteLine("Num de Regla:");
                     // TODO Crear metodo estatico que convierte de TokenDeEntrada.Codigo al simbolo de turno. ej IGUAL -> =
                     break;

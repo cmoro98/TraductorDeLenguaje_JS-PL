@@ -274,7 +274,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                                 // Algo inesperado -> Error
                                 else
                                 {
-                                    gestorDeErrores.ErrLexico("Error en linea: "+ numLineaCodigo+ " El símbolo " + leido + " no está permitido");
+                                    gestorDeErrores.ErrLexico("Error Lexico: Linea("+ numLineaCodigo + ") " + " El símbolo " + leido + " no está permitido");
                                     fin = true;
                                 }
 
@@ -293,7 +293,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                         {
                             //error
                             
-                            gestorDeErrores.ErrLexico("ERROR: Símbolo no permitido./n NO existe el componente léxico & " +
+                            gestorDeErrores.ErrLexico("Error Lexico: Linea("+ numLineaCodigo + ") " +" Símbolo no permitido./n NO existe el componente léxico & " +
                                               "pruebe con &&");
                         }
                         fin = true;
@@ -328,7 +328,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                             p = gestorTs.buscarPR(cadena);
                             if (cadena.Length > 64) {
                                 //Error
-                                gestorDeErrores.ErrLexico("Una constante tiene como max 64 caracteres");
+                                gestorDeErrores.ErrLexico("Error Lexico: Linea("+ numLineaCodigo + ") " + " Una constante tiene como max 64 caracteres");
                             }
                             if (p != null) // si Palabra reservada
                             {
@@ -376,7 +376,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                             valor = (short) (valor * 10 + (leido - '0'));
                             if (valor < aux)
                             {
-                                gestorDeErrores.ErrLexico("El rango de numeros es (-32768,32767)");
+                                gestorDeErrores.ErrLexico("Error Lexico: Linea("+ numLineaCodigo + ") " +"El rango de numeros es (-32768,32767)");
                                 //return null; // probar si funciona con esta linea
                             }
 
@@ -408,7 +408,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                     case 5: //Estado 5 Cadenas
                         if (cadena.Length > 64) {
                             //Error
-                            gestorDeErrores.ErrLexico("Una constante tiene como max 64 caracteres");
+                            gestorDeErrores.ErrLexico("Error Lexico: Linea("+ numLineaCodigo + ") " + "Una constante tiene como max 64 caracteres");
                         }
                         if (leido == '\"')
                         {
@@ -432,7 +432,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                             pos++;
                         }
                         else
-                            gestorDeErrores.ErrLexico("El componente léxico / no existe pruebe con //");
+                            gestorDeErrores.ErrLexico("Error Lexico: Linea("+ numLineaCodigo + ") " + "El componente léxico / no existe pruebe con //");
 
                         break;
 

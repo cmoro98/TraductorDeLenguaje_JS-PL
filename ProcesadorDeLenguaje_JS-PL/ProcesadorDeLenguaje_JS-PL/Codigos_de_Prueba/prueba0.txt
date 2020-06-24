@@ -1,13 +1,14 @@
-var int a;
-var int b;
-var int c;
-print ("Introduce el primer operando");
-input (a);
-print ("Introduce el segundo operando");
-input (b);
-function int suma (int num1, int num2)
+function imprime (string msg)
 {
-	return num1+num2;
+	print (msg);
 }
-c = suma (a, b);
-print (c);
+function pideTexto ()
+{
+	print ("Introduce un texto");
+	input (texto);
+}
+pideTexto();
+var string masde64caracteressssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss;
+var string textoAux;
+textoAux = texto;
+imprime (textoAux);

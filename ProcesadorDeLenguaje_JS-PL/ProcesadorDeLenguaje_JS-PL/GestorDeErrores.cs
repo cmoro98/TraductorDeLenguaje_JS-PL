@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 
 namespace ProcesadorDeLenguaje_JS_PL
 {
@@ -14,6 +15,7 @@ namespace ProcesadorDeLenguaje_JS_PL
         private string errorActual;
         private string warningActual;
         private bool suprimirWarnings = false;
+        TextWriter errorWriter = Console.Error;
         public void  SetAnalizadorLexico(AnalisisLexico alex)// para poder acceder al num de linea. Tanto en el lex,sint, sem..
         {
             this.alex = alex;
@@ -29,8 +31,8 @@ namespace ProcesadorDeLenguaje_JS_PL
         public void ErrLexico(string error)
         {
             errores += "\n" + error;
-            Console.WriteLine(error);
-            Console.WriteLine("Teclee una letra para continuar...    no se asegura que los siguientes errores sean correctos.");
+            errorWriter.WriteLine(error);
+            errorWriter.WriteLine("Teclee una letra para continuar...    no se asegura que los siguientes errores sean correctos.");
             Console.ReadKey();
         }
 
@@ -38,8 +40,8 @@ namespace ProcesadorDeLenguaje_JS_PL
         {
             errorActual = "Error SINTACTICO: Linea(" + alex.NumLineaCodigo + ") " + error;
             errores += "\n" + errorActual;
-            Console.WriteLine(errorActual);
-            Console.WriteLine("Teclee una letra para continuar...");
+            errorWriter.WriteLine(errorActual);
+            errorWriter.WriteLine("Teclee una letra para continuar...");
             Console.ReadKey();
         }
 
@@ -49,7 +51,7 @@ namespace ProcesadorDeLenguaje_JS_PL
             num_errores_semantico++;
             errorActual = "Error SEMANTICO: Linea(" + idNumLineaCodigo + ") " + error;
             errores += "\n" + errorActual;
-            Console.WriteLine(errorActual);
+            errorWriter.WriteLine(errorActual);
             
             if (nErr==1)
             {

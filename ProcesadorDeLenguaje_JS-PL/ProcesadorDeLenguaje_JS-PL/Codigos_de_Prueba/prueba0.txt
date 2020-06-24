@@ -1,14 +1,48 @@
-function imprime (string msg)
+// prueba correcta
+var int entero;
+var string cadena;
+var boolean logico;
+var int abcdefghijklmnopqrstuvwxyz;
+function FuncionNumero ()
 {
-	print (msg);
+  var string i;
+  
+  i = "1Cadena";
+  cadena = i;
+  i = "Hola!";
 }
-function pideTexto ()
+function string FuncionRetorno (string hola, int x, boolean z)
 {
-	print ("Introduce un texto");
-	input (texto);
+  var int i;
+  
+  input (i);
+  print (hola);
+  return " d";
 }
-pideTexto();
-var string masde64caracteressssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss;
-var string textoAux;
-textoAux = texto;
-imprime (textoAux);
+function FuncionSentencia (int z_Z, boolean b)
+{
+  do
+  {
+	print (88);
+  } while (b);
+}
+function Funcion (int x, boolean b)
+{
+	print (FuncionRetorno("",0,true));
+  print 
+    (cadena);return;
+}
+var int iii;
+var boolean bbb;
+// comentario 
+// multi ***/
+//línea 
+input(iii);
+print (iii) ;
+
+iii = iii;
+bbb = bbb;
+
+Funcion
+ ( iii, 
+   bbb );

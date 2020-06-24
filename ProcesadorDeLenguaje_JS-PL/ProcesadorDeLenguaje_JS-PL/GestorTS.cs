@@ -174,6 +174,14 @@ namespace ProcesadorDeLenguaje_JS_PL
             }*/
             return tsg.insertarTipoParametrosTS(lexema,  tipoParametros);
         }
+        public int? insertarEtiquetaTS(string lexema, string etiqueta)
+        {
+/*            if (tablaLocalActiva)
+            {
+                return tsl.insertarTipoParametrosTS(lexema,  tipoParametros);
+            }*/
+            return tsg.insertarEtiquetaTS(lexema,  etiqueta);
+        }
         public int? insertarTipoRetornoTS(string lexema, string  tipoRetorno)
         {
             if (tablaLocalActiva)

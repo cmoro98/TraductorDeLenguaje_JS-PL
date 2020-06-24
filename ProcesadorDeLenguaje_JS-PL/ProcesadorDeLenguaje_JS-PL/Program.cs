@@ -17,11 +17,25 @@ namespace ProcesadorDeLenguaje_JS_PL {
        
         static void Main(string[] args) {
             
-            Console.WriteLine("Hola usuario que tal estas?      ");
+            //Console.WriteLine("Hola usuario que tal estas?      ");
+            //Console.WriteLine(args.Length);
+           
             GestorDeErrores gestorDeErrores = new GestorDeErrores();
             GestorTS gestorTs = new GestorTS();
            
             string pathSourceCode = @".."+Path.DirectorySeparatorChar+"../Codigos_de_Prueba/prueba0.txt";
+            if (args.Length >= 1)
+            {
+                //Console.WriteLine(args[0]);
+                pathSourceCode = (File.Exists(args[0]) ?  args[0] : @".." + Path.DirectorySeparatorChar + "../Codigos_de_Prueba/prueba0.txt");
+                if (!File.Exists(args[0]))
+                {
+                    Console.WriteLine("El fichero no existe.");
+                }
+                //Console.WriteLine(File.Exists(args[0]) ? "File exists." : "File does not exist.");
+               
+            }
+            
             string pathAstTablaAccion = @".."+Path.DirectorySeparatorChar+".."+Path.DirectorySeparatorChar+"Ficheros_Del_Traductor"+Path.DirectorySeparatorChar+"Sintactico"+Path.DirectorySeparatorChar+"TablaACCION.csv";
             string pathAstTablaGoto = @".."+Path.DirectorySeparatorChar+".."+Path.DirectorySeparatorChar+"Ficheros_Del_Traductor"+Path.DirectorySeparatorChar+"Sintactico"+Path.DirectorySeparatorChar+"TablaGOTO.csv";
             string pathReglas =  @".."+Path.DirectorySeparatorChar+".."+Path.DirectorySeparatorChar+"Ficheros_Del_Traductor"+Path.DirectorySeparatorChar+"Sintactico"+Path.DirectorySeparatorChar+"Reglas.txt";

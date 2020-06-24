@@ -57,6 +57,7 @@ namespace TablaSimbolos
        // private int desplazamiento;
         private int posEnLaTablaDeSimbolos;
         private int numeroTS;
+        private int numEtiq=1;
 
         // Constructor: Recibe un booleano para indicar si la tabla de simbolos es global -> true o es local -> false
         public TablaDeSimbolos(bool global)
@@ -107,6 +108,15 @@ namespace TablaSimbolos
         {
             ObjetoTS ret = (ObjetoTS) tablaSimbolos[lexema];
             ret.TiposParametros = tipoParametros;
+            return ret?.PosEnLaTablaDeSimbolos;
+        }
+        
+        public int? insertarEtiquetaTS(string lexema, string etiqueta)
+        {
+            etiqueta += numEtiq;
+            numEtiq++;
+            ObjetoTS ret = (ObjetoTS) tablaSimbolos[lexema];
+            ret.Etiqueta = etiqueta;
             return ret?.PosEnLaTablaDeSimbolos;
         }
 
@@ -249,13 +259,14 @@ namespace TablaSimbolos
                     string parametros = "";
                     for (int i = 0; i < nParametros; i++)
                     {
-                        parametros += "+ TipoParam" + i + ": \'" + tiposParametros[i] + "\' \n" ;//+ "+ ModoParam"+ i + ": 1 (es por valor) \n"
+                        parametros += "+ TipoParam" + (i+1) + ": \'" + tiposParametros[i] + "\' \n" ;//+ "+ ModoParam"+ i + ": 1 (es por valor) \n"
                     }
                     ret = "* LEXEMA: " + "\'" + lexema + "\' \n" + "ATRIBUTOS: \n"
                           + "+ tipo: " + "\'" + tipo + "\' \n"
                           + "+ numParam: " + nParametros + "\n" 
                           + parametros + ""
                           + "+ TipoRetorno: " + "\'" + tipoDevuelto + "\' \n"
+                          + "+ EtiqFuncion: " + "\'"+etiqueta+"\' \n"
                           + ""
                           + "\n "
                         ;

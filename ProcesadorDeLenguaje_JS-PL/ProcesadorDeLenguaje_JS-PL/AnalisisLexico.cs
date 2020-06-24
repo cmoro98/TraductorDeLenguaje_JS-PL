@@ -81,6 +81,11 @@ namespace ProcesadorDeLenguaje_JS_PL
         /*Mete el archivo en un string llamado texto.*/
         private void abreArchivo(string ruta)
         {
+            if( new FileInfo( ruta ).Length == 0 )
+            {
+                Console.WriteLine("Fichero vacio.");
+                Environment.Exit(-1);
+            }
             try
             {
                 StreamReader file = new StreamReader(ruta); //abrimos el archivo.

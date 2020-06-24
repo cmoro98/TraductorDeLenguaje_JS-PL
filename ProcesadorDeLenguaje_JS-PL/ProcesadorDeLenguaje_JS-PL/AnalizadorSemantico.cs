@@ -32,7 +32,7 @@ namespace ProcesadorDeLenguaje_JS_PL
 
         public  string ejecAccSemantica(int numRegla,Stack<Atributo> pilaSemantico)
         {   
-            //Console.WriteLine("Acc Sem: "+ numRegla );
+           // Console.WriteLine("Acc Sem: "+ numRegla );
             Atributo PAxioma, P, B , F, T, E, C, S, L, Q, X, H, A, K, R, U, V; //No terminales
             Atributo  var, ID, @if, AbreParent, CierraParent, AbreCorchetes ,@while ,CierraCorchetes,  @int, boolean ,@string ,IGUAL ,PuntoComa ,@return ,print ,input ,COMA, @do  ,function, AND, IGUALIGUAL, Suma ,MASMAS, digito, cadena ,@true, @false;
             Atributo P1;
@@ -66,9 +66,6 @@ namespace ProcesadorDeLenguaje_JS_PL
                 case 5://5 B -> var T ID PuntoComa {
                     //if(TSL==Null) then TS<-TSG; Despl<-DesplG
                     //else TS<-TSL  Despl<-DesplLocal
-                    
-                    
-                    // sacamos elems de la pila
                     // Antecedente
                     B = pilaSemantico.Pop();
                     // Consecuentes
@@ -114,8 +111,6 @@ namespace ProcesadorDeLenguaje_JS_PL
                                 else Tipo_error (Entre los parentesis del if se espera una expresion logica)
                        } S// comprobar que E es un booleano.
                      */
-                    // sacar de la pila:
-                    
                     // Antecedente
                     B = pilaSemantico.Pop();
                     // Consecuente
@@ -361,6 +356,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                     else
                     {
                         S.Tipo = Tipo.TIPO_ERROR;
+                        S.TipoRet = Tipo.vacio;
                         gestorDeErrores.ErrSemantico(2,"LLamada a funcion incorrecta.",ID.NumLineaCodigo);
                     }
                     pilaSemantico.Push(S);
@@ -852,6 +848,27 @@ namespace ProcesadorDeLenguaje_JS_PL
                     // consecuente
                     MASMAS = pilaSemantico.Pop();
                     ID = pilaSemantico.Pop();
+                    if (gesTS.buscarTS(ID.Lexema) == null)
+                    {
+                       
+                        gestorDeErrores.WarningSemantico("No has declarado la variable \"" + ID.Lexema + "\". Por defecto se asume que es un int con valor 0.",ID.NumLineaCodigo);
+                        // Guardar el estado anterior.
+                        //---------------------------------------------------------------------------------------------------------  SI NO DECLARADA VARIABLE GLOBAL.
+                        bool estadoAnteriorTS = gesTS.TablaLocalActiva;
+                        bool estadoAnteriorDesplisLocal = despl.isLocal();
+                        // pasar a global . Meter y recuperar estado anterior.
+                        gesTS.TablaLocalActiva = false;
+                        despl.useDesplG();
+                        gesTS.insertarTS(ID.Lexema, despl.Despl, Tipo.@int.ToString());
+                        despl.Despl += size_int;
+                        despl.update();
+                        
+                        gesTS.TablaLocalActiva = estadoAnteriorTS;
+                        if(estadoAnteriorDesplisLocal){ despl.useDesplL();}
+                        //--------------------------------------------------------------------------------------------------------
+                       
+                        
+                    }
                     if (gesTS.buscaTipoTS(ID.Lexema) == Tipo.@int.ToString())
                     {
                         V.Tipo = Tipo.@int;
@@ -887,8 +904,10 @@ namespace ProcesadorDeLenguaje_JS_PL
             }
             else
             {
-                gesTS.insertarTS(ID.Lexema, 0,Tipo.funcion.ToString()); // declaramos la funcion. // tipo, tipo retorno. H.tipo, num de parametros.
+                gesTS.insertarTS(ID.Lexema, 0,Tipo.function.ToString()); // declaramos la funcion. // tipo, tipo retorno. H.tipo, num de parametros.
                 gesTS.insertarTipoRetornoTS(ID.Lexema,H.Tipo.ToString());
+                // Insertar etiq: 
+                gesTS.insertarEtiquetaTS(ID.Lexema, "Et"+ID.Lexema);
                 gesTS.crearTS(false); // crear Tabla de simbolos Local
                 despl.useDesplL();
                 despl.Despl =0;

@@ -78,7 +78,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                        detectarFuncionUltimosTresElementos = pilaSem.ToList().GetRange(0, 3);
                        if (DetectarFunction(detectarFuncionUltimosTresElementos))
                        {
-                           Console.WriteLine("Declarando funcion.");
+                           //Console.WriteLine("Declarando funcion.");
                            // Ejecutamo la accion semantica de turno.
                            aSemantico.declararFuncion(detectarFuncionUltimosTresElementos);
                            detectarFuncionFlag = false;
@@ -181,7 +181,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                     valor = tokenDeEntrada.Cadena?.ToString();
                     erroresSintactico.ErrSintactico(1,"error: sintactico encontrado. en Linea " + tokenDeEntrada.NumLinea+
                                                       " . Tiene que estar cerca del simbolo: "+ tokenDeEntrada.Codigo + ": "+ valor );
-
+                    //Console.WriteLine("Num de Regla:");
                     // TODO Crear metodo estatico que convierte de TokenDeEntrada.Codigo al simbolo de turno. ej IGUAL -> =
                     break;
                 }

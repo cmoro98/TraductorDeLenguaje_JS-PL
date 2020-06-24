@@ -91,5 +91,5 @@ namespace ProcesadorDeLenguaje_JS_PL
         public int NumLineaCodigo => numLineaCodigo;
     }
 
-    public enum Tipo { UNDEFF,TIPO_OK,TIPO_ERROR,@int,@string,boolean, vacio,funcion };
+    public enum Tipo { UNDEFF,TIPO_OK,TIPO_ERROR,@int,@string,boolean, vacio,function };
 }

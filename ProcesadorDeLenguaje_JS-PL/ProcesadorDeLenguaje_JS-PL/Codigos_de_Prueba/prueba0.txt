@@ -1,48 +1,15 @@
-// prueba correcta
-var int entero;
-var string cadena;
-var boolean logico;
-var int abcdefghijklmnopqrstuvwxyz;
-function FuncionNumero ()
-{
-  var string i;
-  
-  i = "1Cadena";
-  cadena = i;
-  i = "Hola!";
-}
-function string FuncionRetorno (string hola, int x, boolean z)
-{
-  var int i;
-  
-  input (i);
-  print (hola);
-  return " d";
-}
-function FuncionSentencia (int z_Z, boolean b)
-{
-  do
-  {
-	print (88);
-  } while (b);
-}
-function Funcion (int x, boolean b)
-{
-	print (FuncionRetorno("",0,true));
-  print 
-    (cadena);return;
-}
-var int iii;
-var boolean bbb;
-// comentario 
-// multi ***/
-//línea 
-input(iii);
-print (iii) ;
+var int a;
+var int b;
+a = 5;  // 0
+b = 6;  // 1
+a = b+a; //Temp_1 2
+var int j;
+function int alfa(){return 5;}
+// .............................
+//a: DATA 5
+//b: DATA 6
+//MOVE #inicio_estaticas, .IY ; Vamos a usar IY para marcar el inicio de la zona de datos estaticos.
+//inicio_estaticas: RES 200
 
-iii = iii;
-bbb = bbb;
 
-Funcion
- ( iii, 
-   bbb );
+

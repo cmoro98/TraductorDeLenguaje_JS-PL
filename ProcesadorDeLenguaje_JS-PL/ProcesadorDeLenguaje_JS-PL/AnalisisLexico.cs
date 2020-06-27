@@ -358,7 +358,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                             */
 
                             numParaID++;
-                            token = new Token("ID", numParaID,numLineaCodigo); // token = new Token("ID", cadena); CORRECTO: 
+                            token = new Token("ID", cadena,numLineaCodigo); // token = new Token("ID", cadena); CORRECTO:  // Para Draco poner numParaID
                             token.NombreIdentificador = cadena;
                             fin = true;
                             
@@ -414,7 +414,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                         {
 
                             //si " --> fin de cadena
-                            token = new Token("cadena", cadena); //generar laa cadena
+                            token = new Token("cadena", cadena,numLineaCodigo); //generar laa cadena
                             fin = true;
                             pos++;
                         }
@@ -508,10 +508,11 @@ namespace ProcesadorDeLenguaje_JS_PL
                 this.numLinea = numLinea;
             }
 
-            public Token(string codigo, string cadena)
+            public Token(string codigo, string cadena,int numLinea)
             {
                 this.codigo = codigo;
                 this.cadena = cadena;
+                this.numLinea = numLinea;
                 valor = null;
             }
 

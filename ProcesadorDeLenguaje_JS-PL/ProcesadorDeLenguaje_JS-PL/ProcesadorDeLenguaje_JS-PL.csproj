@@ -81,7 +81,10 @@
     <Content Include="Ficheros_Del_Traductor\Sintactico\Reglas.txt" />
     <Content Include="Ficheros_Del_Traductor\Sintactico\TablaACCION.csv" />
     <Content Include="Ficheros_Del_Traductor\Sintactico\TablaGOTO.csv" />
-    <Content Include="README.md" />
+    <Content Include="DetallesImplementacion.md" />
+    <Content Include="Resultados\parse.txt" />
+    <Content Include="Resultados\tokens.txt" />
+    <Content Include="Resultados\TS.txt" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Ficheros_Del_Traductor\Lexico" />

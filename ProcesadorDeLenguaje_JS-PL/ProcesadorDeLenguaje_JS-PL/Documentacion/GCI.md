@@ -42,8 +42,6 @@ B->S
 R9:
 T->int
 
-    | T.lugar = nuevoTemp()
-	| T.cod = gen(T.lugar, "=", "int")
 
 R10:
 T->boolean
@@ -122,6 +120,8 @@ E->R
 
 	| E.lugar = R.lugar
 	| E.cod = R.cod
+	| E.cadena = R.cadena
+    | E.digito = R.digito	
 
 R34:
 R->R IGUALIGUAL U
@@ -131,6 +131,8 @@ R->U
 
 	| R.lugar = U.lugar
 	| R.cod = U.cod
+	| R.cadena = U.cadena
+    | R.digito = U.digito
 
 R36:
 U->U Suma V
@@ -143,6 +145,8 @@ U->V
 
 	| U.lugar = V.lugar
 	| U.cod = V.cod
+	| U.cadena = V.cadena
+	| U.digito = V.digito
 
 R38:
 V->ID
@@ -153,14 +157,24 @@ V->ID
 R39:
 V->digito
 
+	| V.lugar = Inmediato digito
+	
+
 R40:
 V->true
+
+    | V.cod = gen(V.lugar, "=", 1)
 
 R41:
 V->false
 
+    | V.cod = gen(V.lugar, "=", 0)
+
 R42:
 V->cadena
+
+	| V.lugar = Inmediato cadena
+	
 
 R43:
 V->ID AbreParent L CierraParent

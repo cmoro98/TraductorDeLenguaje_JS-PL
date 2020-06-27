@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection.Emit;
 using TablaSimbolos;
 
 namespace ProcesadorDeLenguaje_JS_PL
@@ -19,6 +20,7 @@ namespace ProcesadorDeLenguaje_JS_PL
        // private int numElementos; // TODO: REVISAR SI ES NECESARIO
         private string fichTSLocal;
         private string fichTSGlobal;
+        
 
         public GestorTS()
         {
@@ -91,6 +93,7 @@ namespace ProcesadorDeLenguaje_JS_PL
             }
             return tsg.buscarTS(lexema);
         }
+        
         // Busqueda en la tabla de simbolos con la intencion de declarar.
         public int? buscarTSDeclarar(string lexema)
         {
@@ -128,6 +131,17 @@ namespace ProcesadorDeLenguaje_JS_PL
             }
             return tsg.buscarObjTS(lexema).Tipo;
         }
+        public Tuple<TipoOperando, string> buscarDesplazamientoTS(string lexema)
+        {
+            if (tablaLocalActiva)
+            {
+                if (tsl.buscarObjTS(lexema) != null)
+                {
+                    return new Tuple<TipoOperando, string>(TipoOperando.Local, tsl.buscarObjTS(lexema).DirDeMemoria.ToString()); //;
+                }
+            }
+            return  new Tuple<TipoOperando, string>(TipoOperando.Global, tsg.buscarObjTS(lexema).DirDeMemoria.ToString());
+        }
         
         public List<Tipo> buscaTipoParametrosTS(string lexema)
         {
@@ -158,6 +172,18 @@ namespace ProcesadorDeLenguaje_JS_PL
             }
             return tsg.insertarTS(lexema, desplazamiento, tipo);
         }
+
+        public int crearNuevaTemporal( int desplazamiento, string tipo)
+        {
+            if (tablaLocalActiva)
+            {
+                return  tsl.crearTemporalTS(desplazamiento,tipo);
+             
+            }
+            return tsg.crearTemporalTS(desplazamiento,tipo);
+            
+        }
+        
         public int? insertarNumParametrosTS(string lexema,int numParametros)
         {
             if (tablaLocalActiva)

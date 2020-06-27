@@ -3,9 +3,12 @@ using System.Collections.Generic;
 
 namespace ProcesadorDeLenguaje_JS_PL
 {
-    public enum AmbitoVariable
+    public enum TipoOperando
     {
-        Global,Local,NoLocal
+        Inmediato,Global,Local,Etiqueta
+        // parametro por valor -> = Local
+        // temporal            -> = Local
+        
     }
 
     public class Atributo
@@ -22,9 +25,16 @@ namespace ProcesadorDeLenguaje_JS_PL
         private Tipo tipoRet;
         private List<Tipo>  listaVar ;
         private int numLineaCodigo;
+        // estos realmente es un def. Lo suyo hubiese sido reutilizar token y añadirle los atributos. Mucho más facil y limpio, pero ya no lo voy a cambiar.
+        // Para cadena
+        private string cadena;
+        // para digitos
+        private short digito; 
         
         // Atributos GCI
-        private Tuple<AmbitoVariable,int> lugar;
+       // private Tuple<TipoOperando,string> lugar;
+        private TipoOperando tipoOperando;
+        private string operando;
 
         public Atributo()
         {
@@ -48,7 +58,21 @@ namespace ProcesadorDeLenguaje_JS_PL
             this.lexema = lexema;
             this.numLineaCodigo = numLineaCodigo;
         }
-        
+
+        public Atributo(string simbolo, int numLineaCodigo, short? valor)
+        {
+            this.simbolo = simbolo;
+            this.numLineaCodigo = numLineaCodigo;
+            this.digito =  (short) valor;
+        }
+
+        public Atributo(string  simbolo, int numLineaCodigo, string valor)
+        {
+            this.simbolo = simbolo;
+            this.numLineaCodigo = numLineaCodigo;
+            this.cadena =  valor;
+        }
+
 
         public string Lexema
         {
@@ -82,13 +106,38 @@ namespace ProcesadorDeLenguaje_JS_PL
             set => simbolo = value;
         }
 
-        public Tuple<AmbitoVariable, int> Lugar
+        /*public Tuple<TipoOperando, string> Lugar
         {
             get => lugar;
             set => lugar = value;
+        }*/
+
+        public TipoOperando TipoOperando
+        {
+            get => tipoOperando;
+            set => tipoOperando = value;
         }
 
+        public string Operando
+        {
+            get => operando;
+            set => operando = value;
+        }
+
+
         public int NumLineaCodigo => numLineaCodigo;
+
+        public string Cadena
+        {
+            get => cadena;
+            set => cadena = value;
+        }
+
+        public short Digito
+        {
+            get => digito;
+            set => digito = value;
+        }
     }
 
     public enum Tipo { UNDEFF,TIPO_OK,TIPO_ERROR,@int,@string,boolean, vacio,function };

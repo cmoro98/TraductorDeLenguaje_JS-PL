@@ -85,9 +85,18 @@ namespace ProcesadorDeLenguaje_JS_PL
                        }
                    }
                    if (tokenDeEntrada.Codigo.Equals("ID")) 
-                    {
+                   {
                         pilaSem.Push(new Atributo(tokenDeEntrada.Codigo,tokenDeEntrada.NombreIdentificador,tokenDeEntrada.NumLinea));
-                    }
+                   }
+                   
+                   else if (tokenDeEntrada.Codigo.Equals("digito")) 
+                   {
+                       pilaSem.Push(new Atributo(tokenDeEntrada.Codigo,tokenDeEntrada.NumLinea,tokenDeEntrada.Valor));
+                   }
+                   else if (tokenDeEntrada.Codigo.Equals("cadena")) 
+                   {
+                       pilaSem.Push(new Atributo(tokenDeEntrada.Codigo,tokenDeEntrada.NumLinea,tokenDeEntrada.Cadena));
+                   }
                     else if (tokenDeEntrada.Codigo.Equals("function")) 
                     {
                         /*En principio con la regla semantica F -> function H ID (A) cuando llegamos hasta un punto creamos la tabla de simbolos y eso.

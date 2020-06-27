@@ -59,6 +59,8 @@ namespace TablaSimbolos
         private int numeroTS;
         private int numEtiq=1;
 
+        private int contadorTemporal = 1;
+
         // Constructor: Recibe un booleano para indicar si la tabla de simbolos es global -> true o es local -> false
         public TablaDeSimbolos(bool global)
         {
@@ -96,6 +98,17 @@ namespace TablaSimbolos
             tablaSimbolos.Add(lexema, new ObjetoTS(lexema,desplazamiento,tipo));
             return posEnLaTablaDeSimbolos;
         }
+        
+        public int crearTemporalTS(int desplazamiento,string tipo)
+        {
+            string lexema = "temp_" + contadorTemporal;
+            contadorTemporal++;
+            posEnLaTablaDeSimbolos++;
+            tablaSimbolos.Add(lexema, new ObjetoTS(lexema,desplazamiento,tipo));
+            return posEnLaTablaDeSimbolos;
+        }
+        
+        
 
         public int? insertarNumParametrosTS(string lexema, int numParametros)
         {

@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace ProcesadorDeLenguaje_JS_PL
 {
     public class GCO
     {
-        int gcogen(Operador op, string arg1, string arg2, string dest)
+        private string ensambladorFich;
+        public int codegen(Operador op, Atributo arg1, Atributo arg2, Atributo dest)
         {
             Console.WriteLine("Se ejecuta el cuarteto: %d, arg1: %s, arg2: %s, dest: %s", op, arg1, arg2, dest);
 
@@ -124,11 +126,36 @@ namespace ProcesadorDeLenguaje_JS_PL
                     // existe_entrada(arg1, "");
                     //dprintf(_fd, "MOVE %s, %s\n", atoi(yytext));
                     //  write(_fd,"MOVE , op2",3);
+
+                    //dest = arg1;
+                    switch (arg1.TipoOperando)
+                    {
+                        case TipoOperando.Inmediato:
+                            if (arg1.Tipo == Tipo.@string)
+                            {
+                                ensambladorFich += "MOVE" + arg1.Operando + "," + dest.Operando;
+                            }
+                            else if (arg1.Tipo == Tipo.@int)
+                            {
+                                Console.WriteLine("asignando un int a un id");
+                                ensambladorFich+="MOVE #"+arg1.Operando +"," +"#" + dest.Operando + "[.IY]"; // mal solo sirve pa estatico.
+                                
+                            }
+
+                            break;
+                        case TipoOperando.Local:
+                            break;
+                        case TipoOperando.Global:
+                            break;
+                    }
+                    
+                    
+                    
                     break;
 
                 default:
                     return -1;
-                    break;
+                    
             }
 
             return 0;

@@ -1,0 +1,30 @@
+Tabla Global   # 1:
+* LEXEMA: 'j' 
+ATRIBUTOS: 
++ tipo: 'int' 
++ despl: '3' 
+
+ * LEXEMA: 'temp_1' 
+ATRIBUTOS: 
++ tipo: 'int' 
++ despl: '2' 
+
+ * LEXEMA: 'a' 
+ATRIBUTOS: 
++ tipo: 'int' 
++ despl: '0' 
+
+ * LEXEMA: 'b' 
+ATRIBUTOS: 
++ tipo: 'int' 
++ despl: '1' 
+
+ * LEXEMA: 'alfa' 
+ATRIBUTOS: 
++ tipo: 'function' 
++ numParam: 0
++ TipoRetorno: 'int' 
++ EtiqFuncion: 'Etalfa1' 
+
+  TABLA Local de la FUNCION alfa    # 2:
+

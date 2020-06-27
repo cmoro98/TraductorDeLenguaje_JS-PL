@@ -143,15 +143,16 @@ U->U Suma V
 R37:
 U->V
 
-	| U.lugar = V.lugar
-	| U.cod = V.cod
-	| U.cadena = V.cadena
-	| U.digito = V.digito
+	|  U.TipoOperando = V.TipoOperando;
+	|  U.Operando = V.Operando;
+   
+   
 
 R38:
 V->ID
-
-	| V.lugar = buscaLugarTS(ID.pos)
+	
+	| V.Operando =  buscaLugarTS(ID.pos)
+	| V.TipoOperando =  buscaTipoOperandoTS(ID.pos)
 	| V.cod =  λ
 
 R39:

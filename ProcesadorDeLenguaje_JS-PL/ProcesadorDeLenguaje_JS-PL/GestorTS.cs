@@ -173,14 +173,15 @@ namespace ProcesadorDeLenguaje_JS_PL
             return tsg.insertarTS(lexema, desplazamiento, tipo);
         }
 
-        public int crearNuevaTemporal( int desplazamiento, string tipo)
+        public string crearNuevaTemporal( int desplazamiento, string tipo)
         {
             if (tablaLocalActiva)
             {
-                return  tsl.crearTemporalTS(desplazamiento,tipo);
+                tsl.crearTemporalTS(desplazamiento,tipo);
+                return   tsl.crearTemporalTS(desplazamiento,tipo) ; //;
              
             }
-            return tsg.crearTemporalTS(desplazamiento,tipo);
+            return  tsg.crearTemporalTS(desplazamiento,tipo) ;
             
         }
         

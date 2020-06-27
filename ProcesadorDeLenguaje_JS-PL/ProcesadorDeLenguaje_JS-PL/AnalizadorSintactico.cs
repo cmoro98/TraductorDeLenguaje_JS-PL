@@ -27,6 +27,7 @@ namespace ProcesadorDeLenguaje_JS_PL
         private GestorTS gestorTs;
         private bool detectarFuncionFlag;
         //private bool detectaAhoraLaFuncion;
+        private string codigoEnsamblador;
 
         public AnalizadorSintactico(AnalisisLexico alex, GestorTS gsTs, string pathTablaAccion, string pathTablaGoto,
             string pathNumeroConsecuentes, GestorDeErrores gestorDeErrores)
@@ -177,7 +178,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                 else if (casilla == "acc") // ACEPTACION "La cadena pertenece al lenguaje generado. Cadena sintacticamente correcta"
                 {
                     // ############################### INICIO SEMANTICO  P3 ########################################################
-                    aSemantico.ejecAccSemantica(1, pilaSem);
+                    codigoEnsamblador = aSemantico.ejecAccSemantica(1, pilaSem);
                     // ############################### FIN SEMANTICO  P3 ###########################################################
                     return parse + 1;// añadimos la regla axioma
                 }
@@ -191,7 +192,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                     erroresSintactico.ErrSintactico(1,
                                                       "Tiene que estar cerca del simbolo: "+ tokenDeEntrada.Codigo + ": "+ valor );
                     //Console.WriteLine("Num de Regla:");
-                    // TODO Crear metodo estatico que convierte de TokenDeEntrada.Codigo al simbolo de turno. ej IGUAL -> =
+                    
                     break;
                 }
             }
@@ -270,6 +271,12 @@ namespace ProcesadorDeLenguaje_JS_PL
                 i++;
             }
             return true;
+        }
+
+        public string CodigoEnsamblador
+        {
+            get => codigoEnsamblador;
+            set => codigoEnsamblador = value;
         }
     }
 }

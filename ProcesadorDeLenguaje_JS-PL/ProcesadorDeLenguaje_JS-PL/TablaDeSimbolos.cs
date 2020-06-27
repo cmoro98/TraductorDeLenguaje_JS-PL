@@ -99,13 +99,14 @@ namespace TablaSimbolos
             return posEnLaTablaDeSimbolos;
         }
         
-        public int crearTemporalTS(int desplazamiento,string tipo)
+        public string crearTemporalTS(int desplazamiento,string tipo)
         {
             string lexema = "temp_" + contadorTemporal;
             contadorTemporal++;
             posEnLaTablaDeSimbolos++;
             tablaSimbolos.Add(lexema, new ObjetoTS(lexema,desplazamiento,tipo));
-            return posEnLaTablaDeSimbolos;
+            
+            return lexema;
         }
         
         

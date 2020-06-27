@@ -47,11 +47,13 @@ namespace ProcesadorDeLenguaje_JS_PL {
             string parse = ast.GetParse();
             string listaTokens = ast.GetFichTokens();
             string tablaSimbolos = gestorTs.getFichTS();
+            string codigoEnsamblador = ast.CodigoEnsamblador;
             
             // Ficheros donde guardamos el resultado.
             string pathParse = "../../Resultados/parse.txt";
             string pathTokens = "../../Resultados/tokens.txt";
             string pathTablaSimbolos = @"../../Resultados/TS.txt";
+            string pathObjectCode = @"../../Resultados/a.ens";
             
             // ESCRIBIR FICHERO PARSE.
             System.IO.File.Delete(pathParse);
@@ -70,6 +72,12 @@ namespace ProcesadorDeLenguaje_JS_PL {
             using (System.IO.StreamWriter fichTS = new System.IO.StreamWriter(pathTablaSimbolos, true))
             {
                 fichTS.WriteLine(tablaSimbolos); 
+            }
+            // ESCRIBIR CODIGO ENSAMBLADOR
+            System.IO.File.Delete(pathObjectCode);
+            using (System.IO.StreamWriter fichENS = new System.IO.StreamWriter(pathObjectCode, true))
+            {
+                fichENS.WriteLine(codigoEnsamblador); 
             }
             
           

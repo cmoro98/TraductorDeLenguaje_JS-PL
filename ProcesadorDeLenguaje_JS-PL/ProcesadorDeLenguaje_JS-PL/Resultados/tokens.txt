@@ -20,17 +20,3 @@
 <Suma,>
 <ID,"a">
 <PuntoComa,>
-<var,>
-<int,>
-<ID,"j">
-<PuntoComa,>
-<function,>
-<int,>
-<ID,"alfa">
-<AbreParent,>
-<CierraParent,>
-<AbreCorchetes,>
-<return,>
-<digito,5>
-<PuntoComa,>
-<CierraCorchetes,>

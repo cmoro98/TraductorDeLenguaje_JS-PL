@@ -69,6 +69,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                     // gesTS.crearTS(true);
                     gesTS.imprimirTS("");
                     gesTS.destruirTS();
+                    return gci.regla_1();
                     break;
                 case 2:
                     // Antecedente
@@ -298,6 +299,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                             gesTS.buscaTipoTS(ID.Lexema) + " = " + E.Tipo, ID.NumLineaCodigo);
                     }
 
+                    gci.regla_12(S, ID, IGUAL, E, PuntoComa);
                     pilaSemantico.Push(S);
                     break;
                 case 13:
@@ -736,6 +738,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                     // consecuente
                     R = pilaSemantico.Pop();
                     E.Tipo = R.Tipo;
+                    gci.regla_33(E, R);
                     pilaSemantico.Push(E);
                     break;
                 case 34:
@@ -768,6 +771,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                     // consecuente
                     U = pilaSemantico.Pop();
                     R.Tipo = U.Tipo;
+                    gci.regla_35(R, U);
                     pilaSemantico.Push(R);
                     break;
                 case 36:
@@ -804,6 +808,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                     // consecuente
                     V = pilaSemantico.Pop();
                     U.Tipo = V.Tipo;
+                    gci.regla_37(U, V);
                     pilaSemantico.Push(U);
                     break;
                 case 38:
@@ -843,6 +848,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                         V.Tipo = (Tipo) Enum.Parse(typeof(Tipo), gesTS.buscaTipoTS(ID.Lexema));
                     }
 
+                    gci.regla_38(V, ID);
                     pilaSemantico.Push(V);
                     break;
                 case 39:
@@ -854,6 +860,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                     V.Tipo = Tipo.@int;
 
                     //Console.WriteLine("DIGITO: "+digito.Digito);
+                    gci.regla_39( V, digito);
                     pilaSemantico.Push(V);
 
                     break;

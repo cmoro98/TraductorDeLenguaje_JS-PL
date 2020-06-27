@@ -23,7 +23,10 @@ namespace ProcesadorDeLenguaje_JS_PL
          * Cuando tenemos un cuarteto :
          * 
          */
-        public void regla_1() {
+        public string regla_1()
+        {
+            generadorDeCodigoObjeto.finaliza();
+            return generadorDeCodigoObjeto.EnsambladorFich;
         }
 
         public void regla_2()
@@ -62,7 +65,10 @@ namespace ProcesadorDeLenguaje_JS_PL
                 | S.cod = E.cod || gen(buscaLugarTS(ID.pos), "=", E.lugar)*/
             //gesTS.buscarDesplazamientoTS(ID.Lexema) = E.Lugar;
             //generadorDeCodigoObjeto.codegen()
-            
+
+            var aux = gesTS.buscarDesplazamientoTS(ID.Lexema);
+            ID.TipoOperando = aux.Item1;
+            ID.Operando = aux.Item2;
             generadorDeCodigoObjeto.codegen(Operador.OP_ASIG, E, null, ID);
         }
 
@@ -93,12 +99,14 @@ namespace ProcesadorDeLenguaje_JS_PL
             /*U->U Suma V
                       | U.lugar = nuevoTemp()
                       | U.cod = U1.cod || V.cod || gen(U.lugar, "=", U1.lugar, "+", V.lugar)*/
-
-
-            gesTS.crearNuevaTemporal(despl.Despl, U.Tipo.ToString());
+            
+            U.Lexema = gesTS.crearNuevaTemporal(despl.Despl, U.Tipo.ToString());
+            var aux = gesTS.buscarDesplazamientoTS(U.Lexema);
+            U.TipoOperando = aux.Item1;
+            U.Operando = aux.Item2;
             despl.Despl += size_int;
             despl.update();
-
+             
             generadorDeCodigoObjeto.codegen(Operador.OP_PLUS, U1, V, U);
         }
 

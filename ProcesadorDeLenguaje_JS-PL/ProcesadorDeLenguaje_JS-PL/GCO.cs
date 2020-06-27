@@ -7,9 +7,17 @@ namespace ProcesadorDeLenguaje_JS_PL
     public class GCO
     {
         private string ensambladorFich;
+        private int tamZonaEstatica = 10;
+
+        public GCO()
+        {
+            ensambladorFich = "ORG 0 \n" + "inicio_estaticas: RES " + tamZonaEstatica + " \n" +"MOVE #inicio_estaticas, .IY \n";
+        }
+
         public int codegen(Operador op, Atributo arg1, Atributo arg2, Atributo dest)
         {
             Console.WriteLine("Se ejecuta el cuarteto: %d, arg1: %s, arg2: %s, dest: %s", op, arg1, arg2, dest);
+            // metodo Preparar operandos VIABLE ?
 
             switch (op)
             {
@@ -46,6 +54,12 @@ namespace ProcesadorDeLenguaje_JS_PL
                  *  MOVE .A, [.R0]
                 */
                 case Operador.OP_PLUS:
+                    // inmediato e inmediato. ID e inmediato .. 4 posibilidades.
+                    asm[arg1.TipoOperando](arg1.Operando);
+                    ensambladorFich += "; Suma a continuacion \n";
+                    ensambladorFich += "ADD " + asm[arg1.TipoOperando](arg1.Operando) +" , "+ asm[arg2.TipoOperando](arg2.Operando) +"\n";
+                    ensambladorFich += "MOVE " + ".A , " + asm[dest.TipoOperando](dest.Operando) +"\n";
+                    
                     break;
 
                 /**
@@ -128,8 +142,13 @@ namespace ProcesadorDeLenguaje_JS_PL
                     //  write(_fd,"MOVE , op2",3);
 
                     //dest = arg1;
-                    switch (arg1.TipoOperando)
+                    // TODO: Esto no se si funcionaría en strings
+                    ensambladorFich += "; Asignacion a continuacion a continuacion \n";
+                    ensambladorFich += "MOVE " + asm[arg1.TipoOperando](arg1.Operando) +" , "+ asm[dest.TipoOperando](dest.Operando) +"\n";
+                    
+                    /*switch (arg1.TipoOperando)
                     {
+                        // TODO: Resuelve el destiono en un string. o ANTES
                         case TipoOperando.Inmediato:
                             if (arg1.Tipo == Tipo.@string)
                             {
@@ -138,7 +157,8 @@ namespace ProcesadorDeLenguaje_JS_PL
                             else if (arg1.Tipo == Tipo.@int)
                             {
                                 Console.WriteLine("asignando un int a un id");
-                                ensambladorFich+="MOVE #"+arg1.Operando +"," +"#" + dest.Operando + "[.IY]"; // mal solo sirve pa estatico.
+                                ensambladorFich+="MOVE #"+arg1.Operando +"," +"#" + dest.Operando + "[.IY]"; // mal solo sirve para un DESTINO estatico.
+                                
                                 
                             }
 
@@ -146,8 +166,19 @@ namespace ProcesadorDeLenguaje_JS_PL
                         case TipoOperando.Local:
                             break;
                         case TipoOperando.Global:
+                            if (arg1.Tipo == Tipo.@string)
+                            {
+                                ensambladorFich += "MOVE" + arg1.Operando + "," + dest.Operando;
+                            }
+                            else if (arg1.Tipo == Tipo.@int)
+                            {
+                                Console.WriteLine("asignando un ID int a un id");
+                                ensambladorFich+="MOVE #"+arg1.Operando+"[IY]" +"," +"#" + dest.Operando + "[.IY]"; // mal solo sirve para un DESTINO estatico.
+                                
+                                
+                            }
                             break;
-                    }
+                    }*/
                     
                     
                     
@@ -160,7 +191,27 @@ namespace ProcesadorDeLenguaje_JS_PL
 
             return 0;
         }
-        
+        private Dictionary<TipoOperando, Func<string, string>> asm =
+            new Dictionary<TipoOperando, Func<string, string>>
+            {
+                { TipoOperando.Global, ( a) => "#"+a+"[.IY]" },
+                { TipoOperando.Local, ( a ) => "#"+a+"[.IX]" },
+                { TipoOperando.Inmediato, ( a ) => "#"+a },
+                { TipoOperando.Etiqueta, ( a ) => "/"+a },
+            };
+
+        public void finaliza()
+        {
+            ensambladorFich += "END";
+        }
+
+        public string EnsambladorFich
+        {
+            get => ensambladorFich;
+            set => ensambladorFich = value;
+        }
+
+
         /*private Dictionary<Operador, Func<int, int, double>> operators =
             new Dictionary<Operador, Func<int, int, double>>
             {

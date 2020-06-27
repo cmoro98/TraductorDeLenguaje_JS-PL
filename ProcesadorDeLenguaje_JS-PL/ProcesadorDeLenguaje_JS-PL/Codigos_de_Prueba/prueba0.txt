@@ -3,8 +3,8 @@ var int b;
 a = 5;  // 0
 b = 6;  // 1
 a = b+a; //Temp_1 2
-var int j;
-function int alfa(){return 5;}
+//var int j;
+//function int alfa(){return 5;}
 // .............................
 //a: DATA 5
 //b: DATA 6

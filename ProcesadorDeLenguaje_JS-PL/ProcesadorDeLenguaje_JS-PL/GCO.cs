@@ -233,7 +233,7 @@ namespace ProcesadorDeLenguaje_JS_PL
 
         public void finaliza()
         {
-            ensambladorFich += "END";
+            ensambladorFich += "HALT \nEND ";
         }
 
         public string EnsambladorFich

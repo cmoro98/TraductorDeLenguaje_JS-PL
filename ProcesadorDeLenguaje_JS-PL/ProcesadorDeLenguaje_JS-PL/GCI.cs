@@ -11,6 +11,7 @@ namespace ProcesadorDeLenguaje_JS_PL
         private GCO generadorDeCodigoObjeto;
         private Atributo cero;
         private Atributo uno;
+        private int numEtiq = 0;
 
         public GCI(GestorTS gesTS, AnalisisLexico alex, GestorDeErrores gestorDeErrores)
         {
@@ -24,6 +25,7 @@ namespace ProcesadorDeLenguaje_JS_PL
             uno = new Atributo();
             uno.TipoOperando = TipoOperando.Inmediato;
             uno.Operando = "1";
+            
         }
         // HECHAS: 1,2,4,5,8,9,12,33,35,36,37,38   
         // TODO:  6,7,10,11,13,14,15,16,17,18,19,20,21,22,23,24...32,34,40,41,42,43  
@@ -64,7 +66,8 @@ namespace ProcesadorDeLenguaje_JS_PL
             //| SC.cod = T.cod || gen("if", T.lugar, "=", "0", "goto", SS.siguiente) || SS.cod || gen(SS.siguiente, ":")
             B.Codigo = E.Codigo;
             Atributo sSiguiente = new Atributo();
-            sSiguiente.Operando = "s.siguiente";
+            sSiguiente.Operando = "s_" + numEtiq+ "_siguiente";
+            numEtiq++;
             sSiguiente.TipoOperando = TipoOperando.Etiqueta;
             B.Codigo.Add(new Cuarteto(Operador.OP_IF,E,uno,sSiguiente));
             B.Codigo.AddRange(S.Codigo);
@@ -142,10 +145,11 @@ namespace ProcesadorDeLenguaje_JS_PL
             R.Codigo = new List<Cuarteto>();
             Atributo rSiguiente = new Atributo();
             rSiguiente.TipoOperando = TipoOperando.Etiqueta;
-            rSiguiente.Operando = "R.siguiente";
-            R.Codigo.Add(new Cuarteto(Operador.OP_ASIG,uno,null,R));
-            R.Codigo.Add(new Cuarteto(Operador.OP_IF,R1,U,rSiguiente));
+            rSiguiente.Operando = "r_" + numEtiq+ "_siguiente";
+            numEtiq++;
             R.Codigo.Add(new Cuarteto(Operador.OP_ASIG,cero,null,R));
+            R.Codigo.Add(new Cuarteto(Operador.OP_IF,R1,U,rSiguiente));
+            R.Codigo.Add(new Cuarteto(Operador.OP_ASIG,uno,null,R));
             R.Codigo.Add(new Cuarteto(Operador.OP_ETIQ,null,null,rSiguiente));
             
             

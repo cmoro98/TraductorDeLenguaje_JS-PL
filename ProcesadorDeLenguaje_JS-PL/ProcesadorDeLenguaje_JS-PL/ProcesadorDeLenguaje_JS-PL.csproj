@@ -52,6 +52,7 @@
     <Compile Include="AnalizadorSemantico.cs" />
     <Compile Include="AnalizadorSintactico.cs" />
     <Compile Include="Atributo.cs" />
+    <Compile Include="Cuarteto.cs" />
     <Compile Include="GCI.cs" />
     <Compile Include="GCO.cs" />
     <Compile Include="GestorDeErrores.cs" />

@@ -36,6 +36,8 @@ namespace ProcesadorDeLenguaje_JS_PL
         private TipoOperando tipoOperando;
         private string operando;
 
+        private List<Cuarteto> codigo;
+
         public Atributo()
         {
             listaVar = new List<Tipo>();
@@ -137,6 +139,12 @@ namespace ProcesadorDeLenguaje_JS_PL
         {
             get => digito;
             set => digito = value;
+        }
+
+        public List<Cuarteto> Codigo
+        {
+            get => codigo;
+            set => codigo = value;
         }
     }
 

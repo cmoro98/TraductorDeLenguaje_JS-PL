@@ -41,6 +41,15 @@ namespace ProcesadorDeLenguaje_JS_PL
                 */
                 case Operador.OP_PRINT:
                     /* code */
+                    ensambladorFich += "; Print:  \n";
+                    if (dest.Tipo == Tipo.@int)
+                    {
+                        ensambladorFich += "WRINT " + asm[dest.TipoOperando](dest.Operando) +"\n";
+                    }else if (dest.Tipo == Tipo.@string)
+                    {
+                        ensambladorFich += "WRSTR " + asm[dest.TipoOperando](dest.Operando) +"\n";
+                    }
+                    
                     break;
 
                 /**
@@ -121,8 +130,10 @@ namespace ProcesadorDeLenguaje_JS_PL
                  *  MOVE [.R1], .R9
                  *  DEC [.R0]
                 */
-                case Operador.OP_POST_DEC:
+                case Operador.OP_POST_INC:
                     /* code */
+                    ensambladorFich += ";Incremento: \n";
+                    ensambladorFich += "INC " + asm[dest.TipoOperando](dest.Operando) +"\n";
                     break;
 
                 /**
@@ -143,7 +154,7 @@ namespace ProcesadorDeLenguaje_JS_PL
 
                     //dest = arg1;
                     // TODO: Esto no se si funcionaría en strings
-                    ensambladorFich += "; Asignacion a continuacion a continuacion \n";
+                    ensambladorFich += "; Asignacion  a continuacion \n";
                     ensambladorFich += "MOVE " + asm[arg1.TipoOperando](arg1.Operando) +" , "+ asm[dest.TipoOperando](dest.Operando) +"\n";
                     
                     /*switch (arg1.TipoOperando)
@@ -199,6 +210,15 @@ namespace ProcesadorDeLenguaje_JS_PL
                 { TipoOperando.Inmediato, ( a ) => "#"+a },
                 { TipoOperando.Etiqueta, ( a ) => "/"+a },
             };
+
+        public string ensamblate(List<Cuarteto> pAxiomaCodigo)
+        {
+            for (int i = 0; i < pAxiomaCodigo.Count; i++)
+            {
+                codegen(pAxiomaCodigo[i].Operador,pAxiomaCodigo[i].Arg1,pAxiomaCodigo[i].Arg1,pAxiomaCodigo[i].Dest);
+            }
+            return ensambladorFich;
+        }
 
         public void finaliza()
         {

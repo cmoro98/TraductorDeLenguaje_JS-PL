@@ -33,7 +33,7 @@ namespace ProcesadorDeLenguaje_JS_PL
         // La pila la utilizamos para en el sintactico guardar y ahora, en el semantico sacar atributos de ella
         public string ejecAccSemantica(int numRegla, Stack<Atributo> pilaSemantico)
         {
-            // Console.WriteLine("Acc Sem: "+ numRegla );
+             Console.WriteLine("Acc Sem: "+ numRegla );
             Atributo PAxioma, P, B, F, T, E, C, S, L, Q, X, H, A, K, R, U, V; //No terminales
             Atributo var,
                 ID,
@@ -67,9 +67,12 @@ namespace ProcesadorDeLenguaje_JS_PL
             {
                 case 1: // 1 PAxioma -> {Crear TSG, DesplG=0}P{imprimirTS,DestruirTSG}#2#
                     // gesTS.crearTS(true);
+                    //PAxioma = pilaSemantico.Pop();
+                    P = pilaSemantico.Pop();
                     gesTS.imprimirTS("");
                     gesTS.destruirTS();
-                    return gci.regla_1();
+                    return gci.regla_1( P);
+                    pilaSemantico.Push(PAxioma);
                     break;
                 case 2:
                     // Antecedente
@@ -77,6 +80,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                     // Consecuentes
                     P1 = pilaSemantico.Pop();
                     B = pilaSemantico.Pop();
+                    gci.regla_2(P, B,P1);
                     pilaSemantico.Push(P);
                     break;
                 case 3:
@@ -86,9 +90,14 @@ namespace ProcesadorDeLenguaje_JS_PL
                     // Consecuentes
                     P1 = pilaSemantico.Pop();
                     F = pilaSemantico.Pop();
+                    
                     pilaSemantico.Push(P);
                     break;
                 case 4:
+                    //  P->lamda
+                    P = pilaSemantico.Pop();
+                    gci.regla_4(P);
+                    pilaSemantico.Push(P);
                     break;
                 case 5: //5 B -> var T ID PuntoComa {
                     //if(TSL==Null) then TS<-TSG; Despl<-DesplG
@@ -124,9 +133,11 @@ namespace ProcesadorDeLenguaje_JS_PL
                         //gesTS.in
                         despl.Despl += T.Ancho;
                     }
-                    // GCI
-                    pilaSemantico.Push(B);
                     despl.update();
+                    // GCI
+                    gci.regla_5(B);
+                    pilaSemantico.Push(B);
+                    
                     //if(buscaTS(ID.lexema!=null)) then ERROR  Variable ya declarada
                     //else id.pos=InsertaTS(TS,id.lexema,T.tipo,Despl)
                     //despl+=T.ancho} //Declaracion de variable#3#
@@ -218,6 +229,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                     S = pilaSemantico.Pop();
                     B.Tipo = S.Tipo;
                     B.TipoRet = S.TipoRet;
+                    gci.regla_8( B,  S);
                     pilaSemantico.Push(B);
                     break;
                 case 9: //T-> int {T.tipo = int,T.ancho=2}
@@ -339,6 +351,8 @@ namespace ProcesadorDeLenguaje_JS_PL
                     print = pilaSemantico.Pop();
                     S.Tipo = Tipo.TIPO_OK;
                     S.TipoRet = Tipo.vacio;
+                    
+                    gci.regla_14(S, E);
                     pilaSemantico.Push(S);
 
                     break;
@@ -871,6 +885,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                     // consecuente
                     @true = pilaSemantico.Pop();
                     V.Tipo = Tipo.boolean;
+                    gci.regla_40(V, @true);
                     pilaSemantico.Push(V);
                     break;
                 case 41: // 
@@ -880,6 +895,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                     // consecuente
                     @false = pilaSemantico.Pop();
                     V.Tipo = Tipo.boolean;
+                    gci.regla_41(V, @false);
                     pilaSemantico.Push(V);
                     break;
                 case 42: // 
@@ -980,6 +996,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                         gestorDeErrores.ErrSemantico(2, "Se esperaba una variable de tipo int.", ID.NumLineaCodigo);
                     }
 
+                    gci.regla_45(V, ID, MASMAS,despl);
                     pilaSemantico.Push(V);
                     break;
 

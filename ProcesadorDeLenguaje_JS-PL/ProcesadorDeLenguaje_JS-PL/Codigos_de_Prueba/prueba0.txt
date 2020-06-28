@@ -1,15 +1,6 @@
 var int a;
-var int b;
-a = 5;  // 0
-b = 6;  // 1
-a = b+a; //Temp_1 2
-//var int j;
-//function int alfa(){return 5;}
-// .............................
-//a: DATA 5
-//b: DATA 6
-//MOVE #inicio_estaticas, .IY ; Vamos a usar IY para marcar el inicio de la zona de datos estaticos.
-//inicio_estaticas: RES 200
-
-
-
+a = 7;
+//b =1;
+//a=b++;
+//print(a);
+//print(b);

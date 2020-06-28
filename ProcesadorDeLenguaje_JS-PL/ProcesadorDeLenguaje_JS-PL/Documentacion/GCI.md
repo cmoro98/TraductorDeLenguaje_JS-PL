@@ -60,6 +60,8 @@ S->return X PuntoComa
 R14:
 S->print AbreParent E CierraParent PuntoComa
 
+	| S.cod = E.cod || gen("print", E.lugar)
+
 R15:
 S->input AbreParent ID CierraParent PuntoComa
 
@@ -185,4 +187,7 @@ V->AbreParent E CierraParent
 
 R45:
 V->ID MASMAS
+
+    |V = crearTemp
+    | gen(V = buscaLugarTS(ID)) || gen(ID = G.)
 

@@ -10,6 +10,7 @@ namespace ProcesadorDeLenguaje_JS_PL
         OP_IF,
         OP_GOTO,
         OP_POST_INC,
-        OP_ASIG
+        OP_ASIG,
+        OP_ETIQ
     }
 }

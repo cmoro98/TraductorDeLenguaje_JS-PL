@@ -182,7 +182,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                                 E.NumLineaCodigo);
                         }
                     }
-
+                    gci.regla_6(B, E, S);
                     pilaSemantico.Push(B);
                     // S 
                     // no se si hay que hacer algo con el S este.
@@ -776,7 +776,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                             "No se puede comparar un: " + R1.Tipo + " con un: " + U.Tipo +
                             ". Solo se pueden comparar enteros.", R1.NumLineaCodigo);
                     }
-
+                    gci.regla_34( R,  R1,  U,despl,size_int);
                     pilaSemantico.Push(R);
                     break;
                 case 35:

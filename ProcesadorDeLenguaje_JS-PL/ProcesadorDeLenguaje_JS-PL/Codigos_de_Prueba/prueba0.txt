@@ -1,6 +1,6 @@
 var int a;
-a = 7;
-//b =1;
-//a=b++;
-//print(a);
-//print(b);
+var boolean z;
+a = 4;
+
+z = a ==4;
+//if (a==7) print(16);

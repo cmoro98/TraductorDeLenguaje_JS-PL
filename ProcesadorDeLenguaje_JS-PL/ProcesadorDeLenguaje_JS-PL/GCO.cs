@@ -14,6 +14,10 @@ namespace ProcesadorDeLenguaje_JS_PL
             ensambladorFich = "ORG 0 \n" + "inicio_estaticas: RES " + tamZonaEstatica + " \n" +"MOVE #inicio_estaticas, .IY \n";
         }
 
+        public void pon_etiqueta(string etiqueta)
+        {
+            ensambladorFich += etiqueta + ": \n";
+        }
         public int codegen(Operador op, Atributo arg1, Atributo arg2, Atributo dest)
         {
             Console.WriteLine("Se ejecuta el cuarteto: %d, arg1: %s, arg2: %s, dest: %s", op, arg1, arg2, dest);
@@ -107,7 +111,11 @@ namespace ProcesadorDeLenguaje_JS_PL
                  *  BZ /dest
                 */
                 case Operador.OP_IF:
-                    /* code */
+                    /* Si arg1 es == arg2.*/
+                    ensambladorFich += ";un IF: \n";
+                    ensambladorFich += "CMP " + asm[arg1.TipoOperando](arg1.Operando) +" , "+ asm[arg2.TipoOperando](arg2.Operando) +"\n";
+                    ensambladorFich += "BNZ " + asm[dest.TipoOperando](dest.Operando)+"\n"; 
+                   
                     break;
 
                 /**
@@ -190,7 +198,10 @@ namespace ProcesadorDeLenguaje_JS_PL
                             }
                             break;
                     }*/
-                    
+                    break;
+                case Operador.OP_ETIQ:
+                    /* code */
+                    pon_etiqueta(dest.Operando);
                     
                     
                     break;
@@ -208,14 +219,14 @@ namespace ProcesadorDeLenguaje_JS_PL
                 { TipoOperando.Global, ( a) => "#"+a+"[.IY]" },
                 { TipoOperando.Local, ( a ) => "#"+a+"[.IX]" },
                 { TipoOperando.Inmediato, ( a ) => "#"+a },
-                { TipoOperando.Etiqueta, ( a ) => "/"+a },
+                { TipoOperando.Etiqueta, ( a ) => "$"+a },
             };
 
         public string ensamblate(List<Cuarteto> pAxiomaCodigo)
         {
             for (int i = 0; i < pAxiomaCodigo.Count; i++)
             {
-                codegen(pAxiomaCodigo[i].Operador,pAxiomaCodigo[i].Arg1,pAxiomaCodigo[i].Arg1,pAxiomaCodigo[i].Dest);
+                codegen(pAxiomaCodigo[i].Operador,pAxiomaCodigo[i].Arg1,pAxiomaCodigo[i].Arg2,pAxiomaCodigo[i].Dest);
             }
             return ensambladorFich;
         }

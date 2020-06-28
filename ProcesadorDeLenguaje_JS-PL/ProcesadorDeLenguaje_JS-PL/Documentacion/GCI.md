@@ -127,6 +127,8 @@ E->R
 
 R34:
 R->R IGUALIGUAL U
+    
+    | R.cod = gen("if", R1.lugar, "=", U.lugar, "goto", R.siguiente) || gen(R.lugar, "=", "0") || gen(R.siguiente, ":") || gen(R.lugar, "=", "1")
 
 R35:
 R->U

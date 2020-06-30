@@ -110,14 +110,20 @@ namespace ProcesadorDeLenguaje_JS_PL
                  *  CMP #0, [.R1]
                  *  BZ /dest
                 */
-                case Operador.OP_IF:
-                    /* Si arg1 es == arg2.*/
+                case Operador.OP_IF_N:
+                    /* Si arg1 es != arg2. SALTA A ETIQUETA. N*/
                     ensambladorFich += ";un IF: \n";
                     ensambladorFich += "CMP " + asm[arg1.TipoOperando](arg1.Operando) +" , "+ asm[arg2.TipoOperando](arg2.Operando) +"\n";
                     ensambladorFich += "BNZ " + asm[dest.TipoOperando](dest.Operando)+"\n"; 
                    
                     break;
-
+                case Operador.OP_IF:
+                    /* Si arg1 es == arg2. SALTA A ETIQUETA. N*/
+                    ensambladorFich += ";un IF Si  \n";
+                    ensambladorFich += "CMP " + asm[arg1.TipoOperando](arg1.Operando) +" , "+ asm[arg2.TipoOperando](arg2.Operando) +"\n";
+                    ensambladorFich += "BN " + asm[dest.TipoOperando](dest.Operando)+"\n"; 
+                   
+                    break;
                 /**
                  * code: goto L
                  * quartet: (OP_GOTO, NULL, NULL, dest)

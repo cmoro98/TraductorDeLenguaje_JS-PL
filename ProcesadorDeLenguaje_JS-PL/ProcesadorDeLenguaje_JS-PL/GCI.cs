@@ -27,6 +27,15 @@ namespace ProcesadorDeLenguaje_JS_PL
             uno.Operando = "1";
             
         }
+
+        public Atributo nuevaEtiqueta(string prefijo_etiqueta,string sufijo_etiqueta)
+        {
+            Atributo etiqueta = new Atributo();
+            etiqueta.TipoOperando = TipoOperando.Etiqueta;
+            etiqueta.Operando = prefijo_etiqueta + numEtiq+ sufijo_etiqueta;
+            numEtiq++;
+            return etiqueta;
+        }
         // HECHAS: 1,2,4,5,8,9,12,33,35,36,37,38   
         // TODO:  6,7,10,11,13,14,15,16,17,18,19,20,21,22,23,24...32,34,40,41,42,43  
         
@@ -69,7 +78,7 @@ namespace ProcesadorDeLenguaje_JS_PL
             sSiguiente.Operando = "s_" + numEtiq+ "_siguiente";
             numEtiq++;
             sSiguiente.TipoOperando = TipoOperando.Etiqueta;
-            B.Codigo.Add(new Cuarteto(Operador.OP_IF,E,uno,sSiguiente));
+            B.Codigo.Add(new Cuarteto(Operador.OP_IF_N,E,uno,sSiguiente));
             B.Codigo.AddRange(S.Codigo);
             B.Codigo.Add(new Cuarteto(Operador.OP_ETIQ,null,null,sSiguiente));
                        
@@ -118,6 +127,35 @@ namespace ProcesadorDeLenguaje_JS_PL
 
         }
 
+        public void regla_32(Atributo E, Atributo E1, Atributo R,Desplazamiento despl, int size_int)
+        {// E -> E1 && R
+            /*| E.siguiente = nuevaEtiq()
+              | E.cod = E1.cod ||gen(E.lugar, "=", "1")|| gen("if", E1.lugar, "=", 1, "goto", E.siguiente) || gen (E.lugar, "=", "0") || 
+              | gen(E.siguiente, ":") || R.cod || gen("if", R.lugar, "=", 1, "goto", E.fin) || gen(E.lugar, "=", "0") ||
+              | gen(E.fin, ":")  */
+            
+            // crear temp y confis.
+            E.Lexema = gesTS.crearNuevaTemporal(despl.Despl, R.Tipo.ToString());
+            var aux = gesTS.buscarDesplazamientoTS(R.Lexema);
+            E.TipoOperando = aux.Item1;
+            E.Operando = aux.Item2;
+            despl.Despl += size_int;
+            despl.update();
+            // fin crear temp
+            Atributo etiq_siguiente = nuevaEtiqueta("E_", "siguiente");
+            Atributo etiq_fin = nuevaEtiqueta("E_", "fin");
+            E.Codigo = E1.Codigo;
+            E.Codigo.Add(new Cuarteto(Operador.OP_ASIG,uno,null,E));
+            E.Codigo.Add(new Cuarteto(Operador.OP_IF,E1,uno,etiq_siguiente));
+            E.Codigo.Add(new Cuarteto(Operador.OP_ASIG,cero,null,E));
+            E.Codigo.Add(new Cuarteto(Operador.OP_ETIQ,null,null,etiq_siguiente));
+            E.Codigo.AddRange(R.Codigo);
+            E.Codigo.Add(new Cuarteto(Operador.OP_IF,R,uno,etiq_fin));
+            E.Codigo.Add(new Cuarteto(Operador.OP_ASIG,cero,null,E));
+            E.Codigo.Add(new Cuarteto(Operador.OP_ETIQ,null,null,etiq_fin));
+
+        }
+
         public void regla_33(Atributo E, Atributo R)
         {
             /*
@@ -148,7 +186,7 @@ namespace ProcesadorDeLenguaje_JS_PL
             rSiguiente.Operando = "r_" + numEtiq+ "_siguiente";
             numEtiq++;
             R.Codigo.Add(new Cuarteto(Operador.OP_ASIG,cero,null,R));
-            R.Codigo.Add(new Cuarteto(Operador.OP_IF,R1,U,rSiguiente));
+            R.Codigo.Add(new Cuarteto(Operador.OP_IF_N,R1,U,rSiguiente));
             R.Codigo.Add(new Cuarteto(Operador.OP_ASIG,uno,null,R));
             R.Codigo.Add(new Cuarteto(Operador.OP_ETIQ,null,null,rSiguiente));
             

@@ -115,7 +115,12 @@ R31:
 K->
 
 R32:
-E->E AND R
+E->E1 AND R
+
+	| E.siguiente = nuevaEtiq()
+	| E.cod = E1.cod || gen("if", E1.lugar, "=", 1, "goto", E.siguiente) || gen (E.lugar, "=", "0") || 
+	| gen(E.siguiente, ":") || T.cod || gen("if", R.lugar, "=", 1, "goto", E.fin) || gen(E.lugar, "=", "0") ||
+	| gen(E.fin, ":") || gen(E.lugar, "=", "1")
 
 R33:
 E->R

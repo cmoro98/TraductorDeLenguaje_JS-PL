@@ -1,6 +1,13 @@
-var int a;
+var boolean a;
 var boolean z;
-a = 7;
+a = false;
+z = true;
+a = a && z;
+//function numero(){
+//var int j;
+//j = 8;
+//}
+//if (a==7) print(16);
+//print(9);
 
-if (a==7) print(16);
-print(9);
+

@@ -1,29 +1,7 @@
-var int a;
-var int b;
-a = 1;
-b= 5;
-do{
-j = a++;
-if(a==6) b = a;
-print(a);
-}while(b==5);
+var int resu;
 
-print("FIN ");
-//a= "hola mundo";
-//print(a);
-//input(a);
-//print(a);
-//var boolean z;
-//var int numero;
-//input(numero);
-//a = false;
-//z = true;
-//a = a && z;
-//function numero(){
-//var int j;
-//j = 8;
-//}
-//if (a==7) print(16);
-//print(9);
-
-
+function int suma (int a, int b){
+j = a+b;
+return j;
+}
+resu = suma(4,8);

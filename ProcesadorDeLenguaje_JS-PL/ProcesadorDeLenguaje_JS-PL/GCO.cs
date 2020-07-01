@@ -15,12 +15,18 @@ namespace ProcesadorDeLenguaje_JS_PL
         private string cadena_etiq;
         public GCO()
         {
-            ensambladorFich = "ORG 0 \n" + "inicio_estaticas: RES " + tamZonaEstatica + " \n" +"MOVE #inicio_estaticas, .IY \n";
+            //ensambladorFich = 
         }
 
         public void pon_etiqueta(string etiqueta)
         {
             ensambladorFich += etiqueta + ": \n";
+        }
+
+        public int TamZonaEstatica
+        {
+            get => tamZonaEstatica;
+            set => tamZonaEstatica = value;
         }
 
         public string dameNombreEtiqCadena()
@@ -160,7 +166,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                     /* Si arg1 es == arg2. SALTA A ETIQUETA. N*/
                     ensambladorFich += ";un IF Si  \n";
                     ensambladorFich += "CMP " + asm[arg1.TipoOperando](arg1.Operando) +" , "+ asm[arg2.TipoOperando](arg2.Operando) +"\n";
-                    ensambladorFich += "BN " + asm[dest.TipoOperando](dest.Operando)+"\n"; 
+                    ensambladorFich += "BZ " + asm[dest.TipoOperando](dest.Operando)+"\n"; 
                    
                     break;
                 /**
@@ -289,7 +295,7 @@ namespace ProcesadorDeLenguaje_JS_PL
 
         public void finaliza()
         {
-            ensambladorFich = funcionesFich +ensambladorFich +"HALT \n"+ cadenasFich+ "END ";
+            ensambladorFich = "ORG 0 \n" + "inicio_estaticas: RES " + tamZonaEstatica + " \n" +"MOVE #inicio_estaticas, .IY \n"+ funcionesFich +ensambladorFich +"HALT \n"+ cadenasFich+ "END ";
         }
 
         public string EnsambladorFich

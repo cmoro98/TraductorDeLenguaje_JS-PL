@@ -1,32 +1,134 @@
 Tabla Global   # 1:
-* LEXEMA: 'a' 
+* LEXEMA: 'c' 
+ATRIBUTOS: 
++ tipo: 'int' 
++ despl: '2' 
+
+ * LEXEMA: 'a' 
 ATRIBUTOS: 
 + tipo: 'int' 
 + despl: '0' 
+
+ * LEXEMA: 'temp_1' 
+ATRIBUTOS: 
++ tipo: 'int' 
++ despl: '5' 
+
+ * LEXEMA: 'temp_4' 
+ATRIBUTOS: 
++ tipo: 'int' 
++ despl: '10' 
+
+ * LEXEMA: 'temp_3' 
+ATRIBUTOS: 
++ tipo: 'int' 
++ despl: '9' 
+
+ * LEXEMA: 'otro' 
+ATRIBUTOS: 
++ tipo: 'string' 
++ despl: '19' 
+
+ * LEXEMA: 'saludo' 
+ATRIBUTOS: 
++ tipo: 'string' 
++ despl: '7' 
+
+ * LEXEMA: 'temp_7' 
+ATRIBUTOS: 
++ tipo: 'int' 
++ despl: '16' 
+
+ * LEXEMA: 'temp_9' 
+ATRIBUTOS: 
++ tipo: 'boolean' 
++ despl: '18' 
+
+ * LEXEMA: 'temp_11' 
+ATRIBUTOS: 
++ tipo: 'int' 
++ despl: '21' 
+
+ * LEXEMA: 'temp_8' 
+ATRIBUTOS: 
++ tipo: 'int' 
++ despl: '17' 
 
  * LEXEMA: 'b' 
 ATRIBUTOS: 
 + tipo: 'int' 
 + despl: '1' 
 
- * LEXEMA: 'j' 
+ * LEXEMA: 'temp_5' 
+ATRIBUTOS: 
++ tipo: 'int' 
++ despl: '13' 
+
+ * LEXEMA: 'd' 
 ATRIBUTOS: 
 + tipo: 'int' 
 + despl: '3' 
 
- * LEXEMA: 'temp_1' 
+ * LEXEMA: 'temp_2' 
 ATRIBUTOS: 
 + tipo: 'int' 
-+ despl: '2' 
++ despl: '6' 
 
- * LEXEMA: 'temp_2' 
+ * LEXEMA: 'temp_6' 
+ATRIBUTOS: 
++ tipo: 'int' 
++ despl: '15' 
+
+ * LEXEMA: 'temp_10' 
+ATRIBUTOS: 
++ tipo: 'int' 
++ despl: '20' 
+
+ * LEXEMA: 'beta' 
+ATRIBUTOS: 
++ tipo: 'int' 
++ despl: '12' 
+
+ * LEXEMA: 'bb' 
+ATRIBUTOS: 
++ tipo: 'boolean' 
++ despl: '8' 
+
+ * LEXEMA: 'e' 
 ATRIBUTOS: 
 + tipo: 'int' 
 + despl: '4' 
 
- * LEXEMA: 'temp_3' 
+ * LEXEMA: 'alfa' 
 ATRIBUTOS: 
 + tipo: 'int' 
-+ despl: '5' 
++ despl: '11' 
+
+ * LEXEMA: 'nodeclarada' 
+ATRIBUTOS: 
++ tipo: 'int' 
++ despl: '14' 
+
+ 
+  # 2:
+* LEXEMA: 'temp_1' 
+ATRIBUTOS: 
++ tipo: 'int' 
++ despl: '2' 
+
+ * LEXEMA: 'a' 
+ATRIBUTOS: 
++ tipo: 'int' 
++ despl: '1' 
+
+ * LEXEMA: 'b' 
+ATRIBUTOS: 
++ tipo: 'int' 
++ despl: '0' 
+
+ * LEXEMA: 'temp_2' 
+ATRIBUTOS: 
++ tipo: 'int' 
++ despl: '2' 
 
  

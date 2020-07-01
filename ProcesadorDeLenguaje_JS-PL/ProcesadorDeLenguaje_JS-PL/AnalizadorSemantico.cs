@@ -71,7 +71,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                     P = pilaSemantico.Pop();
                     gesTS.imprimirTS("");
                     gesTS.destruirTS();
-                    return gci.regla_1( P);
+                    return gci.regla_1( P,despl);
                     pilaSemantico.Push(PAxioma);
                     break;
                 case 2:
@@ -90,7 +90,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                     // Consecuentes
                     P1 = pilaSemantico.Pop();
                     F = pilaSemantico.Pop();
-                    
+                    gci.regla_3(P, F, P1);
                     pilaSemantico.Push(P);
                     break;
                 case 4:

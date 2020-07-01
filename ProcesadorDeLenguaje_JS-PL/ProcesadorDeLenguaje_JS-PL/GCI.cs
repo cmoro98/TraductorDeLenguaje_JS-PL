@@ -43,9 +43,9 @@ namespace ProcesadorDeLenguaje_JS_PL
          * Cuando tenemos un cuarteto :
          * 
          */
-        public string regla_1(Atributo P)
+        public string regla_1(Atributo P,Desplazamiento despl)
         {
-            
+            generadorDeCodigoObjeto.TamZonaEstatica = despl.Despl;
             generadorDeCodigoObjeto.ensamblate(P.Codigo);
             generadorDeCodigoObjeto.finaliza();
             return generadorDeCodigoObjeto.EnsambladorFich;
@@ -54,6 +54,13 @@ namespace ProcesadorDeLenguaje_JS_PL
         public void regla_2(Atributo P,Atributo B,Atributo P1)
         {//| P.cod = B.cod || P1.cod
             P.Codigo = B.Codigo;
+            P.Codigo.AddRange(P1.Codigo);
+        }
+
+        public void regla_3(Atributo P,Atributo F,Atributo P1)
+        {
+            // TODO:
+            P.Codigo = new List<Cuarteto>();
             P.Codigo.AddRange(P1.Codigo);
         }
 
@@ -156,6 +163,9 @@ namespace ProcesadorDeLenguaje_JS_PL
         public void regla_26(Atributo C,Atributo B,Atributo C1)
         { //C->B C
             //C.Codigo = B.Codigo || C.Codigo
+            
+            // TODO: quitar esto cuando este completado. SIrve para q no pete.
+            if(B.Codigo == null){B.Codigo = new List<Cuarteto>();}
             C.Codigo = B.Codigo;
             C.Codigo.AddRange(C1.Codigo);
 
@@ -223,6 +233,10 @@ namespace ProcesadorDeLenguaje_JS_PL
             despl.update();
             
             R.Codigo = new List<Cuarteto>();
+            
+            R.Codigo.AddRange(R1.Codigo);
+            R.Codigo.AddRange(U.Codigo);
+            
             Atributo rSiguiente = new Atributo();
             rSiguiente.TipoOperando = TipoOperando.Etiqueta;
             rSiguiente.Operando = "r_" + numEtiq+ "_siguiente";

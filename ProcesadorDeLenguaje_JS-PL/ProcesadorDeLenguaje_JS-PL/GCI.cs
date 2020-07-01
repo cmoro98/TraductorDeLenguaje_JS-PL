@@ -85,6 +85,18 @@ namespace ProcesadorDeLenguaje_JS_PL
 
 
         }
+
+        public void regla_7(Atributo B,Atributo C,Atributo E)
+        { /*B->do AbreCorchetes C CierraCorchetes while AbreParent E CierraParent PuntoComa
+                B.code = gen("B. Inicio") || C.code || E. Code || gen(If E.value != 0 goto B.inicio)*/
+            B.Codigo = new List<Cuarteto>();
+            Atributo inicio = nuevaEtiqueta("B_", "Inicio");
+            B.Codigo.Add(new Cuarteto(Operador.OP_ETIQ,null,null,inicio));
+            B.Codigo.AddRange(C.Codigo);
+            B.Codigo.AddRange(E.Codigo);
+            B.Codigo.Add(new Cuarteto(Operador.OP_IF_N,E,cero,inicio));
+            
+        }
         public void regla_8(Atributo B, Atributo S)
         {
             /*B->S
@@ -121,10 +133,40 @@ namespace ProcesadorDeLenguaje_JS_PL
 
         public void regla_14(Atributo S,Atributo E)
         {// S->print(E) 
+            
             S.Codigo = E.Codigo;
             S.Codigo.Add(new Cuarteto(Operador.OP_PRINT, null, null, E));
            // generadorDeCodigoObjeto.codegen(Operador.OP_PRINT, null, null, E);
 
+        }
+        
+        public void regla_15(Atributo S,Atributo ID)
+        {
+            /*S->input AbreParent ID CierraParent PuntoComa
+            S.cod = gen("input" , ID)*/
+            S.Codigo = new List<Cuarteto>();
+            var aux = gesTS.buscarDesplazamientoTS(ID.Lexema);
+            ID.TipoOperando = aux.Item1;
+            ID.Operando = aux.Item2;
+          
+            S.Codigo.Add(new Cuarteto(Operador.OP_INPUT,null,null,ID));
+            
+        }
+
+        public void regla_26(Atributo C,Atributo B,Atributo C1)
+        { //C->B C
+            //C.Codigo = B.Codigo || C.Codigo
+            C.Codigo = B.Codigo;
+            C.Codigo.AddRange(C1.Codigo);
+
+
+
+        }
+        public void regla_27(Atributo C)
+        { //C->
+             //C.Codigo = "";
+
+            C.Codigo = new List<Cuarteto>();
         }
 
         public void regla_32(Atributo E, Atributo E1, Atributo R,Desplazamiento despl, int size_int)
@@ -136,7 +178,7 @@ namespace ProcesadorDeLenguaje_JS_PL
             
             // crear temp y confis.
             E.Lexema = gesTS.crearNuevaTemporal(despl.Despl, R.Tipo.ToString());
-            var aux = gesTS.buscarDesplazamientoTS(R.Lexema);
+            var aux = gesTS.buscarDesplazamientoTS(E.Lexema);
             E.TipoOperando = aux.Item1;
             E.Operando = aux.Item2;
             despl.Despl += size_int;
@@ -294,7 +336,7 @@ namespace ProcesadorDeLenguaje_JS_PL
             //V.Cadena = cadena.Cadena;
         }
 
-        public void regla_45(Atributo V,Atributo ID,Atributo MASMAS,Desplazamiento despl) // TODO: Revisar NO TESTEADA Y TENGO SUEÑO.
+        public void regla_45(Atributo V,Atributo ID,Atributo MASMAS,Desplazamiento despl,int size_int) // TODO: Revisar NO TESTEADA Y TENGO SUEÑO.
         { //V->ID MASMAS
            
             
@@ -303,6 +345,8 @@ namespace ProcesadorDeLenguaje_JS_PL
             var aux1 = gesTS.buscarDesplazamientoTS(V.Lexema);
             V.TipoOperando = aux1.Item1;
             V.Operando = aux1.Item2;
+            despl.Despl += size_int;
+            despl.update();
             
             var aux = gesTS.buscarDesplazamientoTS(ID.Lexema);
             ID.TipoOperando = aux.Item1;

@@ -1,12 +1,32 @@
 Tabla Global   # 1:
-* LEXEMA: 'z' 
-ATRIBUTOS: 
-+ tipo: 'boolean' 
-+ despl: '1' 
-
- * LEXEMA: 'a' 
+* LEXEMA: 'a' 
 ATRIBUTOS: 
 + tipo: 'int' 
 + despl: '0' 
+
+ * LEXEMA: 'b' 
+ATRIBUTOS: 
++ tipo: 'int' 
++ despl: '1' 
+
+ * LEXEMA: 'j' 
+ATRIBUTOS: 
++ tipo: 'int' 
++ despl: '3' 
+
+ * LEXEMA: 'temp_1' 
+ATRIBUTOS: 
++ tipo: 'int' 
++ despl: '2' 
+
+ * LEXEMA: 'temp_2' 
+ATRIBUTOS: 
++ tipo: 'int' 
++ despl: '4' 
+
+ * LEXEMA: 'temp_3' 
+ATRIBUTOS: 
++ tipo: 'int' 
++ despl: '5' 
 
  

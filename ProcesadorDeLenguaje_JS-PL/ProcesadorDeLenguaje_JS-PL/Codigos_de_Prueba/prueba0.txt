@@ -1,8 +1,24 @@
-var boolean a;
-var boolean z;
-a = false;
-z = true;
-a = a && z;
+var int a;
+var int b;
+a = 1;
+b= 5;
+do{
+j = a++;
+if(a==6) b = a;
+print(a);
+}while(b==5);
+
+print("FIN ");
+//a= "hola mundo";
+//print(a);
+//input(a);
+//print(a);
+//var boolean z;
+//var int numero;
+//input(numero);
+//a = false;
+//z = true;
+//a = a && z;
 //function numero(){
 //var int j;
 //j = 8;

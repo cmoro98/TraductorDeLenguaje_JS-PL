@@ -217,7 +217,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                         gestorDeErrores.ErrSemantico(2,
                             "Entre los parentesis del while se espera una expresion logica ", E.NumLineaCodigo);
                     }
-
+                    gci.regla_7( B, C,E);
                     pilaSemantico.Push(B);
 
                     break;
@@ -302,6 +302,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                     {
                         S.Tipo = Tipo.TIPO_OK;
                         S.TipoRet = Tipo.vacio;
+                        ID.Tipo = (Tipo) Enum.Parse(typeof(Tipo), gesTS.buscaTipoTS(ID.Lexema));
                     }
                     else
                     {
@@ -390,7 +391,9 @@ namespace ProcesadorDeLenguaje_JS_PL
                     if (
                         gesTS.buscaTipoTS(ID.Lexema) == Tipo.@string.ToString() ||
                         gesTS.buscaTipoTS(ID.Lexema) == Tipo.@int.ToString())
+
                     {
+                        ID.Tipo = (Tipo) Enum.Parse(typeof(Tipo), gesTS.buscaTipoTS(ID.Lexema));
                         S.Tipo = Tipo.TIPO_OK;
                         S.TipoRet = Tipo.vacio;
                     }
@@ -400,7 +403,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                         gestorDeErrores.ErrSemantico(2, "input solo admite variables de tipo int o string.",
                             input.NumLineaCodigo);
                     }
-
+                    gci.regla_15( S, ID);
                     pilaSemantico.Push(S);
 
                     break;
@@ -622,6 +625,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                         gestorDeErrores.ErrSemantico(2, "Tipos devueltos erroneos.", B.NumLineaCodigo);
                     }
 
+                    gci.regla_26(C, B, C1);
                     pilaSemantico.Push(C);
 
 
@@ -632,6 +636,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                     C = pilaSemantico.Pop();
                     C.Tipo = Tipo.TIPO_OK;
                     C.TipoRet = Tipo.vacio;
+                    gci.regla_27(C);
                     pilaSemantico.Push(C);
 
 
@@ -744,6 +749,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                             " AND " + R.Tipo, E1.NumLineaCodigo);
                     }
 
+                    gci.regla_32(E, E1, R, despl, size_int);
                     pilaSemantico.Push(E);
                     break;
                 case 33:
@@ -910,7 +916,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                     byte[] bytes = Encoding.ASCII.GetBytes(s);
                     int result = BitConverter.ToInt32(bytes, 0);
                     Console.WriteLine(s+"   ASCII: "+ result);*/
-
+                    gci.regla_42(V, cadena);
                     pilaSemantico.Push(V);
                     break;
                 case 43:
@@ -996,7 +1002,7 @@ namespace ProcesadorDeLenguaje_JS_PL
                         gestorDeErrores.ErrSemantico(2, "Se esperaba una variable de tipo int.", ID.NumLineaCodigo);
                     }
 
-                    gci.regla_45(V, ID, MASMAS,despl);
+                    gci.regla_45(V, ID, MASMAS,despl,size_int);
                     pilaSemantico.Push(V);
                     break;
 

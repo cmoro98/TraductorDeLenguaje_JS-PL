@@ -33,6 +33,8 @@ B->if AbreParent E CierraParent S
 R7:
 B->do AbreCorchetes C CierraCorchetes while AbreParent E CierraParent PuntoComa
 
+    B.code = gen("B. Inicio") || C.code || E. Code || gen(If E.value != 0 goto B.inicio)
+    
 R8:
 B->S
 
@@ -64,6 +66,9 @@ S->print AbreParent E CierraParent PuntoComa
 
 R15:
 S->input AbreParent ID CierraParent PuntoComa
+   
+    S.cod = gen("input" , ID)
+    	
 
 R16:
 S->ID AbreParent L CierraParent PuntoComa
@@ -95,11 +100,15 @@ H->T
 R25:
 H->
 
-R25:
+R26:
 C->B C
+
+    C.Codigo = B.Codigo || C.Codigo
 
 R27:
 C->
+
+    C.Codigo = "";
 
 R28:
 A->T ID K
@@ -116,11 +125,12 @@ K->
 
 R32:
 E->E1 AND R
-
+      
+    | gen(E.lugar, "=", "1")
 	| E.siguiente = nuevaEtiq()
 	| E.cod = E1.cod || gen("if", E1.lugar, "=", 1, "goto", E.siguiente) || gen (E.lugar, "=", "0") || 
 	| gen(E.siguiente, ":") || T.cod || gen("if", R.lugar, "=", 1, "goto", E.fin) || gen(E.lugar, "=", "0") ||
-	| gen(E.fin, ":") || gen(E.lugar, "=", "1")
+	| gen(E.fin, ":") 
 
 R33:
 E->R

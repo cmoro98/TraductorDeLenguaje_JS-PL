@@ -6,9 +6,13 @@ namespace ProcesadorDeLenguaje_JS_PL
 {
     public class GCO
     {
-        private string ensambladorFich;
+        private string ensambladorFich = "\n";
+        private string cadenasFich = "\n; zona con cadenas \n";
+        private string funcionesFich;
+        // funciones + ensamblador+ cadenas. 
         private int tamZonaEstatica = 10;
-
+        private int num_cadena;
+        private string cadena_etiq;
         public GCO()
         {
             ensambladorFich = "ORG 0 \n" + "inicio_estaticas: RES " + tamZonaEstatica + " \n" +"MOVE #inicio_estaticas, .IY \n";
@@ -17,6 +21,13 @@ namespace ProcesadorDeLenguaje_JS_PL
         public void pon_etiqueta(string etiqueta)
         {
             ensambladorFich += etiqueta + ": \n";
+        }
+
+        public string dameNombreEtiqCadena()
+        {
+            num_cadena++;
+            return "nuevaCadena" + num_cadena;
+            
         }
         public int codegen(Operador op, Atributo arg1, Atributo arg2, Atributo dest)
         {
@@ -34,6 +45,19 @@ namespace ProcesadorDeLenguaje_JS_PL
                 */
                 case  Operador.OP_INPUT:
                     /* code */
+                    ensambladorFich += "; Input:  \n";
+                    if (dest.Tipo == Tipo.@int)
+                    {
+                        ensambladorFich += "ININT " + asm[dest.TipoOperando](dest.Operando) +"\n";
+                    }else if (dest.Tipo == Tipo.@string)
+                    {
+                        cadena_etiq = dameNombreEtiqCadena();
+                        cadenasFich+=  cadena_etiq + ": RES " + 66 + " ; \n";
+                        /*INSTR /aprueba
+                        MOVE #aprueba,#0[.IY]*/
+                        ensambladorFich += "INSTR /" + cadena_etiq +"\n";
+                        ensambladorFich += "MOVE #" + cadena_etiq +", " + asm[dest.TipoOperando](dest.Operando) +"\n";
+                    }
                     break;
 
                 /**
@@ -51,7 +75,22 @@ namespace ProcesadorDeLenguaje_JS_PL
                         ensambladorFich += "WRINT " + asm[dest.TipoOperando](dest.Operando) +"\n";
                     }else if (dest.Tipo == Tipo.@string)
                     {
-                        ensambladorFich += "WRSTR " + asm[dest.TipoOperando](dest.Operando) +"\n";
+                        if ( dest.TipoOperando==TipoOperando.Inmediato )
+                        {
+                            // crear el temporal. arg1.lexema DATA "operando"
+                            cadena_etiq = dameNombreEtiqCadena();
+                            cadenasFich += cadena_etiq + ": DATA \"" + dest.Operando + "\" ; \n";
+                           // ensambladorFich += "MOVE #" + cadena_etiq+ " , "+ asm[dest.TipoOperando](dest.Operando) +"\n";
+                            
+                            ensambladorFich +=  "MOVE #" + cadena_etiq+ " , .R1" +"\n";
+                            ensambladorFich += "WRSTR [.R1]" +"\n"; 
+                        }
+                        else
+                        {
+                            ensambladorFich += "MOVE "  + asm[dest.TipoOperando](dest.Operando)  + ", .R1" +"\n";
+                            ensambladorFich += "WRSTR [.R1]" +"\n"; 
+                        }
+
                     }
                     
                     break;
@@ -168,9 +207,20 @@ namespace ProcesadorDeLenguaje_JS_PL
 
                     //dest = arg1;
                     // TODO: Esto no se si funcionaría en strings
-                    ensambladorFich += "; Asignacion  a continuacion \n";
-                    ensambladorFich += "MOVE " + asm[arg1.TipoOperando](arg1.Operando) +" , "+ asm[dest.TipoOperando](dest.Operando) +"\n";
-                    
+                  
+                    ensambladorFich += "; Asignacion   \n";
+                    if (dest.Tipo == Tipo.@string && arg1.TipoOperando==TipoOperando.Inmediato )
+                    {
+                        // crear el temporal. arg1.lexema DATA "operando"
+                        cadena_etiq = dameNombreEtiqCadena();
+                        cadenasFich += cadena_etiq + ": DATA \"" + arg1.Operando + "\" ; \n";
+                        ensambladorFich += "MOVE #" + cadena_etiq+ " , "+ asm[dest.TipoOperando](dest.Operando) +"\n";
+                    }
+                    else 
+                    {
+                        
+                        ensambladorFich += "MOVE " + asm[arg1.TipoOperando](arg1.Operando) +" , "+ asm[dest.TipoOperando](dest.Operando) +"\n";
+                    }
                     /*switch (arg1.TipoOperando)
                     {
                         // TODO: Resuelve el destiono en un string. o ANTES
@@ -239,7 +289,7 @@ namespace ProcesadorDeLenguaje_JS_PL
 
         public void finaliza()
         {
-            ensambladorFich += "HALT \nEND ";
+            ensambladorFich = funcionesFich +ensambladorFich +"HALT \n"+ cadenasFich+ "END ";
         }
 
         public string EnsambladorFich
